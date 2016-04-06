@@ -5,9 +5,9 @@
  - Amar
  - Jannes
  - Tinco
- - Jurgen
  - Djurre
- 
+ - Jurgen
+
  # Features
  - Realtime stragegy (RTS)
  
