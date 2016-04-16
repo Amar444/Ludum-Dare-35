@@ -20,16 +20,18 @@ function create() {
 	world.create();
 	sound.create();
 	player.create();
-	camera.create(player);
+	camera.create();
 }
 
 function update() {
 	player.update();
 }
 
+
 function render() {
+	world.update();
+	camera.render();
 	player.render();
-	camera.render(player);
 }
 
 module.exports = game;
