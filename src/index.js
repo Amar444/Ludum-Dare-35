@@ -4,7 +4,7 @@ window.game = game;
 var player = require('player');
 var world = require('world');
 var camera = require('camera');
-var item = require('item');
+var character = require('character');
 
 function preload() {
 	world.preload();
@@ -16,7 +16,7 @@ function create() {
 	player.create()
 	world.postCreate();
 	for(var i = 0; i < 10;i++){
-		console.log(item.random_weapon(10));
+		console.log(character.random_mob(10));
 	}
 }
 
