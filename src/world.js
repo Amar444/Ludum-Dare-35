@@ -5,7 +5,7 @@ var random = require('random');
 var world = {}
 var specs = {
     size: 30,
-    chunk: 30
+    chunk: 15
 }
 var maps = [];
 
@@ -51,7 +51,6 @@ world.updateMap = function(){
         for(var j = player_chunk_y-1; j <= player_chunk_y+1; j++) {
             //check if already made
             accepted_maps.push(j  + "." +  i);
-
         }
     }
 
@@ -77,7 +76,6 @@ world.updateMap = function(){
 }
 
 world.update = function() {
-    this.updateMap();
     //this.game.world.setBounds(windowWidth + player.position.x, windowHeight + player.position.y, windowWidth*2, windowHeight*2);
     //Move the tilesprite (fixed to camera) depending on the player's positiontile
     //Sprite.tilePosition.y = -camera.view.y;

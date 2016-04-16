@@ -18,6 +18,8 @@ function create() {
 	world.create();
 	player.create();
 	camera.create();
+
+	game.time.events.loop(Phaser.Timer.SECOND, world.updateMap, this);
 }
 
 function update() {
@@ -25,7 +27,6 @@ function update() {
 }
 
 function render() {
-	world.update();
 	camera.render();
 	player.render();
 }
