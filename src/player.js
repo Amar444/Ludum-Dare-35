@@ -1,6 +1,7 @@
 var game = window.game;
 
 var cursors;
+var keys;
 
 var sprite = 0;
 var iter = 0;
@@ -23,6 +24,12 @@ player.create = function() {
 
     game.physics.p2.enable(player.entity);
     cursors = game.input.keyboard.createCursorKeys();
+    keys = {
+        w: game.input.keyboard.addKey(Phaser.Keyboard.W),
+        a: game.input.keyboard.addKey(Phaser.Keyboard.A),
+        s: game.input.keyboard.addKey(Phaser.Keyboard.S),
+        d: game.input.keyboard.addKey(Phaser.Keyboard.D)
+    };
 }
 
 player.render = function() {
@@ -41,16 +48,16 @@ player.render = function() {
 
 player.update = function() {
     player.entity.body.setZeroVelocity();
-    if (cursors.up.isDown) {
+    if (cursors.up.isDown || keys.w.isDown) {
         player.entity.body.moveUp(300);
     }
-    if (cursors.down.isDown) {
+    if (cursors.down.isDown || keys.s.isDown) {
         player.entity.body.moveDown(300);
     }
-    if (cursors.left.isDown){
+    if (cursors.left.isDown || keys.a.isDown){
         player.entity.body.moveLeft(300);
     }
-    if (cursors.right.isDown) {
+    if (cursors.right.isDown || keys.d.isDown) {
         player.entity.body.moveRight(300);
     }
 }
