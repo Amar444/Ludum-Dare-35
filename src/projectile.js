@@ -3,6 +3,8 @@ var player = require('player');
 
 var projectiles = {};
 var projectile = {};
+var PROJECTILE_COOLDOWN = 330;
+var PROJECTILE_SPEED = 100;
 
 projectiles.preload = function(){
 
@@ -20,10 +22,22 @@ projectile.render = function(){
 projectiles.update = function() {
     if (game.input.mousePointer.isDown && this.cooldown === false){
         this.cooldown = true;
-        this.getProjectile(1, 100, 100);
+
+        var px = player.entity.body.x;
+        var py = player.entity.body.y;
+        var mx = game.input.x;
+        var my = game.input.y;
+        var dx = px - mx;
+        var dy = py - my;
+        var rad_angle = Math.atan2(dy, dx);
+        var x_distance = Math.cos(rad_angle);
+        var y_distance = Math.sin(rad_angle);
+        console.log("ANGLE: "+rad_angle+"  YDISTANCE"+y_distance+"  XDISTANCE "+x_distance);
+
+        this.getProjectile(1, x_distance * PROJECTILE_SPEED, y_distance * PROJECTILE_SPEED);
         setTimeout(function () {
           projectiles.cooldown = false;
-        }, 330);
+        }, PROJECTILE_COOLDOWN);
     }
 };
 
@@ -36,7 +50,7 @@ projectiles.create = function() {
 projectiles.getProjectile = function(damageValue, velocityX, velocityY) {
     
     var projectile= {};
-    projectile.entity = game.add.sprite(player.centerX, player.centerY, 'projectile');
+    projectile.entity = game.add.sprite(player.entity.body.x, player.entity.body.y, 'projectile');
     game.physics.p2.enable(projectile.entity);
     projectile.damageValue = damageValue;
     projectile.entity.body.velocity.x = velocityX;
