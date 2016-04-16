@@ -1,6 +1,6 @@
 
 
-game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'phaser-example', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
 	game.load.image('background','assets/tests/debug-grid-1920x1920.png');
@@ -26,6 +26,10 @@ function update() {
 		player.body.moveUp(300)
 	} else if (cursors.down.isDown) {
 		player.body.moveDown(300);
+	} else if (cursors.left.isDown) {
+		player.body.moveLeft(300);
+	} else if (cursors.right.isDown){
+		player.body.moveRight(300);
 	}
 }
 
