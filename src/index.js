@@ -23,11 +23,12 @@ function create() {
 	world.create();
 	player.create();
 	camera.create(player);
-	projectiles.create(1,100,100);
+	projectiles.create();
 }
 
 function update() {
 	player.update();
+	projectiles.update();
 }
 
 function render() {
