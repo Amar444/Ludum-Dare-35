@@ -6,6 +6,8 @@ var world = require('world');
 var camera = require('camera');
 var item = require('item');
 var projectiles = require('projectile');
+var character = require('character');
+
 
 function preload() {
 	world.preload();
@@ -14,13 +16,13 @@ function preload() {
 }
 
 function create() {
-	world.preCreate();
-	player.create();
-	world.postCreate();
-	projectile = projectiles.create(100,100,100);
+
 	for(var i = 0; i < 10;i++){
-		console.log(item.random_weapon(10));
+		console.log(character.random_mob(10));
 	}
+	world.create();
+	player.create();
+	camera.create(player);
 }
 
 function update() {
@@ -29,7 +31,7 @@ function update() {
 
 function render() {
 	player.render();
-	camera.render();
+	camera.render(player);
 }
 
 module.exports = game;
