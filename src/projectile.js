@@ -24,11 +24,16 @@ projectiles.update = function() {
         var my = game.input.y;
         var dx = mx - px;
         var dy = py - my;
-        var rad_angle = Math.atan2(dy, dx);
-        var x_distance = Math.cos(rad_angle*180/Math.PI);
-        var y_distance = Math.sin(rad_angle*180/Math.PI);
-        console.log("ANGLE: "+rad_angle*Math.PI/180+"  YDISTANCE"+y_distance+"  XDISTANCE "+x_distance);
 
+        var angle = Phaser.Point.angle(new Phaser.Point(player.entity.body.x, player.entity.body.y), new Phaser.Point(game.input.worldX, game.input.worldY))
+
+        var x_distance = -Math.cos(angle);
+        var y_distance = -Math.sin(angle);
+        console.log("angle: "+angle+"\n"+
+                    "x_distance: "+x_distance+"\n"+
+                    "y_distance: "+y_distance+"\n"+
+                    "player_entity coords: "+player.entity.body.x+","+player.entity.body.y+"\n"+
+                    "game input coords: "+game.input.worldX+","+game.input.worldY+"\n")
         this.getProjectile(1, x_distance * PROJECTILE_SPEED, y_distance * PROJECTILE_SPEED);
         setTimeout(function () {
           projectiles.cooldown = false;
