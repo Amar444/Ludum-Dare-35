@@ -15,10 +15,6 @@ function create() {
 	world.create();
 	player.create();
 	camera.create(player);
-
-	for(var i = 0; i < 10;i++){
-		console.log(item.random_weapon(10));
-	}
 }
 
 function update() {

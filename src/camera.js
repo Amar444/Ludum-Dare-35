@@ -10,8 +10,6 @@ camera.create = function(player) {
 }
 
 camera.render = function(player) {
-    game.debug.cameraInfo(game.camera, 32, 32);
-    
     x += (player.entity.x - x) * tween;
     y += (player.entity.y - y) * tween;
 

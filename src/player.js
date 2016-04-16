@@ -33,7 +33,6 @@ player.create = function() {
 }
 
 player.render = function() {
-    game.debug.spriteCoords(player.entity, 32, 500);
     player.entity.removeChild(sprite);
 
     sprite = game.add.graphics(0, 0);
