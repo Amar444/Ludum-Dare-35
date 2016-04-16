@@ -5,6 +5,7 @@ var projectiles = {};
 var projectile = {};
 var PROJECTILE_COOLDOWN = 660;
 var PROJECTILE_SPEED = 600;
+var PROJECTILE_DAMAGE = 0;
 
 projectiles.preload = function(){
 
@@ -14,22 +15,41 @@ projectiles.preload = function(){
 projectile.render = function(){
 };
 
-projectiles.update = function() {
-    if (game.input.mousePointer.isDown && this.cooldown === false){ /*TODO add check for class when implemented*/
-        this.cooldown = true;
-        var angle = Phaser.Point.angle(new Phaser.Point(player.entity.body.x, player.entity.body.y), new Phaser.Point(game.input.worldX, game.input.worldY))
+projectiles.update = function(source, target) {
+    if(!source.hasOwnProperty("cooldown")){source.cooldown = false;}
+    if (game.input.mousePointer.isDown && source.cooldown === false){ /*TODO add check for class when implemented*/
+        source.cooldown = true;
+
+        var sx, sy, tx, ty;
+
+        sx = source.entity.x;
+        sy = source.entity.y;
+
+        if(target == "mouse") {
+            tx = game.input.worldX;
+            ty = game.input.worldY;
+        } else {
+            tx = target.entity.x;
+            ty = target.entity.y;
+        }
+
+
+        var angle = Phaser.Point.angle(new Phaser.Point(sx, sy), new Phaser.Point(tx, ty));
 
         var x_distance = -Math.cos(angle);
         var y_distance = -Math.sin(angle);
-        /*console.log("angle: "+angle+"\n"+
+
+        /*DEBUG MESSAGE
+        console.log("angle: "+angle+"\n"+
                     "x_distance: "+x_distance+"\n"+
                     "y_distance: "+y_distance+"\n"+
                     "player_entity coords: "+player.entity.body.x+","+player.entity.body.y+"\n"+
                     "game input coords: "+game.input.worldX+","+game.input.worldY+"\n")*/
-        this.getProjectile(1, x_distance * PROJECTILE_SPEED, y_distance * PROJECTILE_SPEED);
+
+        this.getProjectile(source.projectileDamage || PROJECTILE_DAMAGE, x_distance * (source.projectileSpeed || PROJECTILE_SPEED), y_distance * (source.projectileSpeed || PROJECTILE_SPEED));
         setTimeout(function () {
-          projectiles.cooldown = false;
-        }, PROJECTILE_COOLDOWN);
+          source.cooldown = false;
+        }, source.cooldownTime || PROJECTILE_COOLDOWN);
     }
 };
 
