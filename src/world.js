@@ -17,7 +17,8 @@ world.create = function(){
     game.world.setBounds(0, 0, 1920, 1920);
     game.physics.startSystem(Phaser.Physics.P2JS);
     world.tileGroup = game.add.group();
-    world.tileGroup.zIndex = 0;
+    world.startingPointGroup = game.add.group();
+    world.createStartingPoint();
     game.camera.follow(player.entity);
     game.camera.deadzone = new Phaser.Rectangle(100, 100, 600, 400);
 }
@@ -46,6 +47,7 @@ world.updateMap = function(){
     var player_tile_x = Math.floor(coordinates.x / specs.size / specs.chunk);
     var accepted = true;
 
+
     for(var x in maps){
         var mapCoordinates = maps[x].split(".");
 
@@ -68,6 +70,17 @@ world.update = function() {
     //this.game.world.setBounds(windowWidth + player.position.x, windowHeight + player.position.y, windowWidth*2, windowHeight*2);
     //Move the tilesprite (fixed to camera) depending on the player's positiontile
     //Sprite.tilePosition.y = -camera.view.y;
+}
+
+world.createStartingPoint = function() {
+    var width = 200;
+    var height = 200;
+
+    var startingPoint = game.add.graphics(game.world.centerX - (width/2), game.world.centerY - (height/2));
+    startingPoint.beginFill(0xC2AB4F);
+    startingPoint.drawRect(0, 0, width, height);
+
+    world.startingPointGroup.add(startingPoint);
 }
 
 

@@ -31,4 +31,5 @@ function render() {
 	player.render();
 }
 
+
 module.exports = game;
