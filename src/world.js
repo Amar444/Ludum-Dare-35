@@ -12,6 +12,7 @@ var maps = [];
 world.preload = function(){
 }
 
+
 world.preCreate = function(){
     game.world.setBounds(0, 0, 1920, 1920);
     game.physics.startSystem(Phaser.Physics.P2JS);
@@ -30,9 +31,9 @@ world.createMap = function(tile_y, tile_x) {
             var bounds = new Phaser.Rectangle(y * specs.size, x * specs.size, specs.size, specs.size);
             var graphics = game.add.graphics(bounds.y, bounds.x);
             if (random.newIntBetween(0, 1) > 0.5)
-                graphics.beginFill(0x000077);
+                graphics.beginFill(0xD9CC3C);
             else
-                graphics.beginFill(0x770070);
+                graphics.beginFill(0x00ADA7);
             graphics.drawRect(0, 0, bounds.width, bounds.height);
             graphics.z = 0;
             world.tileGroup.add(graphics);
@@ -40,7 +41,6 @@ world.createMap = function(tile_y, tile_x) {
         }
     }
     game.world.sendToBack(world.tileGroup)
-
 }
 
 world.updateMap = function(){
