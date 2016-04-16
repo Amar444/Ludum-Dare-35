@@ -46,7 +46,7 @@ projectiles.update = function(source, target) {
                     "player_entity coords: "+player.entity.body.x+","+player.entity.body.y+"\n"+
                     "game input coords: "+game.input.worldX+","+game.input.worldY+"\n")*/
 
-        this.getProjectile(source.projectileDamage || PROJECTILE_DAMAGE, x_distance * (source.projectileSpeed || PROJECTILE_SPEED), y_distance * (source.projectileSpeed || PROJECTILE_SPEED));
+        this.getProjectile(source.projectileDamage || PROJECTILE_DAMAGE, x_distance * (source.projectileSpeed || PROJECTILE_SPEED), y_distance * (source.projectileSpeed || PROJECTILE_SPEED), angle);
         setTimeout(function () {
           source.cooldown = false;
         }, source.cooldownTime || PROJECTILE_COOLDOWN);
@@ -59,11 +59,18 @@ projectiles.create = function() {
     
 };
 
-projectiles.getProjectile = function(damageValue, velocityX, velocityY) {
+projectiles.getProjectile = function(damageValue, velocityX, velocityY, rotation) {
     
     var projectile= {};
-    projectile.entity = game.add.sprite(player.entity.body.x, player.entity.body.y, 'projectile');
+
+    var sprite = game.add.graphics(0, 0);
+    sprite.beginFill(0xFF002F);
+    sprite.drawRect(0,0,20,5);
+
+    projectile.entity = game.add.sprite(player.entity.x, player.entity.y, sprite.generateTexture());
+
     game.physics.p2.enable(projectile.entity);
+    projectile.entity.body.angle = rotation*180/Math.PI;
     projectile.damageValue = damageValue;
     projectile.entity.body.velocity.x = velocityX;
     projectile.entity.body.velocity.y = velocityY;
