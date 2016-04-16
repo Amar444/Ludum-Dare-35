@@ -24,9 +24,12 @@ function update() {
 	player.update()
 }
 
+
 function render() {
-	player.render();
+	world.update();
 	camera.render();
+	player.render();
+
 }
 
 module.exports = game;

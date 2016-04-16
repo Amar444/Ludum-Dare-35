@@ -3,9 +3,7 @@ var seed = 1815;
 
 random.newSeed = function (new_seed){
     seed = new_seed;
-
 }
-
 
 random.newFloat = function () {
     var x = Math.sin(seed++) * 10000;
@@ -34,9 +32,6 @@ random.newPercentageSplit = function (number){
         out.push((list[i] / count));
     }
     return out;
-
-
 }
-
 
 module.exports =  random;
