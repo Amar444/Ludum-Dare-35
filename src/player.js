@@ -5,11 +5,11 @@ var keys;
 
 var sprite = 0;
 var iter = 0;
+var speed = 200;
 
 var player = {};
 
 player.preload = function(){
-     game.load.image('player','assets/square.png');
 }
 
 player.create = function() {
@@ -46,19 +46,34 @@ player.render = function() {
 }
 
 player.update = function() {
+    var nspeed = speed;
     player.entity.body.setZeroVelocity();
-    if (cursors.up.isDown || keys.w.isDown) {
-        player.entity.body.moveUp(300);
+
+    var vert = false;
+    var hori = false;
+    if (cursors.up.isDown || keys.w.isDown)
+        vert = !vert;
+    if (cursors.down.isDown || keys.s.isDown)
+        vert = !vert;
+    if (cursors.left.isDown || keys.a.isDown)
+        hori = !hori;
+    if (cursors.right.isDown || keys.d.isDown)
+        hori = !hori;
+
+    if (vert & hori)
+        nspeed = speed/Math.sqrt(2);
+        if (cursors.up.isDown || keys.w.isDown) {
+        vert = !vert;
     }
-    if (cursors.down.isDown || keys.s.isDown) {
-        player.entity.body.moveDown(300);
-    }
-    if (cursors.left.isDown || keys.a.isDown){
-        player.entity.body.moveLeft(300);
-    }
-    if (cursors.right.isDown || keys.d.isDown) {
-        player.entity.body.moveRight(300);
-    }
+
+    if (cursors.up.isDown || keys.w.isDown)
+        player.entity.body.moveUp(nspeed);
+    if (cursors.down.isDown || keys.s.isDown)
+        player.entity.body.moveDown(nspeed);
+    if (cursors.left.isDown || keys.a.isDown)
+        player.entity.body.moveLeft(nspeed);
+    if (cursors.right.isDown || keys.d.isDown)
+        player.entity.body.moveRight(nspeed);
 }
 
 module.exports = player;
