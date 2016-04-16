@@ -16,14 +16,14 @@ function preload() {
 }
 
 function create() {
-
 	for(var i = 0; i < 10;i++){
 		console.log(character.random_mob(10));
 	}
 	world.create();
 	player.create();
-	camera.create(player);
 	projectiles.create();
+	camera.create();
+
 }
 
 function update() {
@@ -31,9 +31,11 @@ function update() {
 	projectiles.update();
 }
 
+
 function render() {
+	world.update();
+	camera.render();
 	player.render();
-	camera.render(player);
 }
 
 module.exports = game;
