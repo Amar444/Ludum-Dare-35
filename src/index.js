@@ -8,26 +8,25 @@ var character = require('character');
 
 function preload() {
 	world.preload();
-	player.preload()
+	player.preload();
 }
 
 function create() {
-	world.preCreate();
-	player.create()
-	world.postCreate();
 	for(var i = 0; i < 10;i++){
 		console.log(character.random_mob(10));
 	}
+	world.create();
+	player.create();
+	camera.create(player);
 }
 
 function update() {
-	player.update()
+	player.update();
 }
 
 function render() {
 	player.render();
-	camera.render();
+	camera.render(player);
 }
 
 module.exports = game;
-
