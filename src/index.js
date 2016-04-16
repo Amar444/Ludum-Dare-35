@@ -5,7 +5,9 @@ var player = require('player');
 var world = require('world');
 var camera = require('camera');
 var item = require('item');
-var projectiles = require('projectile');
+var projectile = require('projectile');
+var projectileFactory = require('projectileFactory');
+
 var sound = require('sound');
 var character = require('character');
 
@@ -13,7 +15,8 @@ var character = require('character');
 function preload() {
 	world.preload();
 	player.preload();
-	projectiles.preload();
+	projectile.preload();
+	projectileFactory.preload();
 	sound.preload();
 
 }
@@ -25,7 +28,7 @@ function create() {
 	world.create();
 	sound.create();
 	player.create();
-	projectiles.create();
+	projectileFactory.create();
 	camera.create();
 	game.time.events.loop(Phaser.Timer.SECOND, world.updateMap, this);
 
@@ -33,7 +36,6 @@ function create() {
 
 function update() {
 	player.update();
-	projectiles.update(player, "mouse");
 }
 
 function render() {

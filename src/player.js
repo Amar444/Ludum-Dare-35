@@ -8,6 +8,7 @@ var iter = 0;
 var speed = 200;
 
 var player = {};
+var projectile = require("projectileFactory")
 
 player.preload = function(){
 }
@@ -72,6 +73,10 @@ player.update = function() {
         player.entity.body.moveLeft(nspeed);
     if (cursors.right.isDown || keys.d.isDown)
         player.entity.body.moveRight(nspeed);
+
+    if(game.input.mousePointer.isDown){
+        projectile.spawnProjectile(player, "mouse", projectile.defaultProjectile);
+    }
 }
 
 module.exports = player;
