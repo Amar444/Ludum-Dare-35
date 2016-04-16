@@ -16,6 +16,7 @@ camera.render = function() {
 
     game.camera.x = x - game.camera.width/2;
     game.camera.y = y - game.camera.height/2;
+    game.debug.cameraInfo(game.camera, 32, 32);
 }
 
 module.exports = camera;

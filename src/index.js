@@ -24,7 +24,6 @@ function update() {
 	player.update();
 }
 
-
 function render() {
 	world.update();
 	camera.render();
