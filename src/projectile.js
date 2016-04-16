@@ -3,8 +3,8 @@ var player = require('player');
 
 var projectiles = {};
 var projectile = {};
-var PROJECTILE_COOLDOWN = 330;
-var PROJECTILE_SPEED = 100;
+var PROJECTILE_COOLDOWN = 660;
+var PROJECTILE_SPEED = 600;
 
 projectiles.preload = function(){
 
@@ -12,27 +12,22 @@ projectiles.preload = function(){
 };
 
 projectile.render = function(){
-   /* var zone = game.camera.deadzone;
-    game.context.fillStyle = 'rgba(255,0,0,0.6)';
-    game.context.fillRect(zone.x, zone.y, zone.width, zone.height);
-    game.debug.cameraInfo(game.camera, 32, 32);
-    game.debug.spriteCoords(projectile.entity, 32, 500);*/
 };
 
 projectiles.update = function() {
-    if (game.input.mousePointer.isDown && this.cooldown === false){
+    if (game.input.mousePointer.isDown && this.cooldown === false){ /*TODO add check for class when implemented*/
         this.cooldown = true;
 
         var px = player.entity.body.x;
         var py = player.entity.body.y;
         var mx = game.input.x;
         var my = game.input.y;
-        var dx = px - mx;
+        var dx = mx - px;
         var dy = py - my;
         var rad_angle = Math.atan2(dy, dx);
-        var x_distance = Math.cos(rad_angle);
-        var y_distance = Math.sin(rad_angle);
-        console.log("ANGLE: "+rad_angle+"  YDISTANCE"+y_distance+"  XDISTANCE "+x_distance);
+        var x_distance = Math.cos(rad_angle*180/Math.PI);
+        var y_distance = Math.sin(rad_angle*180/Math.PI);
+        console.log("ANGLE: "+rad_angle*Math.PI/180+"  YDISTANCE"+y_distance+"  XDISTANCE "+x_distance);
 
         this.getProjectile(1, x_distance * PROJECTILE_SPEED, y_distance * PROJECTILE_SPEED);
         setTimeout(function () {
