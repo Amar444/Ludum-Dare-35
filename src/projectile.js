@@ -28,10 +28,10 @@ projectiles.create = function(damageValue, velocityX, velocityY) {
     projectile.entity = game.add.sprite(game.world.centerX, game.world.centerY, 'projectile');
     game.physics.p2.enable(projectile.entity);
     projectile.damageValue = damageValue;
-    projectile.entity.velocity.x = velocityX;
-    projectile.entity.velocity.y = velocityY;
-    projectile.setCollisionGroup(game.projectileCollisionGroup);
-    projectile.collides([game.enemyCollisionGroup], projectiles.collisionHandler, this);
+    projectile.entity.body.velocity.x = velocityX;
+    projectile.entity.body.velocity.y = velocityY;
+    projectile.entity.body.setCollisionGroup(game.projectileCollisionGroup);
+    projectile.entity.body.collides([game.enemyCollisionGroup], projectiles.collisionHandler, this);
     return projectile;
 };
 
