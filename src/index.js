@@ -4,6 +4,7 @@ window.game = game;
 var player = require('player');
 var world = require('world');
 var camera = require('camera');
+var item = require('item');
 
 function preload() {
 	world.preload();
@@ -14,6 +15,10 @@ function create() {
 	world.create();
 	player.create();
 	camera.create(player);
+
+	for(var i = 0; i < 10;i++){
+		console.log(item.random_weapon(10));
+	}
 }
 
 function update() {
