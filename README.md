@@ -8,10 +8,17 @@
  - Djurre
  - Jurgen
 
- # Features
- - Realtime stragegy (RTS)
+# Howto
+ - Start and survive as long as possible 
+ - Press M for music mute
+ - Press N for next number
+
+# Features
+ - Roguelike
+ - Procedural generation of terrain
+ - Changing classes
  
- # Frameworks
+# Frameworks
  - [Phaser](http://phaser.io/)
  - Cross compiler 
   - [CoffeeScript](http://coffeescript.org/)
