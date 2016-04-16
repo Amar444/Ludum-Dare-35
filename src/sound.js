@@ -6,6 +6,7 @@ var vumeter = [];
 var channels = [];
 var mute_key ;
 var music_player;
+var fx;
 
 
 sound.modLoaded = function (key, data) {
@@ -25,6 +26,7 @@ sound.preload = function(){
     game.load.binary('elysium', 'protracker/elysium.mod', sound.modLoaded, this);
     game.load.binary('stardust', 'protracker/sd-ingame1.mod', sound.modLoaded, this);
     game.load.binary('globaltrash', 'protracker/global_trash_3_v2.mod', sound.modLoaded, this);
+    game.load.audio('sfx', 'effects/fx_mixdown.ogg');
 
 };
 sound.next_number = function (){
@@ -38,10 +40,29 @@ sound.next_number = function (){
 }
 
 sound.create = function() {
-    music_player = new Protracker();
+    // Sound effects
+    fx = game.add.audio('sfx');
+    fx.allowMultiple = true;
+    fx.addMarker('alien death', 1, 1.0);
+    fx.addMarker('boss hit', 3, 0.5);
+    fx.addMarker('escape', 4, 3.2);
+    fx.addMarker('meow', 8, 0.5);
+    fx.addMarker('numkey', 9, 0.1);
+    fx.addMarker('ping', 10, 1.0);
+    fx.addMarker('death', 12, 4.2);
+    fx.addMarker('shot', 17, 1.0);
+    fx.addMarker('squit', 19, 0.3);
 
+
+    // Music
+    music_player = new Protracker();
+    var first = true
     music_player.onReady = function() {
-        // music_player.play();
+        if(first){
+            first = false
+        }else{
+            music_player.play();
+        }
     };
     music_player.buffer = game.cache.getBinary(mods[current]);
 
@@ -53,7 +74,20 @@ sound.create = function() {
     game.input.keyboard.addKey(Phaser.Keyboard.N).onDown.add(function (){
         sound.next_number()
     }, this);
+
+    game.input.keyboard.addKey(Phaser.Keyboard.ONE).onDown.add(function (){
+        sound.play_effect("shot")
+    }, this);
+    game.input.keyboard.addKey(Phaser.Keyboard.TWO).onDown.add(function (){
+        sound.play_effect("boss hit")
+    }, this);
 };
+
+//Options:  alien death,boss hit,escape,meow,numkey,ping,death,shot,squit
+sound.play_effect = function (name) {
+    fx.play(name);
+};
+
 
 sound.toggle_sound = function () {
     if(music_player.playing){
@@ -62,7 +96,5 @@ sound.toggle_sound = function () {
         music_player.play();
     }
 }
-
-//module.play() has to be called from a callback
 
 module.exports =  sound;
