@@ -26,4 +26,3 @@ function render() {
 }
 
 module.exports = game;
-
