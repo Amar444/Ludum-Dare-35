@@ -6,6 +6,7 @@ var projectile = {};
 var PROJECTILE_COOLDOWN = 660;
 var PROJECTILE_SPEED = 600;
 var PROJECTILE_DAMAGE = 0;
+var PROJECTILE_LIFESPAN = 1000;
 
 projectiles.preload = function(){
 
@@ -65,9 +66,9 @@ projectiles.getProjectile = function(damageValue, velocityX, velocityY, rotation
 
     var sprite = game.add.graphics(0, 0);
     sprite.beginFill(0xFF002F);
-    sprite.drawRect(0,0,20,5);
-
+    sprite.drawRect(100,100,20,5);
     projectile.entity = game.add.sprite(player.entity.x, player.entity.y, sprite.generateTexture());
+    sprite.destroy();
 
     game.physics.p2.enable(projectile.entity);
     projectile.entity.body.angle = rotation*180/Math.PI;
@@ -76,12 +77,16 @@ projectiles.getProjectile = function(damageValue, velocityX, velocityY, rotation
     projectile.entity.body.velocity.y = velocityY;
     projectile.entity.body.setCollisionGroup(game.projectileCollisionGroup);
     /*projectile.entity.body.collides([game.enemyCollisionGroup], projectiles.collisionHandler, this);*/
+    /*setTimeout(function(){
+        projectile.destroy();
+    }, PROJECTILE_LIFESPAN);*/
+
     return projectile;
 };
 
 projectiles.collisionHandler = function (projectile, enemy) {
     enemy.removeHealth(projectile.damageValue);
-    projectile.kill();
+    projectile.destroy();
 };
 
 module.exports = projectiles;
