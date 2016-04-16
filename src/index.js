@@ -17,7 +17,7 @@ function create() {
 	}
 	world.create();
 	player.create();
-	camera.create(player);
+	camera.create();
 }
 
 function update() {

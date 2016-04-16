@@ -13,12 +13,9 @@ world.preload = function(){
 }
 
 
-world.preCreate = function(){
+world.create = function(){
     game.world.setBounds(0, 0, 1920, 1920);
     game.physics.startSystem(Phaser.Physics.P2JS);
-}
-
-world.postCreate = function(){
     world.tileGroup = game.add.group();
     world.tileGroup.zIndex = 0;
     game.camera.follow(player.entity);
