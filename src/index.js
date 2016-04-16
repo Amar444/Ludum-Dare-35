@@ -7,23 +7,22 @@ var camera = require('camera');
 
 function preload() {
 	world.preload();
-	player.preload()
+	player.preload();
 }
 
 function create() {
-	world.preCreate();
-	player.create()
-	world.postCreate();
+	world.create();
+	player.create();
+	camera.create(player);
 }
 
 function update() {
-	player.update()
+	player.update();
 }
 
 function render() {
 	player.render();
-	camera.render();
+	camera.render(player);
 }
 
 module.exports = game;
-
