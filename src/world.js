@@ -22,10 +22,10 @@ world.createMap = function() {
         for (var x = 0; x < specs.chunk; x++) {
             var bounds = new Phaser.Rectangle(y * specs.size, x * specs.size, specs.size, specs.size);
             var graphics = game.add.graphics(bounds.x, bounds.y);
-            if (Math.random() > 0.5)
-                graphics.beginFill(0x000077);
+            if (Math.random() > 0.2)
+                graphics.beginFill(0xD9CC3C);
             else
-                graphics.beginFill(0x770070);
+                graphics.beginFill(0x00ADA7);
             graphics.drawRect(0, 0, bounds.width, bounds.height);
         }
     }

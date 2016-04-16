@@ -2,6 +2,9 @@ var game = window.game;
 
 var cursors;
 
+var sprite = 0;
+var iter = 0;
+
 var player = {};
 
 player.preload = function(){
@@ -9,13 +12,31 @@ player.preload = function(){
 }
 
 player.create = function() {
-    player.entity = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
+    
+    var sprite = game.add.graphics(0, 0);
+    sprite.beginFill(0x222222);
+    sprite.drawCircle(0, 0, 32);
+    sprite.beginFill(0x1463ab);
+    sprite.drawCircle(0, 0, 25);
+    player.entity = game.add.sprite(game.world.centerX, game.world.centerY, sprite.generateTexture());
+
+
     game.physics.p2.enable(player.entity);
     cursors = game.input.keyboard.createCursorKeys();
 }
 
 player.render = function() {
     game.debug.spriteCoords(player.entity, 32, 500);
+    player.entity.removeChild(sprite);
+
+    sprite = game.add.graphics(0, 0);
+    iter += 0.4;
+    if (iter > 10)
+        iter = -10;
+
+    sprite.beginFill(0xD9C021);
+    sprite.drawCircle(0, 0, Math.abs(iter) + 5);
+    player.entity.addChild(sprite);
 }
 
 player.update = function() {
