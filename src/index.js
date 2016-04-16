@@ -1,17 +1,19 @@
-window.game = new Phaser.Game(800, 600, Phaser.CANVAS, 'undefined', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'undefined', { preload: preload, create: create, update: update, render: render });
+window.game = game;
 
 var player = require('player');
-
-var cursors;
+var world = require('world');
+var camera = require('camera');
 
 function preload() {
-	game.load.image('background','assets/tests/debug-grid-1920x1920.png');
+	world.preload();
 	player.preload()
 }
 
 function create() {
-	player.create();
-	createWorld();
+	world.preCreate();
+	player.create()
+	world.postCreate();
 }
 
 function update() {
@@ -20,13 +22,8 @@ function update() {
 
 function render() {
 	player.render();
+	camera.render();
 }
 
-function createWorld() {
-	game.add.tileSprite(0, 0, 1920, 1920, 'background');
-	game.world.setBounds(0, 0, 1920, 1920);
-	game.physics.startSystem(Phaser.Physics.P2JS);
-	game.camera.follow(player);
-	game.camera.deadzone = new Phaser.Rectangle(100, 100, 600, 400);
-}
+module.exports = game;
 
