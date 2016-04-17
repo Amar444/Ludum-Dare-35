@@ -6,6 +6,7 @@ var world = require('world');
 var camera = require('camera');
 var item = require('item');
 var projectile = require('projectile');
+var particles = require('particles');
 var projectileFactory = require('projectileFactory');
 var mobFactory = require('mobFactory');
 var inventoryScreen = require('inventoryScreen');
@@ -25,6 +26,7 @@ function preload() {
 	projectileFactory.preload();
 	sound.preload();
 	hud.preload();
+	particles.preload()
 
 }
 
@@ -34,6 +36,7 @@ function create() {
 	player.create();
 	mobFactory.create();
 	projectileFactory.create();
+	particles.create();
 	camera.create();
 	hud.create();
 	world.postCreate();

@@ -1,6 +1,7 @@
 var game = window.game;
 var player = require('player');
 var projectile = require("projectile")
+var particles = require("particles")
 var sound = require("sound")
 
 var projectileFactory = {};
@@ -30,7 +31,7 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
      */
     if (projectile.cooldown === false){
         projectile.cooldown = true;
-
+        particles.explosion(source.entity.x,source.entity.y)
 
         /*Variables used in velocity calulations*/
         var sx, sy, tx, ty, angle, x_velocity, y_velocity;
