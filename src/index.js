@@ -8,6 +8,7 @@ var item = require('item');
 var projectile = require('projectile');
 var projectileFactory = require('projectileFactory');
 var mobFactory = require('mobFactory');
+var inventoryScreen = require('inventoryScreen');
 
 var sound = require('sound');
 var character = require('character');
@@ -38,6 +39,7 @@ function create() {
 	camera.create();
 	world.postCreate();
 	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
+	inventoryScreen.create();
 }
 
 var i = 0;
