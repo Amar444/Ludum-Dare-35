@@ -6,7 +6,7 @@ var sound = require("sound")
 var projectileFactory = {};
 
 projectileFactory.preload = function(){
-
+    game.load.image('diamond', 'images/diamond.png');
 
 };
 
@@ -16,7 +16,21 @@ projectileFactory.create = function () {
             
         }
     }
+
     this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultCollisionHandler);
+
+
+    var defaultSprite = game.add.graphics();
+    defaultSprite.beginFill(0x0000ff);
+    defaultSprite.drawCircle(0,0, 7);
+
+    defaultSprite.drawCircle(-5,-5, 5);
+    defaultSprite.drawCircle(5,-5, 5);
+    defaultSprite.drawCircle(-5,5, 5);
+    defaultSprite.drawCircle(5,5, 5);
+    var missle = defaultSprite.generateTexture();
+    defaultSprite.destroy();
+    this.magicMissile = new projectile(undefined, undefined, undefined,missle , undefined, defaultCollisionHandler);
 }
 
 projectileFactory.update = function () {
@@ -52,7 +66,7 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
         var p = {};
         p.entity = game.add.sprite(sx, sy, projectile.texture);
         game.physics.p2.enable(p.entity);
-        p.entity.body.angle = angle*180/Math.PI;
+        p.entity.body.angle += angle*180/Math.PI;
         p.entity.body.velocity.x = x_velocity;
         p.entity.body.velocity.y = y_velocity;
         p.entity.body.onBeginContact.add(projectile.collisionHandler)

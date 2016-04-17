@@ -140,6 +140,26 @@ mobFactory.defaultRangedAi = function(){
     projectiles.spawnProjectile(this, player, mobFactory.defaultRangedProjectile)
 };
 
+
+mobFactory.findMobInCone = function (x,y,direction,spread,range){
+    var out = []
+    for(var i in mobs){
+        var m = mobs[i]
+        var d = Math.sqrt(Math.pow(x-m.entity.x,2) + Math.pow(y-m.entity.y,2));
+
+        var sx = player.entity.x;
+        var sy = player.entity.y;
+        var tx = m.entity.x;
+        var ty = m.entity.y;
+        var angle = Phaser.Point.angle(new Phaser.Point(sx, sy), new Phaser.Point(tx, ty));
+        if(d < range){
+            // TODO: radius
+            out.push(m)
+        }
+    }
+    
+    return out
+}
 module.exports = mobFactory
 
 
