@@ -6,21 +6,26 @@ inventoryScreen.preload = function(){
 
 };
 var itemSize = 32;
-var group
+var group;
 inventoryScreen.active = false;
+
 inventoryScreen.create = function() {
     game.input.keyboard.addKey(Phaser.Keyboard.I).onDown.add(function () {
-        if(inventoryScreen.active == false){
-
-            group = game.add.group();
-            inventoryScreen.createInventory()
-        }else{
-            group.destroy();
-
-        }
-        inventoryScreen.active = !inventoryScreen.active;
+        inventoryScreen.toggle_inventory();
     }, this);
-}
+};
+
+inventoryScreen.toggle_inventory = function () {
+    if (inventoryScreen.active) {
+        group.destroy();
+        inventoryScreen.active = false;
+    } else {
+        group = game.add.group();
+        inventoryScreen.createInventory();
+        inventoryScreen.active = true;
+    }
+};
+
 inventoryScreen.createInventory = function() {
     var user = character.getCurrentUser();
     var item;
@@ -149,7 +154,6 @@ inventoryScreen.createInventory = function() {
 
     }
 };
-
 
 
 inventoryScreen.render = function() {
