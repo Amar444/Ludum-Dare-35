@@ -63,10 +63,10 @@ hud.createMuteButton = function() {
 hud.updateMuteButton = function(){
     if(sound.sound_enabled){
         //button image speakerSound
-        button.loadTexture('speakerSound');
+        muteButton.loadTexture('speakerSound');
     }else {
         //button image speakerMute
-        button.loadTexture('speakerMute');
+        muteButton.loadTexture('speakerMute');
     }
 };
 function toggleSound () {
