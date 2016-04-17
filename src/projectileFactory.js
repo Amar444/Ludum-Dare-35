@@ -11,9 +11,8 @@ projectileFactory.preload = function(){
 };
 
 projectileFactory.create = function () {
-    var defaultCollisionHandler = function(projectile, target, projectileParent){
-        projectile.hit = true;
-        target.hit = true;
+    var defaultCollisionHandler = function(projectile, target){
+
     };
     this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, game.enemyCollisionGroup, defaultCollisionHandler);
 }
@@ -56,11 +55,13 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
         p.entity.body.velocity.x = x_velocity;
         p.entity.body.velocity.y = y_velocity;
         p.entity.body.setCollisionGroup(game.projectileCollisionGroup);
+        p.entity.body.parent = p;
+
 
         /*DEBUG MESSAGES*/
         console.log(projectile.collideGroups);
         if(projectile.collideGroups != undefined && projectile.collisionHandler != undefined){
-            p.entity.body.collides([projectile.collideGroups, game.projectileCollisionGroup], projectile.collisionHandler);
+            p.entity.body.collides([projectile.collideGroups, game.projectileCollisionGroup]);
             console.log("added handler")
         }
 

@@ -24,6 +24,7 @@ player.create = function() {
     player.entity = game.add.sprite(game.world.centerX, game.world.centerY, sprite.generateTexture());
     sprite.destroy();
     game.physics.p2.enable(player.entity);
+    player.entity.body.parent = player;
     cursors = game.input.keyboard.createCursorKeys();
     keys = {
         w: game.input.keyboard.addKey(Phaser.Keyboard.W),
