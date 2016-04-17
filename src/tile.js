@@ -1,4 +1,6 @@
 
+var tile_object = {}
+var bmd;
 var specs = require('specs')
 
 class Tile {
@@ -48,6 +50,7 @@ class grass{
         return graphics;
     }
 }
+
 
 class mud{
     render(graphics){

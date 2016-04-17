@@ -34,6 +34,16 @@ player.create = function() {
 }
 
 player.render = function() {
+    player.entity.body.angle = 0;
+    var sx = player.entity.x;
+    var sy = player.entity.y;
+    var tx = game.input.worldX;
+    var ty = game.input.worldY;
+    var angle = Phaser.Point.angle(new Phaser.Point(sx, sy), new Phaser.Point(tx, ty));
+    var x = -Math.cos(angle);
+    var y = -Math.sin(angle);
+
+
     player.entity.removeChild(sprite);
 
     sprite = game.add.graphics(0, 0);
@@ -41,9 +51,13 @@ player.render = function() {
     if (iter > 10)
         iter = -10;
 
-    sprite.beginFill(0xD9C021);
+    sprite.beginFill(0xEDBE00);
     sprite.drawCircle(0, 0, Math.abs(iter) + 5);
-    player.entity.addChild(sprite);game.debug.spriteInfo(player.entity, 32, 32);
+    sprite.lineStyle(5, 0xEDBE00, 1);
+    sprite.moveTo(x*16, y*16);
+    sprite.lineTo(x*20, y*20);
+
+    var child = player.entity.addChild(sprite);
 }
 
 player.update = function() {

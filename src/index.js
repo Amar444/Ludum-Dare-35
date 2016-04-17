@@ -8,6 +8,7 @@ var item = require('item');
 var projectile = require('projectile');
 var projectileFactory = require('projectileFactory');
 var mobFactory = require('mobFactory');
+var inventoryScreen = require('inventoryScreen');
 
 var sound = require('sound');
 var character = require('character');
@@ -28,9 +29,6 @@ function preload() {
 }
 
 function create() {
-	for(var i = 0; i < 10;i++){
-		console.log(character.random_mob(10));
-	}
 	world.preCreate();
 	sound.create();
 	player.create();
@@ -42,10 +40,8 @@ function create() {
 	world.postCreate();
 
 	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
+	inventoryScreen.create();
 	mobFactory.spawnMob(5100, 5000, mobFactory.defaultMobType, 10);
-}
-
-function init() {
 }
 
 var i = 0;
