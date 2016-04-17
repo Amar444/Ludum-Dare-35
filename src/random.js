@@ -1,5 +1,5 @@
 var random = {};
-var seed = 1;
+var seed = 27;
 
 random.newSeed = function (new_seed){
     seed = new_seed;
@@ -23,6 +23,7 @@ random.newFloatBetween = function (min, max) {
     var r = random.newFloat()
     return min + ((max - min) * r);
 }
+
 
 
 random.newPercentageSplit = function (number){

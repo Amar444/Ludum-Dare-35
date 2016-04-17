@@ -37,8 +37,8 @@ SimplexNoise.dot = function(g, x, y) {
 };
 
 SimplexNoise.noise = function(xin, yin) {
-    xin = xin / 20;
-    yin = yin / 20;
+    xin = xin / 30;
+    yin = yin / 30;
     var n0, n1, n2; // Noise contributions from the three corners
     // Skew the input space to determine which simplex cell we're in
     var F2 = 0.5*(Math.sqrt(3.0)-1.0);

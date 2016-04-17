@@ -2,13 +2,13 @@ var game = window.game;
 var player = require('player');
 var random = require('random');
 var simplexNoise = require('perlin');
+var Tile = require('tile');
+var specs = require('specs')
 
 var world = {};
 var simplex = {};
-var specs = {
-    size: 30,
-    chunk: 15
-}
+
+var tiles = [];
 
 var maps = [];
 
@@ -23,12 +23,20 @@ world.emptyMap = function() {
 world.preCreate = function(){
     game.world.setBounds(0, 0, 10000, 10000);
     game.physics.startSystem(Phaser.Physics.P2JS);
+
+    //INIT FOR COLLISION EVENTS
+    game.physics.p2.setImpactEvents(true);
+    game.enemyCollisionGroup = game.physics.p2.createCollisionGroup();
+    game.projectileCollisionGroup = game.physics.p2.createCollisionGroup();
+    game.physics.p2.updateBoundsCollisionGroup();
+
     world.tileGroup = game.add.group();
     world.startingPointGroup = game.add.group();
     world.createStartingPoint();
     game.camera.follow(player.entity);
     game.camera.deadzone = new Phaser.Rectangle(50, 50, 600, 400);
     simplex = simplexNoise.create();
+
 }
 
 world.postCreate = function() {
@@ -39,19 +47,16 @@ world.createMap = function(chunk_y, chunk_x) {
     random.setSeed(chunk_x, chunk_y);
     for (var y = chunk_y * specs.chunk; (y < specs.chunk + (chunk_y * specs.chunk) ); y++) {
         for (var x = chunk_x * specs.chunk; (x < specs.chunk + (chunk_x * specs.chunk)) ; x++) {
-            var bounds = new Phaser.Rectangle(y * specs.size, x * specs.size, specs.size, specs.size);
-            var graphics = game.add.graphics(bounds.y, bounds.x);
-            if (simplex.noise(x, y) > 0){
-                graphics.beginFill(0x00ADA7);
-                game.physics.p2.enable(graphics, true);
-                graphics.body.static = true;
-            } else{
-                graphics.beginFill(0xD9CC3C);
+            var rng = simplex.noise(x, y)
+            if(tiles[chunk_x] == undefined){
+                tiles[chunk_x] = [];
             }
-            graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
-            graphics.z = 0;
+            if(tiles[chunk_x][chunk_y] == undefined){
+                tiles[chunk_x][chunk_y] = [];
+            }
+            var tileGraphic = new Tile(x, y, rng, world);
 
-            world.tileGroup.add(graphics);
+            tiles[chunk_x][chunk_y].push(tileGraphic.render());
         }
     }
     game.world.sendToBack(world.tileGroup);
@@ -73,9 +78,10 @@ world.updateMap = function() {
 
     for(var x in accepted_maps) {
         var acceptedMapCoordinates = accepted_maps[x].split(".");
-
+        var found = false;
         var accepted = true;
         for(var y in maps) {
+            found = true;
             var mapCoordinates = maps[y].split(".");
             if (acceptedMapCoordinates[0] == mapCoordinates[0] && acceptedMapCoordinates[1] == mapCoordinates[1]) {
                 accepted = false;
@@ -84,12 +90,29 @@ world.updateMap = function() {
 
         if(accepted) {
             maps.push(acceptedMapCoordinates[0] + "." + acceptedMapCoordinates[1]);
-            setTimeout(function(acceptedMapCoordinates){
-                world.createMap(acceptedMapCoordinates[0], acceptedMapCoordinates[1]);
-            }, 0, acceptedMapCoordinates)
-
+            world.createMap(acceptedMapCoordinates[0], acceptedMapCoordinates[1]);
         }
     }
+    for(var y in maps) {
+        var notFoundMapCoordinates = maps[y].split(".");
+        var found = false;
+        for (var x in accepted_maps) {
+            var acceptedMapCoordinates = accepted_maps[x].split(".");
+            if (acceptedMapCoordinates[0] == notFoundMapCoordinates[0] && acceptedMapCoordinates[1] == notFoundMapCoordinates[1]) {
+                found = true
+                break;
+            }
+        }
+        if(!found){
+            var chunkTiles = tiles[notFoundMapCoordinates[1]][notFoundMapCoordinates[0]];
+
+            for (x in chunkTiles) {
+                chunkTiles[x].destroy();
+            }
+            maps.splice(y, 1);
+        }
+    }
+
 }
 
 world.getTilesAroundPlayer = function(r) {  //radius  
@@ -109,7 +132,8 @@ world.getTilesAroundPlayer = function(r) {  //radius
         for (var j = 0; j < r*2 + 1; j++) {
             var x = p_x - r + j;
             var y = p_y - r + i;
-            if (simplex.noise(x, y) > 0) {
+            var solid = tile.getType(simplex.noise(x, y)).solid;
+            if (solid) {
                 //obstructable
                 tiles.grid[i][j] = 1;
             } else {
@@ -123,6 +147,10 @@ world.getTilesAroundPlayer = function(r) {  //radius
 
 world.update = function() {
 
+}
+
+world.getTileSize = function() {
+    return specs.size;
 }
 
 world.createStartingPoint = function() {

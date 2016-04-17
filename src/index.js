@@ -12,9 +12,11 @@ var inventoryScreen = require('inventoryScreen');
 
 var sound = require('sound');
 var character = require('character');
+var hud = require('hud');
 
 
 function preload() {
+
 	game.time.advancedTiming = true;
 	world.preload();
 	player.preload();
@@ -22,7 +24,7 @@ function preload() {
 	projectile.preload();
 	projectileFactory.preload();
 	sound.preload();
-
+	hud.preload();
 
 }
 
@@ -37,9 +39,12 @@ function create() {
 	projectileFactory.create();
 
 	camera.create();
+	hud.create();
 	world.postCreate();
+
 	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
 	inventoryScreen.create();
+	mobFactory.spawnMob(5100, 5000, mobFactory.defaultMobType, 10);
 }
 
 var i = 0;
@@ -51,6 +56,7 @@ function update() {
 function render() {
 	camera.render();
 	player.render();
+	hud.render();
 }
 
 function tick() {
