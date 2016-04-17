@@ -37,13 +37,11 @@ classes.calculate_modifier = function (character, stats){
         if(character.getWeapon().affinity != character.type){
             stats.strength -= 5
             stats.wisdom -= 5
-            stats.luck -= 5
             stats.dexterity -= 5
         }
     }else{
         stats.strength -= 10
         stats.wisdom -= 10
-        stats.luck -= 10
         stats.dexterity -= 10
     }
     if(character.getArmour() != null){
