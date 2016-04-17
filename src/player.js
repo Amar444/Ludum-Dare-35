@@ -208,8 +208,8 @@ player.update = function() {
 
                     var x_velocity = -Math.cos(angle2)*20;
                     var y_velocity = -Math.sin(angle2)*20;
-                    m_mobs[m].move(x_velocity,y_velocity)
-                    m_mobs[m].current_health--
+                    m_mobs[m].move(x_velocity,y_velocity);
+                    m_mobs[m].current_health--;
                 }
                 // debugger
                 console.log(m_mobs.length)
