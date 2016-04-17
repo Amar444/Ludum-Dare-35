@@ -57,6 +57,7 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     mob.entity.body.collides([game.projectileCollisionGroup, game.physics.p2.everythingCollisionGroup]);
     mob.entity.body.debug = true;
     mobs.push(mob);
+    game.junkGroup.add(mob.entity);
 
     /* Returns the mob in case you want to do something special with it */
     return mob;
