@@ -38,9 +38,7 @@ player.create = function() {
     console.log("HI")
     
     player.entity.body.setCollisionGroup(game.playerCollisionGroup)
-    player.entity.body.collides([game.mobCollisionGroup,
-        game.projectileCollisionGroup,
-        game.playerCollisionGroup]);
+    player.entity.body.collides(game.allCollisionGroups);
     this.createWeapon();
     game.input.keyboard.addKey(Phaser.Keyboard.C).onDown.add(function () {
         player.mutate();
@@ -74,7 +72,6 @@ player.render = function() {
     sprite.beginFill(0xEDBE00);
     sprite.drawCircle(0, 0, Math.abs(iter) + 5);
     var child = player.entity.addChild(sprite);
-}
 
 
     weaponsprite = game.add.graphics(0, 0);

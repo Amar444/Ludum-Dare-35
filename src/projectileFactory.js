@@ -74,7 +74,7 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
         p.entity.body.velocity.x = x_velocity;
         p.entity.body.velocity.y = y_velocity;
         p.entity.body.setCollisionGroup(game.projectileCollisionGroup);
-        p.entity.body.collides([game.projectileCollisionGroup]);
+        p.entity.body.collides([game.allCollisionGroups]);
         p.entity.body.collides([game.playerCollisionGroup, game.mobCollisionGroup], projectile.collisionHandler);
         p.entity.body.daddy = p;
         p.entity.name == "projectile";
