@@ -93,7 +93,8 @@ user_class.new_user = function (){
                     if(isFinite(i["mod_"+k])){
                         stats[k] += i["mod_"+k];
                     }else{
-                        console.error("Missing weapon?")
+                        console.error("Missing weapon?", i,"mod_"+k)
+                        debugger
                     }
                 }
             })
@@ -111,6 +112,14 @@ user_class.new_user = function (){
 user_class.getCurrentUser = function(){
     if (!singleton) {
         singleton = user_class.new_user();
+        for(var g = 0;g < 3;g++){
+            singleton.inventory.push(item.random_weapon(1));
+            singleton.inventory.push(item.random_armour(1));
+            singleton.inventory.push(item.random_shield(1));
+            singleton.inventory.push(item.random_hat(1));
+        }
+
+
     }
     return singleton;
 }
