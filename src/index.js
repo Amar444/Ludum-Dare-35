@@ -34,8 +34,14 @@ function create() {
 	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
 }
 
+var i = 0;
 function update() {
 	player.update();
+	if (!world.emptyMap() && i < 1) {
+		var chunks = world.getChunks();
+		console.log(chunks);
+		i++;
+	}
 }
 
 function render() {

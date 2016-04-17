@@ -1,8 +1,12 @@
 var random = {};
-var seed = 1815;
+var seed = 1;
 
 random.newSeed = function (new_seed){
     seed = new_seed;
+}
+
+random.setSeed = function (chunk_x, chunk_y) {
+    seed = chunk_x + chunk_y;
 }
 
 random.newFloat = function () {
