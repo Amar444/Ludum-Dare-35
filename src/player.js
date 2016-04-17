@@ -10,12 +10,13 @@ var speed = 200;
 var player = {};
 var projectile = require("projectileFactory")
 var init_char = require("character")
+var shapes = require("shapes");
 
 player.preload = function(){
 }
 
 player.create = function() {
-    player.character = init_char.new_user();
+    player.character = init_char.getCurrentUser();
     var sprite = game.add.graphics(0, 0);
     sprite.beginFill(0x222222);
     sprite.drawCircle(0, 0, 32);
@@ -66,6 +67,7 @@ player.drawWeapon = function(sprite) {
             sprite.lineTo(x*25, y*25);            
             break;
         case "Melee":
+            shapes.item_weapon(sprite, 32);
             break;
         case "Magic":
             break;
@@ -86,7 +88,7 @@ player.update = function() {
         vert = !vert;
     if (cursors.left.isDown || keys.a.isDown)
         hori = !hori;
-    if (cursors.right.isDown || keys.d.isDown)
+    if (cursors.right.iesDown || keys.d.isDown)
         hori = !hori;
 
     if (vert & hori)
@@ -110,6 +112,7 @@ player.update = function() {
                 projectile.spawnProjectile(player, "mouse", projectile.defaultProjectile);
                 break;
             case "Melee":
+
                 break;
             case "Magic":
                 break;
