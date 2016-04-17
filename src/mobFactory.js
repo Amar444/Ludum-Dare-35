@@ -14,8 +14,11 @@ mobFactory.preload = function(){
 }
 
 mobFactory.update = function() {
-    for (var mob in this.mobs) {
-        this.mobs[mob].update();
+    for (var mob in mobs) {
+        mobs[mob].update();
+        if (mobs[mob].current_health <= 0) {
+            mobs.splice(mob, 1);
+        }
     }
     if (game.input.mousePointer.isDown && this.mobtest) {
         this.mobtest = false;
@@ -23,10 +26,10 @@ mobFactory.update = function() {
         for (var mob in mobs) {
             mobs[mob].update();
         }
-        easystar.calculate();
         if (game.input.mousePointer.isDown) {
         }
     }
+    easystar.calculate();
 }
 
 mobFactory.create = function () {
@@ -39,6 +42,7 @@ mobFactory.create = function () {
     defaultSprite.drawCircle(0, 0, 32);
     defaultSprite.beginFill(0xFF0000);
     defaultSprite.drawCircle(0, 0, 25);
+
 
     mobFactory.defaultMobType = new mobType(mobFactory.defaultAi, defaultSprite.generateTexture());
     defaultSprite.destroy();
@@ -54,10 +58,11 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     mob.update = mobType.ai;
     mob.move = mobType.move;
     mob.entity.body.setCollisionGroup(game.enemyCollisionGroup);
-
-    mob.entity.body.collides(game.projectileCollisionGroup);
+    mob.entity.body.collides([game.projectileCollisionGroup, game.physics.p2.everythingCollisionGroup]);
     mob.entity.body.debug = true;
     mobs.push(mob);
+    game.junkGroup.add(mob.entity);
+    mob.entity.body.parent = mob;
 
     /* Returns the mob in case you want to do something special with it */
     return mob;
@@ -70,7 +75,6 @@ mobFactory.defaultAi = function () {
     var tiles = world.getTilesAroundPlayer(rad);
     var self = this;
     easystar.setGrid(tiles.grid);
-    console.table(tiles.grid);
     if (m_x >= tiles.pX - rad && m_x <= tiles.pX + rad &&
         m_y >= tiles.pY - rad && m_y <= tiles.pY + rad) {
         easystar.findPath(rad + m_x - tiles.pX, rad + m_y - tiles.pY, rad, rad, (path) => {
@@ -78,11 +82,9 @@ mobFactory.defaultAi = function () {
                 self.move(0, 0);
             } else {
                 var next = path.slice(0, 1)[0];
-                console.log(path);
 
                 var dx = 0;
                 var dy = 0;
-                console.log(next, rad);
                 if (next.x < rad)
                     dx++;
                 if (next.x > rad)
@@ -97,6 +99,15 @@ mobFactory.defaultAi = function () {
         });
     } else {
         self.move(0, 0);
+    }
+
+    if (this.entity.body.hit) {
+        this.entity.body.hit = false;
+        var dmg = this.entity.body.hitDamage;
+        this.current_health -= 1;
+        if (this.current_health <= 0) {
+            this.entity.destroy();
+        }
     }
 };
 

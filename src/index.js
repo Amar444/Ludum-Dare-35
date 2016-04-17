@@ -18,6 +18,7 @@ var hud = require('hud');
 function preload() {
 
 	game.time.advancedTiming = true;
+	game.junkGroup = game.add.group();
 	world.preload();
 	player.preload();
 	mobFactory.preload();
@@ -29,9 +30,6 @@ function preload() {
 }
 
 function create() {
-	for(var i = 0; i < 10;i++){
-		console.log(character.random_mob(10));
-	}
 	world.preCreate();
 	sound.create();
 	player.create();

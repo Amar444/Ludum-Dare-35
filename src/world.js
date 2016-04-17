@@ -5,6 +5,7 @@ var simplexNoise = require('perlin');
 var Tile = require('tile');
 var specs = require('specs')
 
+var bmd;
 var world = {};
 var simplex = {};
 
@@ -22,6 +23,9 @@ world.emptyMap = function() {
 
 world.preCreate = function(){
     game.world.setBounds(0, 0, 10000, 10000);
+    bmd = game.add.bitmapData(10000, 10000);
+    bmd.addToWorld();
+    world.bmd = bmd;
     game.physics.startSystem(Phaser.Physics.P2JS);
 
     //INIT FOR COLLISION EVENTS
@@ -54,13 +58,14 @@ world.createMap = function(chunk_y, chunk_x) {
             if(tiles[chunk_x][chunk_y] == undefined){
                 tiles[chunk_x][chunk_y] = [];
             }
-            var tileGraphic = new Tile(x, y, rng, world);
 
-            tiles[chunk_x][chunk_y].push(tileGraphic.render());
+
+            tiles[chunk_x][chunk_y].push(Tile.create(x, y, rng, world).preRender());
         }
     }
     game.world.sendToBack(world.tileGroup);
 }
+
 
 world.updateMap = function() {
     var coordinates = player.entity;
@@ -132,7 +137,7 @@ world.getTilesAroundPlayer = function(r) {  //radius
         for (var j = 0; j < r*2 + 1; j++) {
             var x = p_x - r + j;
             var y = p_y - r + i;
-            var solid = tile.getType(simplex.noise(x, y)).solid;
+            var solid = Tile.getType(simplex.noise(x, y)).solid;
             if (solid) {
                 //obstructable
                 tiles.grid[i][j] = 1;
