@@ -19,7 +19,7 @@ mobFactory.update = function(){
         mob.update;
     }
     if(game.input.mousePointer.isDown){
-        this.spawnMob(player.entity.x+250, player.entity.y+250, mobFactory.defaultMobType, 20);
+       // this.spawnMob(player.entity.x+250, player.entity.y+250, mobFactory.defaultMobType, 20);
     }
 }
 
