@@ -6,6 +6,8 @@ var world = require('world');
 var projectiles = require("projectileFactory")
 var projectile = require("projectile");
 var specs = require('specs');
+var random = require('random');
+var TileManager = require('tileManager');
 
 
 var mobFactory = {};
@@ -35,6 +37,32 @@ mobFactory.update = function() {
         }
     }
     easystar.calculate();
+    this.spawn();
+}
+
+mobFactory.spawn = function() {
+    var freq = 120;
+    var chance = random.newIntBetween(0, freq);
+    if (chance != 1)
+        return;
+    var x = player.entity.x;
+    var y = player.entity.y;
+    var minDistance = 200;
+    var variation = 100;
+    
+    var dx = random.newIntBetween(minDistance, minDistance + variation);
+    var dy = random.newIntBetween(minDistance, minDistance + variation);
+    if (random.newFloat > 0.5)
+        dx = -dx;
+    if (random.newFloat > 0.5)
+        dy = -dy;
+
+    console.log(dx, dy);
+    
+    var solid = TileManager.getType(world.simplex.noise(x+dx, y+dy)).solid;
+    if (!solid) {
+        this.spawnMob(x + dx, y + dy, mobFactory.defaultMobType, world.getMobLevel());
+    }
 }
 
 mobFactory.create = function () {

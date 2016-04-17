@@ -36,6 +36,7 @@ world.preCreate = function(){
     game.camera.follow(player.entity);
 
     simplex = simplexNoise.create();
+    world.simplex = simplex;
 };
 
 world.postCreate = function() {
