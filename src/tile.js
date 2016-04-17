@@ -1,55 +1,70 @@
+var specs = require('specs')
 
+class Tile {
+    constructor(x, y, simplex, world) {
+        this.x = x;
+        this.y = y;
+        this.simplex = simplex;
 
-var tile = {};
+        if(this.simplex < -0.3){
+            this.type = new water();
+        } else if(this.simplex > 0.5) {
+            this.type = new stone();
+        } else if(this.simplex > 0.4 && this.simplex < 0.5){
+            this.type = new mud();
+        } else {
+            this.type = new grass();
+        }
+        this.world = world;
 
-tile.create = function(x, y, simplex, specs, world){
-    var bounds = new Phaser.Rectangle(y * specs.size, x * specs.size, specs.size, specs.size);
-    var graphics = game.add.graphics(bounds.y, bounds.x);
-    var tile;
-
-    if(simplex < -0.3){
-        tile = tiles.water;
-    } else if(simplex > 0.5) {
-        tile = tiles.stone;
-    } else if(simplex > 0.4 && simplex < 0.5){
-        tile = tiles.mud;
-    } else {
-        tile = tiles.grass;
     }
-    tile.render(graphics);
 
-    graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
-    graphics.z = 0;
+    render() {
+        var bounds = new Phaser.Rectangle(this.y * specs.size, this.x * specs.size, specs.size, specs.size);
+        var graphics = game.add.graphics(bounds.y, bounds.x);
 
-    world.tileGroup.add(graphics);
+        graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
+        graphics.z = 0;
 
-    return graphics;
-}
+        graphics = this.type.render(graphics);
 
-var tiles = {
-    water: {
-        render: function(graphics){
-            graphics.beginFill(0x40a4df);
-            game.physics.p2.enable(graphics);
-            graphics.body.static = true;
-        }
-    },
-    grass: {
-        render: function(graphics) {
-            graphics.beginFill(0x4DBD33);
-        }
-    },
-    stone: {
-        render: function(graphics){
-            graphics.beginFill(0x5C4033);
-            game.physics.p2.enable(graphics);
-            graphics.body.static = true;
-        }
-    },
-    mud: {
-        render: function(graphics){
-            graphics.beginFill(0x6F4242);
-        }
+        this.world.tileGroup.add(graphics);
+
+        return graphics;
     }
 }
-module.exports = tile
+
+class water{
+    render(graphics){
+        graphics.beginFill(0x40a4df);
+        game.physics.p2.enable(graphics);
+        graphics.body.static = true;
+        return graphics;
+    }
+}
+
+class grass{
+    render(graphics) {
+        graphics.beginFill(0x4DBD33);
+        return graphics;
+    }
+}
+
+class mud{
+    render(graphics){
+        graphics.beginFill(0x6F4242);
+        return graphics;
+    }
+
+}
+
+class stone{
+    render(graphics){
+        graphics.beginFill(0x5C4033);
+        game.physics.p2.enable(graphics);
+        graphics.body.static = true;
+        return graphics;
+    }
+}
+
+module.exports = Tile;

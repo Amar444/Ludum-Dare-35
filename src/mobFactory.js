@@ -9,18 +9,7 @@ var mobs = new Array();
 var easystar;
 
 mobFactory.preload = function(){
-    easystar = new EasyStar.js();
-    easystar.setAcceptableTiles([0]);
-    easystar.enableDiagonals();
-
-    var defaultSprite = game.add.graphics(0, 0);
-    defaultSprite.beginFill(0x222222);
-    defaultSprite.drawCircle(0, 0, 32);
-    defaultSprite.beginFill(0xFF0000);
-    defaultSprite.drawCircle(0, 0, 25);
-
-    mobFactory.defaultMobType = new mobType(mobFactory.defaultAi, defaultSprite.generateTexture());
-    defaultSprite.destroy();
+    game.load.script('EasyStar', '_plugins/easystar.js');
 }
 
 mobFactory.update = function(){
@@ -34,6 +23,18 @@ mobFactory.update = function(){
 }
 
 mobFactory.create = function () {
+    easystar = new EasyStar.js();
+    easystar.setAcceptableTiles([0]);
+    easystar.enableDiagonals();
+
+    var defaultSprite = game.add.graphics(0, 0);
+    defaultSprite.beginFill(0x222222);
+    defaultSprite.drawCircle(0, 0, 32);
+    defaultSprite.beginFill(0xFF0000);
+    defaultSprite.drawCircle(0, 0, 25);
+
+    mobFactory.defaultMobType = new mobType(mobFactory.defaultAi, defaultSprite.generateTexture());
+    defaultSprite.destroy();
     game.enemyCollisionGroup = game.physics.p2.createCollisionGroup();
 }
 

@@ -2,14 +2,12 @@ var game = window.game;
 var player = require('player');
 var random = require('random');
 var simplexNoise = require('perlin');
-var tile = require('tile');
+var Tile = require('tile');
+var specs = require('specs')
 
 var world = {};
 var simplex = {};
-var specs = {
-    size: 30,
-    chunk: 15
-}
+
 var tiles = [];
 
 var maps = [];
@@ -49,7 +47,9 @@ world.createMap = function(chunk_y, chunk_x) {
             if(tiles[chunk_x][chunk_y] == undefined){
                 tiles[chunk_x][chunk_y] = [];
             }
-            tiles[chunk_x][chunk_y].push(tile.create(x, y, rng, specs, world));
+            var tileGraphic = new Tile(x, y, rng, world);
+
+            tiles[chunk_x][chunk_y].push(tileGraphic.render());
         }
     }
     game.world.sendToBack(world.tileGroup);
@@ -97,7 +97,6 @@ world.updateMap = function() {
             }
         }
         if(!found){
-            console.log(player_chunk_y + " " +player_chunk_x + " " + notFoundMapCoordinates[0] + " " + notFoundMapCoordinates[1]);
             var chunkTiles = tiles[notFoundMapCoordinates[1]][notFoundMapCoordinates[0]];
 
             for (x in chunkTiles) {
