@@ -125,6 +125,10 @@ world.update = function() {
 
 }
 
+world.getTileSize = function() {
+    return specs.size;
+}
+
 world.createStartingPoint = function() {
     var width = 200;
     var height = 200;

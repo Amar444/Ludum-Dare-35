@@ -38,6 +38,10 @@ function create() {
 	camera.create();
 	world.postCreate();
 	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
+	mobFactory.spawnMob(5100, 5000, mobFactory.defaultMobType, 10);
+}
+
+function init() {
 }
 
 var i = 0;
