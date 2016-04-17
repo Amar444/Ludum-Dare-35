@@ -9,7 +9,7 @@ var environment = require('environment');
 var bmd;
 var world = {};
 var simplex = {};
-var mobLevelUpAfterPixels = 800;
+var mobLevelUpAfterPixels = 600;
 var mobLevel;
 
 var maps = [];
