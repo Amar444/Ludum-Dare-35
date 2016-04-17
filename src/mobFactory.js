@@ -16,6 +16,9 @@ mobFactory.preload = function(){
 mobFactory.update = function() {
     for (var mob in mobs) {
         mobs[mob].update();
+        if (mobs[mob].stats.current_health <= 0) {
+            mobs.splice(mob, 1);
+        }
     }
     if (game.input.mousePointer.isDown && this.mobtest) {
         this.mobtest = false;
@@ -39,6 +42,7 @@ mobFactory.create = function () {
     defaultSprite.drawCircle(0, 0, 32);
     defaultSprite.beginFill(0xFF0000);
     defaultSprite.drawCircle(0, 0, 25);
+
 
     mobFactory.defaultMobType = new mobType(mobFactory.defaultAi, defaultSprite.generateTexture());
     defaultSprite.destroy();
@@ -93,6 +97,14 @@ mobFactory.defaultAi = function () {
         });
     } else {
         self.move(0, 0);
+    }
+
+    if (this.entity.body.hit) {
+        var dmg = this.entity.body.hitDamage;
+        this.stats.current_health -= dmg;
+        if (this.stats.current_health <= 0) {
+            this.entity.destroy();
+        }
     }
 };
 

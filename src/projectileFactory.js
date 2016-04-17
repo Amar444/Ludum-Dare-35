@@ -12,11 +12,14 @@ projectileFactory.preload = function(){
 
 projectileFactory.create = function () {
     var defaultCollisionHandler = function(projectile, target){
-        console.log(projectile.entity)
-        projectile.destroy();
-        target.destroy();
+        projectile.hit = true;
+        target.hit = true;
     };
     this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, game.enemyCollisionGroup, defaultCollisionHandler);
+}
+
+projectileFactory.update = function () {
+
 }
 
 projectileFactory.spawnProjectile = function(source, target, projectile) {
