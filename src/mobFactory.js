@@ -14,8 +14,12 @@ mobFactory.preload = function(){
 }
 
 mobFactory.update = function() {
-    for (var mob in this.mobs) {
-        this.mobs[mob].update();
+    for (var mob in mobs) {
+        mobs[mob].update();
+        console.log(mobs);
+        if (mobs[mob].current_health <= 0) {
+            mobs.splice(mob, 1);
+        }
     }
     if (game.input.mousePointer.isDown && this.mobtest) {
         this.mobtest = false;
@@ -23,10 +27,10 @@ mobFactory.update = function() {
         for (var mob in mobs) {
             mobs[mob].update();
         }
-        easystar.calculate();
         if (game.input.mousePointer.isDown) {
         }
     }
+    easystar.calculate();
 }
 
 mobFactory.create = function () {
@@ -39,6 +43,7 @@ mobFactory.create = function () {
     defaultSprite.drawCircle(0, 0, 32);
     defaultSprite.beginFill(0xFF0000);
     defaultSprite.drawCircle(0, 0, 25);
+
 
     mobFactory.defaultMobType = new mobType(mobFactory.defaultAi, defaultSprite.generateTexture());
     defaultSprite.destroy();
@@ -94,6 +99,15 @@ mobFactory.defaultAi = function () {
         });
     } else {
         self.move(0, 0);
+    }
+
+    if (this.entity.body.hit) {
+        this.entity.body.hit = false;
+        var dmg = this.entity.body.hitDamage;
+        this.current_health -= 1;
+        if (this.current_health <= 0) {
+            this.entity.destroy();
+        }
     }
 };
 
