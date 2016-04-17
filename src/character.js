@@ -3,6 +3,7 @@ var user_class = {};
 var item = require('item');
 var random = require('random');
 
+var singleton;
 
 user_class.random_mob = function (level){
     if(!isFinite(level) || level <= 0 || level > 10000){
@@ -20,7 +21,7 @@ user_class.random_mob = function (level){
     u.shield = u.inventory.push(s) - 1;
     return u;
 
-    
+
 }
 user_class.new_user = function (){
     var user = {};
@@ -38,6 +39,7 @@ user_class.new_user = function (){
     user.getStats = function () {
         var stats = {
             health: 10,
+            maxHealth: 12,
             speed: 10,
             strength: 10,
             stamina: 10,
@@ -68,6 +70,13 @@ user_class.new_user = function (){
 
     return user;
 };
+
+user_class.getCurrentUser = function(){
+    if (!singleton) {
+        singleton = user_class.new_user();
+    }
+    return singleton;
+}
 
 
 var namesMale = ["Acorn","Aed","Aeden","Alaneo","Albedo","Ali","Almond","Aloha","Anthurium","Aodh","Aphid","Apogee","Aqua","Ash","Astro","Aven","Avo","Axis","Badger","Barley","Basil","Bear","Berry","Bim","Birch","Blathnat","Blaze","Bracken","Bramble","Briar","Brock","Bud","Bumble","Calico","Canyon","Caraway","Carpus","Carrot","Cedar","Christopher","Cinnamon","Cirro","Cirrus","Citron","Cloud","Coconut","Comet","Cookie","Cosmo","Crator","Cricket","Daybreak","Dew","Dewdrop","Diaspor","Dragonfly","Drake","Dune","Dusk","Earth","Echo","Elliot","Elm","Finch","Firo","Flame","Flamo","Flare","Flax","Flint","Flix","Florian","Fox","Foxglove","Freddie","Frost","Frostbite","Ginko","Happy","Harbor","Harley","Helio","Herb","Indi","Indigo","Jamie","Jarrah","Jeremy","Karma","Koko","Lake","Lapis","Lark","Laurel","Lazuli","Lemony","Light","Lightning","Liri","Lucky","Luke","Magpie","Mahogany","Mango","Marlie","Meadow","Mercury","Midnight","Miles","Mitah","Moon","Moonbeam","Moonbean","Moptop","Morel","Mountain","Mulberry","Nebula","Nelly","Newt","Nightfall","Nightshade","Nimbus","North","Nova","Novus","Nutmeg","Nyx","Oak","Ocean","Oleander","Oliver","Onyx","Oregano","Pandora","Peanut","Pecan","Pepper","Peridot","Persimmon","Petal","Pine","Pinecone","Pistachio","Plume","Poppy","Pyro","Quicksilver","Quinn","Rain","Raine","Reef","Rhubarb","Ridge","Robbie","Robin","Rock","Rocky","Saffron","Scorpia","Shade","Silver","Sky","Skylark","Smokey","Sneezy","Snow","Snowdrop","Snowflake","Spark","Spice","Spring","Sprinkle","Sprinkles","Stardust","Starfish","Stargazer","Stone","Storm","Stormy","Strombo","Sunbeam","Sundew","Sunrise","Sunset","Tadpole","Tangy","Tarragon","Thicket","Thistle","Tidal","Tiger","Timber","Timothy","Tiny","Tori","Trevan","Trumpet","Turnip","Twig","Walnut","Willow","Winnie","Wolf","Woods","Zephyr"];

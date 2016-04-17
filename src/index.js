@@ -6,11 +6,13 @@ var world = require('world');
 var camera = require('camera');
 var sound = require('sound');
 var character = require('character');
+var hud = require('hud');
 
 function preload() {
 	world.preload();
 	player.preload();
 	sound.preload();
+	hud.preload();
 }
 
 function create() {
@@ -21,6 +23,7 @@ function create() {
 	sound.create();
 	player.create();
 	camera.create();
+	hud.create();
 
 	game.time.events.loop(Phaser.Timer.SECOND, world.updateMap, this);
 }
@@ -32,8 +35,7 @@ function update() {
 function render() {
 	camera.render();
 	player.render();
+	hud.render();
 }
-
-
 
 module.exports = game;
