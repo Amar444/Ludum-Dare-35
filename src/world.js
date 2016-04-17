@@ -4,6 +4,7 @@ var random = require('random');
 var simplexNoise = require('perlin');
 var tile = require('tile');
 
+var bmd;
 var world = {};
 var simplex = {};
 var specs = {
@@ -24,6 +25,9 @@ world.emptyMap = function() {
 
 world.preCreate = function(){
     game.world.setBounds(0, 0, 10000, 10000);
+    bmd = game.add.bitmapData(10000, 10000);
+    bmd.addToWorld();
+    world.bmd = bmd;
     game.physics.startSystem(Phaser.Physics.P2JS);
     world.tileGroup = game.add.group();
     world.startingPointGroup = game.add.group();
@@ -97,7 +101,6 @@ world.updateMap = function() {
             }
         }
         if(!found){
-            console.log(player_chunk_y + " " +player_chunk_x + " " + notFoundMapCoordinates[0] + " " + notFoundMapCoordinates[1]);
             var chunkTiles = tiles[notFoundMapCoordinates[1]][notFoundMapCoordinates[0]];
 
             for (x in chunkTiles) {

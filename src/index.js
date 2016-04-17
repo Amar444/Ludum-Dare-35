@@ -24,9 +24,6 @@ function preload() {
 }
 
 function create() {
-	for(var i = 0; i < 10;i++){
-		console.log(character.random_mob(10));
-	}
 	world.preCreate();
 	sound.create();
 	player.create();

@@ -1,6 +1,6 @@
 var game = window.game;
 
-projectile.PROJECTILE_COOLDOWN = 660;
+projectile.PROJECTILE_COOLDOWN = 200;
 projectile.PROJECTILE_SPEED = 600;
 projectile.PROJECTILE_DAMAGE = 0;
 
@@ -16,8 +16,10 @@ function projectile(velocity, damageValue, cooldownTime, texture, collideGroups,
 
 projectile.preload = function(){
     var defaultSprite = game.add.graphics();
-    defaultSprite.beginFill(0xFF002F);
-    defaultSprite.drawRect(0,0,20, 5);
+    defaultSprite.beginFill(0x000000);
+    defaultSprite.drawCircle(0,0, 7);
+    defaultSprite.beginFill(0xEDBE00);
+    defaultSprite.drawCircle(0,0, 5);
     this.DEFAULT_TEXTURE = defaultSprite.generateTexture();
     defaultSprite.destroy();
 };

@@ -1,15 +1,17 @@
 var game = window.game;
 
 var tile_object = {}
+var bmd;
 
 
 tile_object.create = function(x, y, simplex, specs, world){
+    bmd = world.bmd;
     var bounds = new Phaser.Rectangle(y * specs.size, x * specs.size, specs.size, specs.size);
     var graphics = game.add.graphics(bounds.y, bounds.x);
     var tile;
 
     tile = tile_object.getType(simplex);
-    tile.render(graphics);
+    tile.render(graphics, x, y, specs.size);
 
     graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
     graphics.z = 0;
@@ -36,10 +38,13 @@ tile_object.getType = function(simplex) {
 var tiles = {
     water: {
         solid: true,
-        render: function(graphics){
+        render: function(graphics, x, y, tilesize){
             graphics.beginFill(0x40a4df);
             game.physics.p2.enable(graphics);
             graphics.body.static = true;
+
+            //var c = Phaser.Color.interpolateColor(0x66d973, 0x40b54d, 30, 5);
+            //bmd.rect(x * tilesize, y * tilesize, tilesize, tilesize, Phaser.Color.getWebRGB(c));
         }
     },
     grass: {
