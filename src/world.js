@@ -62,6 +62,7 @@ world.createMap = function(chunk_y, chunk_x) {
     game.world.sendToBack(world.tileGroup);
 }
 
+
 world.updateMap = function() {
     var coordinates = player.entity;
     var player_chunk_y = Math.floor(coordinates.y / specs.size / specs.chunk);

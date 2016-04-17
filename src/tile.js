@@ -2,6 +2,7 @@
 var specs = require('specs')
 
 class Tile {
+
     static create(x, y, simplex, world){
         var tile;
         switch(true){
@@ -21,6 +22,7 @@ class Tile {
                 tile = new Stone(x, y, simplex, world);
                 break;
         }
+
         return tile;
     }
 
@@ -37,18 +39,7 @@ class Tile {
         graphics = this.render(graphics);
         graphics.z = 0;
         graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
-
         this.world.tileGroup.add(graphics);
-
-        return graphics;
-    }
-}
-
-class Tree extends Tile{
-    render(graphics){
-        graphicss.beginFill(0x5C4033);
-        game.physics.p2.enable(graphics);
-        graphics.body.static = true;
         return graphics;
     }
 }
