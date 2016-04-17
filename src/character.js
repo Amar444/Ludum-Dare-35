@@ -2,6 +2,7 @@ var user_class = {};
 
 var item = require('item');
 var random = require('random');
+var classes = require('classes');
 
 
 user_class.random_mob = function (level){
@@ -27,17 +28,51 @@ user_class.new_user = function (){
 
     user.name = "";
     user.inventory = [];
+    user.current_health = 10;
     // from inventory
+    user.type = classes.get_random_class(true);
     user.weapon = -1;
     user.shield = -1;
     user.armour = -1;
     user.hat = -1;
 
 
+    user.getWeapon = function (){
+        if(user.weapon != -1){
+            return user.inventory[user.weapon];
+        }else{
+            return null;
+        }
+    };
+    user.getArmour = function (){
+        if(user.armour != -1){
+            return user.inventory[user.armour];
+        }else{
+            return null;
+        }
+    };
+    user.getHat = function (){
+        if(user.hat != -1){
+            return user.inventory[user.hat];
+        }else{
+            return null;
+        }
+    };
+
+    user.getShield = function (){
+        if(user.shield != -1){
+            return user.inventory[user.shield];
+        }else{
+            return null;
+        }
+    };
+
+
 
     user.getStats = function () {
         var stats = {
-            health: 10,
+            health: user.current_health,
+            armour: 10,
             speed: 10,
             strength: 10,
             stamina: 10,
@@ -51,6 +86,7 @@ user_class.new_user = function (){
         for(var k in stats){
             ["weapon","shield","armour","hat"].map(function (item){
                 if(user[item] != -1){
+                    // get Item from inverntory and apply the stats
                     var i = user.inventory[user[item]];
                     if(isFinite(i["mod_"+k])){
                         stats[k] += i["mod_"+k];
@@ -61,6 +97,7 @@ user_class.new_user = function (){
             })
 
         }
+        stats = classes.calculate_modifier(user, stats);
         return stats;
 
 
