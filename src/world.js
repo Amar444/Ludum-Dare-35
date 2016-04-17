@@ -54,9 +54,9 @@ world.createMap = function(chunk_y, chunk_x) {
             if(tiles[chunk_x][chunk_y] == undefined){
                 tiles[chunk_x][chunk_y] = [];
             }
-            var tileGraphic = new Tile(x, y, rng, world);
 
-            tiles[chunk_x][chunk_y].push(tileGraphic.render());
+
+            tiles[chunk_x][chunk_y].push(Tile.create(x, y, rng, world).preRender());
         }
     }
     game.world.sendToBack(world.tileGroup);
