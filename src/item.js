@@ -6,19 +6,28 @@ var classes = require('classes');
 
 game.random_weapon = function (level) {
     var item = game.random_item(level);
+    item.type = 'weapon';
     item.name = items.SEEDITEMWEAPONALL[random.newIntBetween(0, items.SEEDITEMWEAPONALL.length)];
     return item;
 }
 
 game.random_armour = function (level) {
     var item = game.random_item(level);
+    item.type = 'armour';
     item.name = items.SEEDITEMARMOR[random.newIntBetween(0, items.SEEDITEMARMOR.length)];
     return item;
 }
 
 game.random_shield = function (level) {
     var item = game.random_item(level);
+    item.type = 'shield';
     item.name = items.SEEDITEMARMORSHIELD[random.newIntBetween(0, items.SEEDITEMARMORSHIELD.length)];
+    return item;
+}
+game.random_hat = function (level) {
+    var item = game.random_item(level);
+    item.type = 'hat';
+    item.name = items.SEEDITEMABSTRACT[random.newIntBetween(0, items.SEEDITEMABSTRACT.length)];
     return item;
 }
 
@@ -44,6 +53,7 @@ game.random_item = function (level) {
     var split = random.newPercentageSplit(11);
 
     item.mod_health = mod_calc(split[0]);
+    item.mod_maxHealth = mod_calc(split[0]);
     item.mod_speed = mod_calc(split[1]);
     item.mod_strength = mod_calc(split[2]);
     item.mod_stamina = mod_calc(split[3]);
@@ -62,6 +72,7 @@ game.random_item = function (level) {
 game.new_item = function () {
     var new_item = {};
     new_item.name = '';
+    new_item.type = 'unknown';
 
     //weapon
     new_item.damage = 0;
