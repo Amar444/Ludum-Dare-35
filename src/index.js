@@ -47,6 +47,7 @@ function create() {
 
 var i = 0;
 function update() {
+	world.update();
 	player.update();
 	mobFactory.update();
 }
