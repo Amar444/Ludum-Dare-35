@@ -23,12 +23,10 @@ class Tile {
     render() {
         var bounds = new Phaser.Rectangle(this.y * specs.size, this.x * specs.size, specs.size, specs.size);
         var graphics = game.add.graphics(bounds.y, bounds.x);
-
-        graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
-        graphics.z = 0;
-
         graphics = this.type.render(graphics);
-
+        graphics.z = 0;
+        graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
+        
         this.world.tileGroup.add(graphics);
 
         return graphics;
