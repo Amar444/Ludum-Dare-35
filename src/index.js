@@ -37,10 +37,9 @@ function create() {
 var i = 0;
 function update() {
 	player.update();
-	if (!world.emptyMap() && i < 1) {
-		var chunks = world.getChunks();
+	if (!world.emptyMap() && i < 5) {
+		var chunks = world.getTilesAroundPlayer(3);
 		console.log(chunks);
-		i++;
 	}
 }
 
