@@ -5,6 +5,12 @@ var player = require('player');
 var world = require('world');
 var itemFactory = require('itemFactory');
 
+var projectiles = require("projectileFactory")
+var projectile = require("projectile");
+var specs = require('specs');
+
+
+
 var mobFactory = {};
 
 var mobs = new Array();
@@ -45,10 +51,23 @@ mobFactory.create = function () {
     defaultSprite.beginFill(0xFF0000);
     defaultSprite.drawCircle(0, 0, 25);
 
+    var defaultRangedSprite = game.add.graphics(0,0);
+    defaultRangedSprite.beginFill(0x121212);
+    defaultRangedSprite.drawRect(0, 0, 30, 30);
+    defaultRangedSprite.beginFill(0x666666);
+    defaultRangedSprite.drawRect(0, 0, 24, 24);
 
+    var defaultRangedCollisionHandler = function(target, A, B, equation){
+        if(target.sprite.name == "player"){
+            console.log("player got hit");
+        }
+    }
+
+    mobFactory.defaultRangedProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultRangedCollisionHandler)
     mobFactory.defaultMobType = new mobType(mobFactory.defaultAi, defaultSprite.generateTexture());
+    mobFactory.defaultRangedMob = new mobType(mobFactory.defaultRangedAi, defaultRangedSprite.generateTexture());
     defaultSprite.destroy();
-    game.enemyCollisionGroup = game.physics.p2.createCollisionGroup();
+    defaultRangedSprite.destroy();
 }
 
 
@@ -61,18 +80,17 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     mob.update = mobType.ai;
     mob.move = mobType.move;
     mob.pathfindRange = mobType.pathfindRange;
-
-    mob.entity.body.setCollisionGroup(game.enemyCollisionGroup);
-    mob.entity.body.collides([game.projectileCollisionGroup, game.physics.p2.everythingCollisionGroup]);
-    mob.entity.body.parent = mob;
     mobs.push(mob);
-    game.junkGroup.add(mob.entity);
+    mob.entity.name = "enemy";
+    //mob.entity.onBeginContact.add(mobType.collisionHandler);
 
     /* Returns the mob in case you want to do something special with it */
     return mob;
 }
 
 mobFactory.defaultAi = function () {
+    var rad = 7;
+    //console.log(this.current_health)
     if (this.hit) {
         this.pathfindRange = 15;
         this.hit = false;
@@ -86,10 +104,9 @@ mobFactory.defaultAi = function () {
         }
     }
     var rad = this.pathfindRange;
-    console.log(rad);
 
-    var m_x = Math.floor(this.entity.x / world.getTileSize()); //tile x
-    var m_y = Math.floor(this.entity.y / world.getTileSize()); //tile y
+    var m_x = Math.floor(this.entity.x / specs.size); //tile x
+    var m_y = Math.floor(this.entity.y / specs.size); //tile y
     var tiles = world.getTilesAroundPlayer(rad);
     var self = this;
     easystar.setGrid(tiles.grid);
@@ -118,6 +135,13 @@ mobFactory.defaultAi = function () {
     } else {
         self.move(0, 0);
     }
+};
+
+
+mobFactory.defaultRangedAi = function(){
+    if(this.defaultAI == undefined) {this.defaultAi = mobFactory.defaultAi;};
+    this.defaultAi();
+    projectiles.spawnProjectile(this, player, mobFactory.defaultRangedProjectile)
 };
 
 module.exports = mobFactory

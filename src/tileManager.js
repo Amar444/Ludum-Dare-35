@@ -1,4 +1,10 @@
 var specs = require('specs')
+var Deepwater = require('tiles/deepwater');
+var Water = require('tiles/water');
+var Grass = require('tiles/grass');
+var Mud = require('tiles/mud');
+var Stone = require('tiles/stone');
+var Tile = require('tile')
 
 class TileManager {
 
@@ -6,7 +12,7 @@ class TileManager {
         this.tiles = [];
     }
 
-    create(x, y, chunk_y, chunk_x, simplex, world){
+    createWithSimplex(x, y, chunk_y, chunk_x, simplex, world){
         var tile;
         switch(true){
             case(simplex < -0.4):
@@ -25,6 +31,9 @@ class TileManager {
                 tile = new Stone(x, y, chunk_y, chunk_x, simplex, world);
                 break;
         }
+        if(typeof tile == "Grass"){
+
+        }
         if(this.tiles[chunk_y] == undefined){
             this.tiles[chunk_y] = [];
         }
@@ -36,6 +45,11 @@ class TileManager {
         return tile;
     }
 
+    create (chunk_y, chunk_x, tile){
+        this.tiles[chunk_y][chunk_x].push(tile);
+        tile.preRender();
+        return tile;
+    }
     getType(simplex) {
 
         switch(true) {
@@ -57,7 +71,6 @@ class TileManager {
         }
     }
 
-
     getTilesInChunk(chunk_y, chunk_x){
         var foundTiles = [];
         return this.tiles[chunk_y][chunk_x];
@@ -68,59 +81,7 @@ class TileManager {
     }
 }
 
-class Tile {
-    constructor(x, y, chunk_y, chunk_x, simplex, world) {
-        this.x = x;
-        this.y = y;
-        this.chunk_y = chunk_y;
-        this.chunk_x = chunk_x;
-        this.simplex = simplex;
-        this.world = world;
-    }
 
-    preRender() {
-        var bounds = new Phaser.Rectangle(this.y * specs.size, this.x * specs.size, specs.size, specs.size);
-        this.graphics = game.add.graphics(bounds.y, bounds.x);
-        this.render();
-        this.graphics.z = 0;
-        this.graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
-        this.world.tileGroup.add(this.graphics);
-    }
-}
-
-class Water extends Tile{
-    render(){
-        this.graphics.beginFill(0x40a4df);
-    }
-}
-
-class Grass extends Tile{
-    render() {
-        this.graphics.beginFill(0x4DBD33);
-    }
-}
-
-class Mud extends Tile{
-    render(){
-        this.graphics.beginFill(0x6F4242);
-    }
-}
-
-class Stone extends Tile{
-    render(){
-        this.graphics.beginFill(0x5C4033);
-        game.physics.p2.enable(this.graphics);
-        this.graphics.body.static = true;
-    }
-}
-
-class Deepwater extends Tile{
-    render(){
-        this.graphics.beginFill(0x2082bc);
-        game.physics.p2.enable(this.graphics);
-        this.graphics.body.static = true;
-    }
-}
 var tileManager = new TileManager();
 
 module.exports = tileManager;
