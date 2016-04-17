@@ -1,30 +1,38 @@
 var game = window.game;
 var player = require('player');
 var random = require('random');
+var simplexNoise = require('perlin');
 
-var world = {}
+var world = {};
+var simplex = {};
 var specs = {
     size: 30,
     chunk: 15
 }
+
 var maps = [];
 
 world.preload = function(){
+
 }
 
 world.emptyMap = function() {
     return maps === undefined || maps.length === 0;
 }
 
-
-world.create = function(){
+world.preCreate = function(){
     game.world.setBounds(0, 0, 10000, 10000);
     game.physics.startSystem(Phaser.Physics.P2JS);
     world.tileGroup = game.add.group();
     world.startingPointGroup = game.add.group();
     world.createStartingPoint();
     game.camera.follow(player.entity);
-    game.camera.deadzone = new Phaser.Rectangle(100, 100, 600, 400);
+    game.camera.deadzone = new Phaser.Rectangle(50, 50, 600, 400);
+    simplex = simplexNoise.create();
+}
+
+world.postCreate = function() {
+    this.updateMap();
 }
 
 world.createMap = function(chunk_y, chunk_x) {
@@ -33,12 +41,16 @@ world.createMap = function(chunk_y, chunk_x) {
         for (var x = chunk_x * specs.chunk; (x < specs.chunk + (chunk_x * specs.chunk)) ; x++) {
             var bounds = new Phaser.Rectangle(y * specs.size, x * specs.size, specs.size, specs.size);
             var graphics = game.add.graphics(bounds.y, bounds.x);
-            if (random.newIntBetween(0, 1) > 0.5)
-                graphics.beginFill(0xD9CC3C);
-            else
+            if (simplex.noise(x, y) > 0){
                 graphics.beginFill(0x00ADA7);
-            graphics.drawRect(0, 0, bounds.width, bounds.height);
+                game.physics.p2.enable(graphics, true);
+                graphics.body.static = true;
+            } else{
+                graphics.beginFill(0xD9CC3C);
+            }
+            graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
             graphics.z = 0;
+
             world.tileGroup.add(graphics);
         }
     }
@@ -134,9 +146,7 @@ world.getChunks = function() {
 }
 
 world.update = function() {
-    //this.game.world.setBounds(windowWidth + player.position.x, windowHeight + player.position.y, windowWidth*2, windowHeight*2);
-    //Move the tilesprite (fixed to camera) depending on the player's positiontile
-    //Sprite.tilePosition.y = -camera.view.y;
+
 }
 
 world.createStartingPoint = function() {
