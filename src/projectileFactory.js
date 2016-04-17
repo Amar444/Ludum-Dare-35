@@ -12,7 +12,9 @@ projectileFactory.preload = function(){
 
 projectileFactory.create = function () {
     var defaultCollisionHandler = function(projectile, target){
-        console.log("HIT!@")
+        target.parent.hit = true;
+        target.parent.hitDamage = projectile.parent.damage;
+        projectile.parent.entity.destroy();
     };
     this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, game.enemyCollisionGroup, defaultCollisionHandler);
 }
@@ -66,7 +68,6 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
 
         // Shoot sound
         sound.play_effect("shot");
-        p.entity.body.debug = true;
         /* Set the cooldown*/
         setTimeout(function () {
             projectile.cooldown = false;

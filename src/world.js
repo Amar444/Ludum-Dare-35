@@ -159,8 +159,8 @@ world.getTileSize = function() {
 }
 
 world.createStartingPoint = function() {
-    var width = 200;
-    var height = 200;
+    var width = 150;
+    var height = 150;
 
     var startingPoint = game.add.graphics(game.world.centerX - (width/2), game.world.centerY - (height/2));
     startingPoint.beginFill(0xC2AB4F);

@@ -60,7 +60,7 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     mob.move = mobType.move;
     mob.entity.body.setCollisionGroup(game.enemyCollisionGroup);
     mob.entity.body.collides([game.projectileCollisionGroup, game.physics.p2.everythingCollisionGroup]);
-    mob.entity.body.debug = true;
+    mob.entity.body.parent = mob;
     mobs.push(mob);
     game.junkGroup.add(mob.entity);
 
@@ -101,9 +101,9 @@ mobFactory.defaultAi = function () {
         self.move(0, 0);
     }
 
-    if (this.entity.body.hit) {
-        this.entity.body.hit = false;
-        var dmg = this.entity.body.hitDamage;
+    if (this.hit) {
+        this.hit = false;
+        var dmg = this.hitDamage;
         this.current_health -= 1;
         if (this.current_health <= 0) {
             this.entity.destroy();
