@@ -31,6 +31,8 @@ environment.plantTree = function(tile){
         graphics.beginFill(0x1E8932);
         graphics.drawCircle((specs.size / 5) * - 1, (specs.size / 5) * - 1, bounds.width * 2.5);
         game.physics.p2.enable(graphics);
+        graphics.body.setCollisionGroup(game.worldCollisionGroup);
+        graphics.body.collides(game.allCollisionGroups);
         graphics.body.static = true;
         environment.entities.push(graphics);
         return true;

@@ -29,16 +29,21 @@ world.preCreate = function(){
     bmd = game.add.bitmapData(bounds, bounds);
     bmd.addToWorld();
     world.bmd = bmd;
+    world.tileGroup = game.add.group();
+
+
+
     game.physics.startSystem(Phaser.Physics.P2JS);
     game.physics.p2.setImpactEvents(true);
     game.projectileCollisionGroup = game.physics.p2.createCollisionGroup();
     game.playerCollisionGroup = game.physics.p2.createCollisionGroup();
     game.mobCollisionGroup = game.physics.p2.createCollisionGroup();
+    game.worldCollisionGroup = game.physics.p2.createCollisionGroup();
+    console.log(game.worldCollisionGroup)
+    game.allCollisionGroups = [game.worldCollisionGroup, game.projectileCollisionGroup, game.playerCollisionGroup, game.mobCollisionGroup]
     game.physics.p2.updateBoundsCollisionGroup();
 
     world.tileGroup = game.add.group();
-    
-    console.log(player);
 
     game.camera.follow(player.entity);
 

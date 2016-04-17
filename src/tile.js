@@ -17,6 +17,7 @@ class Tile {
         this.graphics.z = 0;
         this.graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
         this.world.tileGroup.add(this.graphics);
+        
     }
 }
 
