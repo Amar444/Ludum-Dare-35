@@ -72,6 +72,9 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
             projectile.cooldown = false;
         }, projectile.cooldownTime);
         /* Returns the projectile in case you want to do something special with it */
+        setTimeout(function(){
+            p.entity.destroy();
+        }, projectile.lifetime)
         return p;
     }
 };
