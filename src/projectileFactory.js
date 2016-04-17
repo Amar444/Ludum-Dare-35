@@ -56,6 +56,7 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
         p.entity.body.velocity.x = x_velocity;
         p.entity.body.velocity.y = y_velocity;
         p.entity.body.onBeginContact.add(projectile.collisionHandler)
+        p.entity.body.data.shapes[0].sensor = true;
         p.entity.name == "projectile";
 
         // Shoot sound

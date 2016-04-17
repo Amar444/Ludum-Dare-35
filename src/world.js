@@ -40,13 +40,14 @@ world.preCreate = function(){
 
 world.postCreate = function() {
     this.updateMap();
-    environment.createStartingPoint();
+    //environment.createStartingPoint();
 }
 
 world.createMap = function(chunk_y, chunk_x) {
     random.setSeed(chunk_x, chunk_y);
     for (var y = chunk_y * specs.chunk; (y < specs.chunk + (chunk_y * specs.chunk) ); y++) {
         for (var x = chunk_x * specs.chunk; (x < specs.chunk + (chunk_x * specs.chunk)) ; x++) {
+            console.log(world);
             TileManager.createWithSimplex(x, y, chunk_y, chunk_x, simplex.noise(x, y), world);
         }
     }

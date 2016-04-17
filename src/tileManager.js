@@ -31,7 +31,7 @@ class TileManager {
                 tile = new Stone(x, y, chunk_y, chunk_x, simplex, world);
                 break;
         }
-        if(typeof title == "Grass"){
+        if(typeof tile == "Grass"){
 
         }
         if(this.tiles[chunk_y] == undefined){
