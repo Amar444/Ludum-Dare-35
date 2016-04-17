@@ -13,8 +13,8 @@ var mobType = function(ai, texture) {
 
         this.entity.body.moveDown(nspeed * dy);
         this.entity.body.moveRight(nspeed * dx);
-    }
-}
+    };
+};
 
 
 module.exports = mobType;
