@@ -9,7 +9,8 @@ var environment = require('environment');
 var bmd;
 var world = {};
 var simplex = {};
-var mobLevel = 1;
+var mobLevelUpAfterPixels = 800;
+var mobLevel;
 
 var maps = [];
 
@@ -159,8 +160,20 @@ world.createStartingPoint = function() {
 };
 
 world.calculateMobLevel = function(){
-    //Calculate it!
-    mobLevel = 1;
+    var level = world.getPlayerDistanceOfCenter() / mobLevelUpAfterPixels;
+    if(level <1){
+        mobLevel = 1;
+    } else {
+        mobLevel = Math.floor(level);
+    }
+
+};
+world.getPlayerDistanceOfCenter = function(){
+    var playerDistanceOfCenterX = player.entity.x - game.world.centerX;
+    var playerDistanceOfCenterY = player.entity.y - game.world.centerX;
+    var playerDistanceOfCenter = Math.sqrt((Math.pow(playerDistanceOfCenterX,2))+(Math.pow(playerDistanceOfCenterY,2)));
+
+    return playerDistanceOfCenter;
 };
 
 world.getMobLevel = function(){
