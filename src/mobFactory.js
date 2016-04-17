@@ -7,6 +7,8 @@ var itemFactory = require('itemFactory');
 
 var projectiles = require("projectileFactory");
 var projectile = require("projectile");
+var particles = require("particles");
+var sound = require("sound");
 var specs = require('specs');
 var random = require('random');
 var TileManager = require('tileManager');
@@ -27,6 +29,8 @@ mobFactory.update = function() {
         mobs[mob].update();
 
         if (mobs[mob].current_health <= 0) {
+            particles.splatter(mobs[mob].entity.x,mobs[mob].entity.y)
+            sound.play_effect('meow')
             mobs.splice(mob, 1);
         }
     }
