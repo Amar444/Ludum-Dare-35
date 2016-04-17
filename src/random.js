@@ -1,5 +1,9 @@
 var random = {};
-var seed = 27;
+var seed = 1;
+
+random.generateSeed = function() {
+    seed = Math.floor(Math.random() * 1000);
+}
 
 random.newSeed = function (new_seed){
     seed = new_seed;

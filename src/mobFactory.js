@@ -56,11 +56,14 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     mob = stats.random_mob(level);
     mob.entity = game.add.sprite(locationX, locationY, mobType.texture);
     game.physics.p2.enable(mob.entity);
+
     mob.update = mobType.ai;
     mob.move = mobType.move;
+    mob.pathfindRange = mobType.pathfindRange;
+
     mob.entity.body.setCollisionGroup(game.enemyCollisionGroup);
     mob.entity.body.collides([game.projectileCollisionGroup, game.physics.p2.everythingCollisionGroup]);
-    mob.entity.body.debug = true;
+    mob.entity.body.parent = mob;
     mobs.push(mob);
     game.junkGroup.add(mob.entity);
 
@@ -69,7 +72,19 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
 }
 
 mobFactory.defaultAi = function () {
-    var rad = 7;
+    if (this.hit) {
+        this.pathfindRange = 15;
+        this.hit = false;
+        var dmg = this.hitDamage;
+        this.current_health -= 1;
+        if (this.current_health <= 0) {
+            this.entity.destroy();
+            return;
+        }
+    }
+    var rad = this.pathfindRange;
+    console.log(rad);
+
     var m_x = Math.floor(this.entity.x / world.getTileSize()); //tile x
     var m_y = Math.floor(this.entity.y / world.getTileSize()); //tile y
     var tiles = world.getTilesAroundPlayer(rad);
@@ -99,15 +114,6 @@ mobFactory.defaultAi = function () {
         });
     } else {
         self.move(0, 0);
-    }
-
-    if (this.entity.body.hit) {
-        this.entity.body.hit = false;
-        var dmg = this.entity.body.hitDamage;
-        this.current_health -= 1;
-        if (this.current_health <= 0) {
-            this.entity.destroy();
-        }
     }
 };
 

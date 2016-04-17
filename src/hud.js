@@ -1,23 +1,27 @@
 var game = window.game;
 var character = require('character');
 var sound = require('sound');
+var inventory = require('inventoryScreen');
 
 var hud = {};
 var healthBar;
 var barWidth = 200;
 var healthText;
 var characterTypeDisplay;
-var button;
+var muteButton;
+var inventoryButton;
 
 hud.preload = function(){
     game.load.image('speakerSound', 'images/sound-on.png');
     game.load.image('speakerMute', 'images/sound-mute.png');
+    game.load.image('knapsack', 'images/knapsack.png');
 };
 
 hud.create = function() {
     hud.createHealthBar();
     hud.createCharacterTypeDisplay();
     hud.createMuteButton();
+    hud.createInventoryButton();
 };
 
 hud.render = function() {
@@ -28,6 +32,22 @@ hud.render = function() {
 hud.update = function() {
 };
 
+//INVENTORYBUTTON
+hud.createInventoryButton = function(){
+    //make group
+    hud.inventoryButtonGroup = game.add.group();
+    hud.inventoryButtonGroup.fixedToCamera = true;
+
+    //make muteButtonGroup
+    inventoryButton = game.add.button(game.width - 60, game.height - 60, 'knapsack', toggleInventory, this);
+
+    //Add to group
+    hud.inventoryButtonGroup.add(inventoryButton);
+};
+function toggleInventory(){
+    inventory.toggle_inventory();
+}
+
 //MUTEBUTTON
 hud.createMuteButton = function() {
     //make group
@@ -35,23 +55,21 @@ hud.createMuteButton = function() {
     hud.muteButtonGroup.fixedToCamera = true;
 
     //make muteButtonGroup
-    button = game.add.button(740, 0, 'speakerMute', toggleSound, this);
+    muteButton = game.add.button(game.width - 60, 0, 'speakerMute', toggleSound, this);
 
     //Add to group
-    hud.muteButtonGroup.add(button);
+    hud.muteButtonGroup.add(muteButton);
 };
 hud.updateMuteButton = function(){
     if(sound.sound_enabled){
         //button image speakerSound
-        button.loadTexture('speakerSound');
+        muteButton.loadTexture('speakerSound');
     }else {
         //button image speakerMute
-        button.loadTexture('speakerMute');
+        muteButton.loadTexture('speakerMute');
     }
 };
 function toggleSound () {
-    console.log("BUTTON PRESSED");
-    //toggle sound
     sound.toggle_mute();
     hud.updateMuteButton();
 }

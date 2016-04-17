@@ -9,22 +9,27 @@ var itemSize = 32;
 var start = {x: itemSize*7, y:itemSize*5,w:5,h:5};
 var itemslots = {x: start.x-(2*itemSize), y: start.y,border:30, p:10,gx:7};
 
-var group
+var group;
 inventoryScreen.active = false;
+
 inventoryScreen.create = function() {
     game.input.keyboard.addKey(Phaser.Keyboard.I).onDown.add(function () {
-        if(inventoryScreen.active == false){
-
-            group = game.add.group();
-            inventoryScreen.createInventory()
-            inventoryScreen.showStats()
-        }else{
-            group.destroy();
-
-        }
-        inventoryScreen.active = !inventoryScreen.active;
+        inventoryScreen.toggle_inventory();
     }, this);
-}
+};
+
+inventoryScreen.toggle_inventory = function () {
+    if (inventoryScreen.active) {
+        group.destroy();
+        inventoryScreen.active = false;
+
+    } else {
+        group = game.add.group();
+        inventoryScreen.createInventory();
+        inventoryScreen.showStats()
+        inventoryScreen.active = true;
+    }
+};
 inventoryScreen.createInventory = function() {
     var user = character.getCurrentUser();
     var item;
@@ -228,7 +233,6 @@ inventoryScreen.showStats = function (){
 
 
 };
-
 
 
 inventoryScreen.render = function() {

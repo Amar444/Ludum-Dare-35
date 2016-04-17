@@ -22,6 +22,7 @@ world.emptyMap = function() {
 }
 
 world.preCreate = function(){
+    random.generateSeed();
     game.world.setBounds(0, 0, 10000, 10000);
     bmd = game.add.bitmapData(10000, 10000);
     bmd.addToWorld();
@@ -40,7 +41,6 @@ world.preCreate = function(){
     game.camera.follow(player.entity);
     game.camera.deadzone = new Phaser.Rectangle(50, 50, 600, 400);
     simplex = simplexNoise.create();
-
 }
 
 world.postCreate = function() {
@@ -159,8 +159,8 @@ world.getTileSize = function() {
 }
 
 world.createStartingPoint = function() {
-    var width = 200;
-    var height = 200;
+    var width = 150;
+    var height = 150;
 
     var startingPoint = game.add.graphics(game.world.centerX - (width/2), game.world.centerY - (height/2));
     startingPoint.beginFill(0xC2AB4F);
