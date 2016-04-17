@@ -3,11 +3,12 @@ var player = require('player');
 var random = require('random');
 var simplexNoise = require('perlin');
 var Tile = require('tile');
-var specs = require('specs')
+var specs = require('specs');
 
 var bmd;
 var world = {};
 var simplex = {};
+var mobLevel = 1;
 
 var tiles = [];
 
@@ -15,11 +16,11 @@ var maps = [];
 
 world.preload = function(){
 
-}
+};
 
 world.emptyMap = function() {
     return maps === undefined || maps.length === 0;
-}
+};
 
 world.preCreate = function(){
     random.generateSeed();
@@ -41,11 +42,11 @@ world.preCreate = function(){
     game.camera.follow(player.entity);
     game.camera.deadzone = new Phaser.Rectangle(50, 50, 600, 400);
     simplex = simplexNoise.create();
-}
+};
 
 world.postCreate = function() {
     this.updateMap();
-}
+};
 
 world.createMap = function(chunk_y, chunk_x) {
     random.setSeed(chunk_x, chunk_y);
@@ -64,7 +65,7 @@ world.createMap = function(chunk_y, chunk_x) {
         }
     }
     game.world.sendToBack(world.tileGroup);
-}
+};
 
 
 world.updateMap = function() {
@@ -118,9 +119,9 @@ world.updateMap = function() {
         }
     }
 
-}
+};
 
-world.getTilesAroundPlayer = function(r) {  //radius  
+world.getTilesAroundPlayer = function(r) {  //radius
     var p_x = Math.floor(player.entity.x / specs.size); //tile x
     var p_y = Math.floor(player.entity.y / specs.size); //tile y
     var tiles = {
@@ -148,15 +149,15 @@ world.getTilesAroundPlayer = function(r) {  //radius
         }
     }
     return tiles;
-}
+};
 
 world.update = function() {
-
-}
+    world.calculateMobLevel();
+};
 
 world.getTileSize = function() {
     return specs.size;
-}
+};
 
 world.createStartingPoint = function() {
     var width = 150;
@@ -167,7 +168,16 @@ world.createStartingPoint = function() {
     startingPoint.drawRect(0, 0, width, height);
 
     world.startingPointGroup.add(startingPoint);
-}
+};
+
+world.calculateMobLevel = function(){
+    //Calculate it!
+    mobLevel = 1;
+};
+
+world.getMobLevel = function(){
+    return mobLevel;
+};
 
 
 module.exports = world;
