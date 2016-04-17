@@ -83,7 +83,6 @@ mobFactory.defaultAi = function () {
         }
     }
     var rad = this.pathfindRange;
-    console.log(rad);
 
     var m_x = Math.floor(this.entity.x / world.getTileSize()); //tile x
     var m_y = Math.floor(this.entity.y / world.getTileSize()); //tile y

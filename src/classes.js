@@ -1,7 +1,7 @@
 var classes = {};
 
 classes.get_random_class = function (include_hulk){
-    var types = ["Melee","Magic","Range"];
+    var types = ["Melee", "Magic", "Range"];
   if(include_hulk == true){
       //types.push("Hulk")
   }
