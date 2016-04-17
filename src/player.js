@@ -9,11 +9,13 @@ var speed = 200;
 
 var player = {};
 var projectile = require("projectileFactory")
+var init_char = require("character")
 
 player.preload = function(){
 }
 
 player.create = function() {
+    player.character = init_char.new_user();
     var sprite = game.add.graphics(0, 0);
     sprite.beginFill(0x222222);
     sprite.drawCircle(0, 0, 32);

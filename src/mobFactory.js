@@ -55,7 +55,7 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     mob.move = mobType.move;
     mob.entity.body.setCollisionGroup(game.enemyCollisionGroup);
 
-    mob.entity.body.collides(game.projectileCollisionGroup);
+    mob.entity.body.collides([game.projectileCollisionGroup, game.physics.p2.everythingCollisionGroup]);
     mob.entity.body.debug = true;
     mobs.push(mob);
 
