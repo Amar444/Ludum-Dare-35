@@ -15,7 +15,7 @@ user_class.random_mob = function (level){
     var w = item.random_weapon(level);
     var a = item.random_armour(level);
     var s = item.random_shield(level);
-
+    u.level = level;
     u.name = user_class.new_sprite_name();
     u.weapon = u.inventory.push(w) - 1;
     u.armour = u.inventory.push(a) - 1;
@@ -37,7 +37,7 @@ user_class.new_user = function (){
     user.armour = -1;
     user.hat = -1;
 
-
+    user.level = 1;
     user.getWeapon = function (){
         if(user.weapon != -1){
             return user.inventory[user.weapon];
@@ -66,6 +66,9 @@ user_class.new_user = function (){
         }else{
             return null;
         }
+    };
+    user.changeType = function (){
+        user.type = classes.get_random_class(true);
     };
 
 

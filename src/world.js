@@ -35,11 +35,13 @@ world.preCreate = function(){
     game.playerCollisionGroup = game.physics.p2.createCollisionGroup();
     game.mobCollisionGroup = game.physics.p2.createCollisionGroup();
     game.physics.p2.updateBoundsCollisionGroup();
+
     world.tileGroup = game.add.group();
 
     game.camera.follow(player.entity);
 
     simplex = simplexNoise.create();
+    world.simplex = simplex;
 };
 
 world.postCreate = function() {
@@ -62,6 +64,7 @@ world.updateMap = function() {
     var player_chunk_y = Math.floor(coordinates.y / specs.size / specs.chunk);
     var player_chunk_x = Math.floor(coordinates.x / specs.size / specs.chunk);
     var accepted_maps = [];
+    var newworld = this.emptyMap();
 
     //check surrouding neighbours
     for(var i = player_chunk_x-1; i <= player_chunk_x+1; i++) {
@@ -107,11 +110,26 @@ world.updateMap = function() {
         }
     }
 
+
+
+    if (newworld) {
+        var solid = true;
+        var x = 0;
+        var y = 0;
+        do {
+            player.entity.body.x += specs.size;
+            x = Math.round(player.entity.body.x / specs.size); //tile x
+            y = Math.round(player.entity.body.y / specs.size); //tile y
+            solid = TileManager.getType(simplex.noise(x, y));
+            console.log(player);
+        } while (solid);
+    }
 };
 
+var first = true;
 world.getTilesAroundPlayer = function(r) {  //radius
-    var p_x = Math.floor(player.entity.x / specs.size); //tile x
-    var p_y = Math.floor(player.entity.y / specs.size); //tile y
+    var p_x = Math.round(player.entity.x / specs.size); //tile x
+    var p_y = Math.round(player.entity.y / specs.size); //tile y
     var tiles = {
         pX: p_x,
         pY: p_y,
@@ -126,7 +144,7 @@ world.getTilesAroundPlayer = function(r) {  //radius
         for (var j = 0; j < r*2 + 1; j++) {
             var x = p_x - r + j;
             var y = p_y - r + i;
-            var solid = TileManager.getType(simplex.noise(x, y)).solid;
+            var solid = TileManager.getType(simplex.noise(x, y));
             if (solid) {
                 //obstructable
                 tiles.grid[i][j] = 1;
@@ -135,6 +153,9 @@ world.getTilesAroundPlayer = function(r) {  //radius
                 tiles.grid[i][j] = 0;
             }
         }
+    }
+    if (first){
+        first = false;
     }
     return tiles;
 };

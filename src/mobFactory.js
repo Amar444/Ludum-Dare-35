@@ -3,9 +3,14 @@ var stats = require('character');
 var mobType = require('mob');
 var player = require('player');
 var world = require('world');
-var projectiles = require("projectileFactory")
+var itemFactory = require('itemFactory');
+
+var projectiles = require("projectileFactory");
 var projectile = require("projectile");
 var specs = require('specs');
+var random = require('random');
+var TileManager = require('tileManager');
+
 
 
 var mobFactory = {};
@@ -15,7 +20,7 @@ var easystar;
 
 mobFactory.preload = function(){
     game.load.script('EasyStar', '_plugins/easystar.js');
-}
+};
 
 mobFactory.update = function() {
     for (var mob in mobs) {
@@ -35,9 +40,50 @@ mobFactory.update = function() {
         }
     }
     easystar.calculate();
-}
+    this.spawn();
+};
+
+mobFactory.spawn = function() {
+    var freq = 50 - world.getMobLevel() * 4;
+    var chance = random.newIntBetween(0, freq);
+    if (chance != 1)
+        return;
+    var x = player.entity.x;
+    var y = player.entity.y;
+    var minDistance = 5;
+    var variation = 5;
+
+    var dx = random.newIntBetween(minDistance, minDistance + variation);
+    var dy = random.newIntBetween(minDistance, minDistance + variation);
+    if (random.newFloat() > 0.5)
+        dx = -dx;
+    if (random.newFloat() > 0.5)
+        dy = -dy;
+
+    var solid = TileManager.getType(world.simplex.noise(
+        Math.round(x/specs.size)+dx,
+        Math.round(y/specs.size)+dy)
+    );
+    if (!solid) {
+        this.spawnMob(
+            Math.round(x/specs.size)*specs.size + (dx * specs.size),
+            Math.round(y/specs.size)*specs.size + (dy * specs.size),
+            mobFactory.defaultMobType, world.getMobLevel()
+        );
+        console.log("Creature has spawned");
+    }
+};
 
 mobFactory.create = function () {
+    //-------------------------------------------------------------
+    //-------------- TEMPORARY - DROP RANDOM ITEM ON GROUND -------
+    //-------------------------------------------------------------
+    game.input.keyboard.addKey(Phaser.Keyboard.X).onDown.add(function () {
+        itemFactory.dropRandomItem(10, player.entity.x + 20, player.entity.y + 20);
+    }, this);
+    //-------------------------------------------------------------
+
+
     easystar = new EasyStar.js();
     easystar.setAcceptableTiles([0]);
     easystar.enableDiagonals();
@@ -56,14 +102,14 @@ mobFactory.create = function () {
 
     var defaultRangedCollisionHandler = function(mob, player){
         console.log("Do shit when you hit the player")
-    };
 
-    mobFactory.defaultRangedProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultRangedCollisionHandler)
+
+    mobFactory.defaultRangedProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultRangedCollisionHandler);
     mobFactory.defaultMobType = new mobType(mobFactory.defaultAi, defaultSprite.generateTexture());
     mobFactory.defaultRangedMob = new mobType(mobFactory.defaultRangedAi, defaultRangedSprite.generateTexture());
     defaultSprite.destroy();
     defaultRangedSprite.destroy();
-}
+};
 
 
 mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
@@ -86,26 +132,27 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     mob.entity.body.collides(game.playerCollisionGroup, mobType.collisionHandler)
     /* Returns the mob in case you want to do something special with it */
     return mob;
-}
+};
 
+var last;
 mobFactory.defaultAi = function () {
     var rad = 7;
-    //console.log(this.current_health)
     if (this.hit) {
         this.pathfindRange = 15;
         this.hit = false;
         var dmg = this.hitDamage;
         this.current_health -= 1;
         if (this.current_health <= 0) {
-            this.entity.destroy();
             //Drop random item
+            itemFactory.dropRandomItem(this.level, this.entity.x, this.entity.y);
+            this.entity.destroy();
             return;
         }
     }
     var rad = this.pathfindRange;
 
-    var m_x = Math.floor(this.entity.x / specs.size); //tile x
-    var m_y = Math.floor(this.entity.y / specs.size); //tile y
+    var m_x = Math.round(this.entity.x / specs.size); //tile x
+    var m_y = Math.round(this.entity.y / specs.size); //tile y
     var tiles = world.getTilesAroundPlayer(rad);
     var self = this;
     easystar.setGrid(tiles.grid);
@@ -115,19 +162,13 @@ mobFactory.defaultAi = function () {
             if (path === undefined || path === null || path.length === 0) {
                 self.move(0, 0);
             } else {
-                var next = path.slice(0, 1)[0];
+                var now = path.slice(0, 1)[0];
+                var next = path.slice(1, 2)[0];
 
                 var dx = 0;
                 var dy = 0;
-                if (next.x < rad)
-                    dx++;
-                if (next.x > rad)
-                    dx--;
-                if (next.y < rad)
-                    dy++;
-                if (next.y > rad)
-                    dy--;
-
+                dx = next.x - now.x;
+                dy = next.y - now.y;
                 self.move(dx, dy);
             }
         });
@@ -140,9 +181,27 @@ mobFactory.defaultAi = function () {
 mobFactory.defaultRangedAi = function(){
     if(this.defaultAI == undefined) {this.defaultAi = mobFactory.defaultAi;};
     this.defaultAi();
-    projectiles.spawnProjectile(this, player, mobFactory.defaultRangedProjectile)
+    projectiles.spawnProjectile(this, player, mobFactory.defaultRangedProjectile);
 };
 
-module.exports = mobFactory
 
+mobFactory.findMobInCone = function (x,y,direction,spread,range){
+    var out = [];
+    for(var i in mobs){
+        var m = mobs[i];
+        var d = Math.sqrt(Math.pow(x-m.entity.x,2) + Math.pow(y-m.entity.y,2));
 
+        var sx = player.entity.x;
+        var sy = player.entity.y;
+        var tx = m.entity.x;
+        var ty = m.entity.y;
+        var angle = Phaser.Point.angle(new Phaser.Point(sx, sy), new Phaser.Point(tx, ty));
+        if(d < range){
+            // TODO: radius
+            out.push(m);
+        }
+    }
+
+    return out;
+};
+module.exports = mobFactory;

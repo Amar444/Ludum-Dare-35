@@ -9,32 +9,32 @@ game.random_weapon = function (level) {
     item.type = 'weapon';
     item.name = items.SEEDITEMWEAPONALL[random.newIntBetween(0, items.SEEDITEMWEAPONALL.length)];
     return item;
-}
+};
 
 game.random_armour = function (level) {
     var item = game.random_item(level);
     item.type = 'armour';
     item.name = items.SEEDITEMARMOR[random.newIntBetween(0, items.SEEDITEMARMOR.length)];
     return item;
-}
+};
 
 game.random_shield = function (level) {
     var item = game.random_item(level);
     item.type = 'shield';
     item.name = items.SEEDITEMARMORSHIELD[random.newIntBetween(0, items.SEEDITEMARMORSHIELD.length)];
     return item;
-}
+};
 game.random_hat = function (level) {
     var item = game.random_item(level);
     item.type = 'hat';
     item.name = items.SEEDITEMABSTRACT[random.newIntBetween(0, items.SEEDITEMABSTRACT.length)];
     return item;
-}
+};
 
 game.random_item = function (level) {
     if(!isFinite(level) || level <= 0 || level > 10000){
-        console.error("invalid level: ", level)
-        throw "Level is invalid "
+        console.error("invalid level: ", level);
+        throw "Level is invalid ";
     }
     var points = random.newIntBetween(level * 10, level * 12);
     var item = game.new_item();
@@ -58,7 +58,7 @@ game.random_item = function (level) {
     item.mod_armour = split[5];
 
 
-    return item
+    return item;
 };
 
 game.new_item = function () {

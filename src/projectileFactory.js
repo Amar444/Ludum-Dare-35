@@ -1,13 +1,12 @@
 var game = window.game;
 var player = require('player');
 var projectile = require("projectile")
-var particles = require("particles")
 var sound = require("sound")
 
 var projectileFactory = {};
 
 projectileFactory.preload = function(){
-
+    game.load.image('diamond', 'images/diamond.png');
 
 };
 
@@ -15,7 +14,27 @@ projectileFactory.create = function () {
     var defaultCollisionHandler = function(projectile, enemy){
         console.log("do stuff here");
     };
+
+    var defaultCollisionHandler = function(target, A, B, equation){
+        if(target.sprite.name == "enemy"){
+            
+        }
+    }
+
     this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultCollisionHandler);
+
+
+    var defaultSprite = game.add.graphics();
+    defaultSprite.beginFill(0x0000ff);
+    defaultSprite.drawCircle(0,0, 7);
+
+    defaultSprite.drawCircle(-5,-5, 5);
+    defaultSprite.drawCircle(5,-5, 5);
+    defaultSprite.drawCircle(-5,5, 5);
+    defaultSprite.drawCircle(5,5, 5);
+    var missle = defaultSprite.generateTexture();
+    defaultSprite.destroy();
+    this.magicMissile = new projectile(undefined, undefined, undefined,missle , undefined, defaultCollisionHandler);
 }
 
 projectileFactory.update = function () {
@@ -29,7 +48,6 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
      */
     if (projectile.cooldown === false){
         projectile.cooldown = true;
-        particles.explosion(source.entity.x,source.entity.y)
 
         /*Variables used in velocity calulations*/
         var sx, sy, tx, ty, angle, x_velocity, y_velocity;
@@ -52,7 +70,7 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
         var p = {};
         p.entity = game.add.sprite(sx + (-Math.cos(angle)*10), sy + (-Math.sin(angle)*10), projectile.texture);
         game.physics.p2.enable(p.entity);
-        p.entity.body.angle = angle*180/Math.PI;
+        p.entity.body.angle += angle*180/Math.PI;
         p.entity.body.velocity.x = x_velocity;
         p.entity.body.velocity.y = y_velocity;
         p.entity.body.setCollisionGroup(game.projectileCollisionGroup);
