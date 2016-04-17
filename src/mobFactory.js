@@ -5,20 +5,27 @@ var player = require('player');
 var world = require('world');
 
 var mobFactory = {};
+
 var mobs = new Array();
 var easystar;
 
 mobFactory.preload = function(){
     game.load.script('EasyStar', '_plugins/easystar.js');
+
 }
 
 mobFactory.update = function(){
+    for(var mob in this.mobs){
+        this.mobs[mob].update();
+    }
+    if(game.input.mousePointer.isDown && this.mobtest){
+        this.mobtest = false;
+        this.spawnMob(player.entity.x+250, player.entity.y+250, mobFactory.defaultMobType, 20);
     for(var mob in mobs){
         mobs[mob].update();
     }
     easystar.calculate();
     if(game.input.mousePointer.isDown){
-       // this.spawnMob(player.entity.x+250, player.entity.y+250, mobFactory.defaultMobType, 20);
     }
 }
 
@@ -47,26 +54,30 @@ mobFactory.spawnMob = function(locationX, locationY, mobType, level){
     mob.update = mobType.ai;
     mob.move = mobType.move;
     mob.entity.body.setCollisionGroup(game.enemyCollisionGroup);
+
+    mob.entity.body.collides(game.projectileCollisionGroup);
+    mob.entity.body.debug = true;
     mobs.push(mob);
+
     /* Returns the mob in case you want to do something special with it */
     return mob;
 }
 
 mobFactory.defaultAi = function() {
-    var rad = 5;
+    var rad = 7;
     var m_x = Math.floor(this.entity.x / world.getTileSize()); //tile x
     var m_y = Math.floor(this.entity.y / world.getTileSize()); //tile y
     var tiles = world.getTilesAroundPlayer(rad);
     var self = this;
     easystar.setGrid(tiles.grid);
+    console.table(tiles.grid);
     if (m_x >= tiles.pX - rad && m_x <= tiles.pX + rad &&
         m_y >= tiles.pY - rad && m_y <= tiles.pY + rad)
     {
         easystar.findPath(rad + m_x - tiles.pX, rad + m_y - tiles.pY, rad, rad, (path) => {
-             if (path === undefined || path.length === 0) {
+             if (path === undefined || path === null || path.length === 0) {
                 self.move(0, 0);
             } else {
-                console.table(tiles.grid);
                 var next = path.slice(0, 1)[0];
                 console.log(path);
 
