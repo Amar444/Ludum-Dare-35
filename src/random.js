@@ -7,7 +7,6 @@ random.newSeed = function (new_seed){
 
 random.setSeed = function (chunk_x, chunk_y) {
     seed = chunk_x + chunk_y;
-    console.log(seed);
 }
 
 random.newFloat = function () {

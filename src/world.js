@@ -5,11 +5,15 @@ var random = require('random');
 var world = {}
 var specs = {
     size: 30,
-    chunk: 30
+    chunk: 15
 }
 var maps = [];
 
 world.preload = function(){
+}
+
+world.emptyMap = function() {
+    return maps === undefined || maps.length === 0;
 }
 
 
@@ -17,7 +21,8 @@ world.create = function(){
     game.world.setBounds(0, 0, 1920, 1920);
     game.physics.startSystem(Phaser.Physics.P2JS);
     world.tileGroup = game.add.group();
-    world.tileGroup.zIndex = 0;
+    world.startingPointGroup = game.add.group();
+    world.createStartingPoint();
     game.camera.follow(player.entity);
     game.camera.deadzone = new Phaser.Rectangle(100, 100, 600, 400);
 }
@@ -40,26 +45,38 @@ world.createMap = function(chunk_y, chunk_x) {
     game.world.sendToBack(world.tileGroup);
 }
 
-world.updateMap = function(){
+world.updateMap = function() {
     var coordinates = player.entity;
     var player_chunk_y = Math.floor(coordinates.y / specs.size / specs.chunk);
     var player_chunk_x = Math.floor(coordinates.x / specs.size / specs.chunk);
-    var accepted = true;
+    var accepted_maps = [];
 
-    for(var x in maps){
-        var mapCoordinates = maps[x].split(".");
-
-        if(player_chunk_y == mapCoordinates[0] && player_chunk_x == mapCoordinates[1]){
-            accepted = false;
-            break;
+    //check surrouding neighbours
+    for(var i = player_chunk_x-1; i <= player_chunk_x+1; i++) {
+        for(var j = player_chunk_y-1; j <= player_chunk_y+1; j++) {
+            //check if already made
+            accepted_maps.push(j  + "." +  i);
         }
     }
 
-    if(accepted){
-        maps.push(player_chunk_y + "." + player_chunk_x);
-        setTimeout(function(){
-            world.createMap(player_chunk_y, player_chunk_x);
-        }, 0);
+    for(var x in accepted_maps) {
+        var acceptedMapCoordinates = accepted_maps[x].split(".");
+
+        var accepted = true;
+        for(var y in maps) {
+            var mapCoordinates = maps[y].split(".");
+            if (acceptedMapCoordinates[0] == mapCoordinates[0] && acceptedMapCoordinates[1] == mapCoordinates[1]) {
+                accepted = false;
+            }
+        }
+
+        if(accepted) {
+            maps.push(acceptedMapCoordinates[0] + "." + acceptedMapCoordinates[1]);
+            setTimeout(function(acceptedMapCoordinates){
+                world.createMap(acceptedMapCoordinates[0], acceptedMapCoordinates[1]);
+            }, 0, acceptedMapCoordinates)
+
+        }
     }
 }
 
@@ -85,6 +102,7 @@ world.getChunks = function() {
             }
         }
     }
+    console.log(coords);
     var i = 0;
     var cnt = 0;
     for (var i in coords) {
@@ -112,13 +130,24 @@ world.getChunks = function() {
         }
         ++i;
     }
+    return chunks;
 }
 
 world.update = function() {
-    this.updateMap();
     //this.game.world.setBounds(windowWidth + player.position.x, windowHeight + player.position.y, windowWidth*2, windowHeight*2);
     //Move the tilesprite (fixed to camera) depending on the player's positiontile
     //Sprite.tilePosition.y = -camera.view.y;
+}
+
+world.createStartingPoint = function() {
+    var width = 200;
+    var height = 200;
+
+    var startingPoint = game.add.graphics(game.world.centerX - (width/2), game.world.centerY - (height/2));
+    startingPoint.beginFill(0xC2AB4F);
+    startingPoint.drawRect(0, 0, width, height);
+
+    world.startingPointGroup.add(startingPoint);
 }
 
 
