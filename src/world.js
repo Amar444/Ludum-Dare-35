@@ -126,7 +126,8 @@ world.getTilesAroundPlayer = function(r) {  //radius
         for (var j = 0; j < r*2 + 1; j++) {
             var x = p_x - r + j;
             var y = p_y - r + i;
-            if (simplex.noise(x, y) > 0) {
+            var solid = tile.getType(simplex.noise(x, y)).solid;
+            if (solid) {
                 //obstructable
                 tiles.grid[i][j] = 1;
             } else {

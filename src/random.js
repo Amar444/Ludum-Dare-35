@@ -1,5 +1,5 @@
 var random = {};
-var seed = 1;
+var seed = 27;
 
 random.newSeed = function (new_seed){
     seed = new_seed;

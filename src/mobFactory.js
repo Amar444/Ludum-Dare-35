@@ -52,20 +52,20 @@ mobFactory.spawnMob = function(locationX, locationY, mobType, level){
 }
 
 mobFactory.defaultAi = function() {
-    var rad = 5;
+    var rad = 7;
     var m_x = Math.floor(this.entity.x / world.getTileSize()); //tile x
     var m_y = Math.floor(this.entity.y / world.getTileSize()); //tile y
     var tiles = world.getTilesAroundPlayer(rad);
     var self = this;
     easystar.setGrid(tiles.grid);
+    console.table(tiles.grid);
     if (m_x >= tiles.pX - rad && m_x <= tiles.pX + rad &&
         m_y >= tiles.pY - rad && m_y <= tiles.pY + rad)
     {
         easystar.findPath(rad + m_x - tiles.pX, rad + m_y - tiles.pY, rad, rad, (path) => {
-             if (path === undefined || path.length === 0) {
+             if (path === undefined || path === null || path.length === 0) {
                 self.move(0, 0);
             } else {
-                console.table(tiles.grid);
                 var next = path.slice(0, 1)[0];
                 console.log(path);
 
