@@ -10,12 +10,13 @@ var speed = 200;
 var player = {};
 var projectile = require("projectileFactory")
 var init_char = require("character")
+var shapes = require("shapes");
 
 player.preload = function(){
 }
 
 player.create = function() {
-    player.character = init_char.new_user();
+    player.character = init_char.getCurrentUser();
     var sprite = game.add.graphics(0, 0);
     sprite.beginFill(0x222222);
     sprite.drawCircle(0, 0, 32);
@@ -35,30 +36,44 @@ player.create = function() {
 }
 
 player.render = function() {
-    player.entity.body.angle = 0;
-    var sx = player.entity.x;
-    var sy = player.entity.y;
-    var tx = game.input.worldX;
-    var ty = game.input.worldY;
-    var angle = Phaser.Point.angle(new Phaser.Point(sx, sy), new Phaser.Point(tx, ty));
-    var x = -Math.cos(angle);
-    var y = -Math.sin(angle);
-
-
     player.entity.removeChild(sprite);
 
     sprite = game.add.graphics(0, 0);
+
     iter += 0.4;
     if (iter > 10)
         iter = -10;
 
     sprite.beginFill(0xEDBE00);
     sprite.drawCircle(0, 0, Math.abs(iter) + 5);
-    sprite.lineStyle(5, 0xEDBE00, 1);
-    sprite.moveTo(x*16, y*16);
-    sprite.lineTo(x*20, y*20);
 
+    this.drawWeapon(sprite);
     var child = player.entity.addChild(sprite);
+}
+
+player.drawWeapon = function(sprite) {
+    switch(player.character.type) {
+        case "Range":
+            player.entity.body.angle = 0;
+            var sx = player.entity.x;
+            var sy = player.entity.y;
+            var tx = game.input.worldX;
+            var ty = game.input.worldY;
+            var angle = Phaser.Point.angle(new Phaser.Point(sx, sy), new Phaser.Point(tx, ty));
+            var x = -Math.cos(angle);
+            var y = -Math.sin(angle);
+            sprite.lineStyle(5, 0xEDBE00, 1);
+            sprite.moveTo(x*16, y*16);
+            sprite.lineTo(x*25, y*25);            
+            break;
+        case "Melee":
+            shapes.item_weapon(sprite, 32);
+            break;
+        case "Magic":
+            break;
+        default:
+            break;
+    }
 }
 
 player.update = function() {
@@ -73,7 +88,7 @@ player.update = function() {
         vert = !vert;
     if (cursors.left.isDown || keys.a.isDown)
         hori = !hori;
-    if (cursors.right.isDown || keys.d.isDown)
+    if (cursors.right.iesDown || keys.d.isDown)
         hori = !hori;
 
     if (vert & hori)
@@ -91,8 +106,19 @@ player.update = function() {
     if (cursors.right.isDown || keys.d.isDown)
         player.entity.body.moveRight(nspeed);
 
-    if(game.input.mousePointer.isDown){
-        projectile.spawnProjectile(player, "mouse", projectile.defaultProjectile);
+    if(game.input.mousePointer.isDown) {
+        switch(player.character.type) {
+            case "Range":
+                projectile.spawnProjectile(player, "mouse", projectile.defaultProjectile);
+                break;
+            case "Melee":
+
+                break;
+            case "Magic":
+                break;
+            default:
+                break;
+        }
     }
 }
 

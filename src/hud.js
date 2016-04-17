@@ -2,6 +2,7 @@ var game = window.game;
 var character = require('character');
 var sound = require('sound');
 var inventory = require('inventoryScreen');
+var world = require('world');
 
 var hud = {};
 var healthBar;
@@ -10,6 +11,7 @@ var healthText;
 var characterTypeDisplay;
 var muteButton;
 var inventoryButton;
+var mobLevelDisplay;
 
 hud.preload = function(){
     game.load.image('speakerSound', 'images/sound-on.png');
@@ -22,14 +24,32 @@ hud.create = function() {
     hud.createCharacterTypeDisplay();
     hud.createMuteButton();
     hud.createInventoryButton();
+    hud.createMobLevelDisplay();
 };
 
 hud.render = function() {
     hud.updateHealthBar();
     hud.updateCharacterType();
+    hud.updateMobLevelDisplay();
 };
 
 hud.update = function() {
+};
+
+//mobLevel
+hud.createMobLevelDisplay = function(){
+    //make group
+    hud.mobLevelGroup = game.add.group();
+    hud.mobLevelGroup.fixedToCamera = true;
+
+    //make textfield
+    mobLevelDisplay = game.add.text(10, 56, character.getCurrentUser().type , { fontSize: '20px', fill: '#FFF' });
+
+    //add to group
+    hud.mobLevelGroup.add(mobLevelDisplay);
+};
+hud.updateMobLevelDisplay = function(){
+    mobLevelDisplay.text = "Mob level: " + world.getMobLevel();
 };
 
 //INVENTORYBUTTON
@@ -82,7 +102,7 @@ hud.createCharacterTypeDisplay = function(){
     hud.characterTypeGroup.fixedToCamera = true;
 
     //make textfield
-    characterTypeDisplay = game.add.text(10, 30, character.getCurrentUser().type , { fontSize: '20px', fill: '#FFF' });
+    characterTypeDisplay = game.add.text(10, 32, character.getCurrentUser().type , { fontSize: '20px', fill: '#FFF' });
 
     //add to group
     hud.characterTypeGroup.add(characterTypeDisplay);

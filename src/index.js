@@ -42,11 +42,12 @@ function create() {
 
 	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
 	inventoryScreen.create();
-	mobFactory.spawnMob(5100, 5000, mobFactory.defaultMobType, 50);
+	mobFactory.spawnMob(5150, 5150, mobFactory.defaultMobType, 50);
 }
 
 var i = 0;
 function update() {
+	world.update();
 	player.update();
 	mobFactory.update();
 }

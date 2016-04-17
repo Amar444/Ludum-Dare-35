@@ -239,15 +239,21 @@ inventoryScreen.showStats = function (){
         var t =group.create(0,0, sprite.generateTexture());
         sprite.destroy()
         t.fixedToCamera = true;
-        t.cameraOffset.setTo(startx+10,starty+10 + (id*12));
+        t.cameraOffset.setTo(startx+10,starty+12 + (id*12));
     }
 
     var line = 0;
     // printText("Name",user.name,line++);
     printText("Class",user.type,line++);
+    starty += 10;
     var stats = user.getStats();
     for(var t in stats){
-        printText(t,stats[t],line++);
+        var key = t;
+        if (t == "maxHealth")
+            key = "health";
+        if (t == "health")
+            continue;
+        printText(key,stats[t],line++);
     }
 
 
