@@ -5,17 +5,31 @@ inventoryScreen.preload = function(){
 
 };
 var itemSize = 32;
-
+var group
+var active = false
 inventoryScreen.create = function() {
+    game.input.keyboard.addKey(Phaser.Keyboard.I).onDown.add(function () {
+        if(active == false){
+
+            group = game.add.group();
+            inventoryScreen.createInventory()
+        }else{
+            group.destroy();
+
+        }
+        active = !active;
+    }, this);
+}
+inventoryScreen.createInventory = function() {
     var item;
     // Print grid
-    var start = {x: itemSize*5, y:itemSize*5,w:5,h:5};
+    var start = {x: itemSize*7, y:itemSize*5,w:5,h:5};
     var itemslots = {x: start.x-(2*itemSize), y: start.y,border:30, p:10,gx:7};
 
     var sprite = game.add.graphics(0, 0);
     sprite.beginFill(0x222222);
     sprite.drawRect(0, 0, itemSize*itemslots.gx,itemSize*itemslots.gx);
-    item = game.add.sprite(game.world.centerX+1, game.world.centerY, sprite.generateTexture());
+    item = group.create(game.world.centerX+1, game.world.centerY, sprite.generateTexture());
     sprite.destroy();
     item.fixedToCamera = true;
 
@@ -41,16 +55,17 @@ inventoryScreen.create = function() {
         sprite.drawRect(0, 0, itemSize + itemslots.border, itemSize + itemslots.border);
         sprite.beginFill(0x555555);
         sprite.drawRect(itemslots.border/2, itemslots.border/2, itemSize, itemSize);
-        item = game.add.sprite(itemslots.x,start_pos, sprite.generateTexture());
+        item = group.create(itemslots.x,start_pos, sprite.generateTexture());
         sprite.destroy();
         item.fixedToCamera = true;
         item.cameraOffset.setTo(itemslots.x,start_pos);
 
 
-        var t = game.add.text(0,0, type, {font: "12px Arial", fill: "#ffffff"});
+        var sprite = game.add.text(0,0, type, {font: "12px Arial", fill: "#ffffff"});
+        var t =group.create(itemslots.x+10,start_pos+1, sprite.generateTexture());
+        sprite.destroy()
         t.fixedToCamera = true;
         t.cameraOffset.setTo(itemslots.x+10,start_pos+1);
-
         j++;
     }
 
@@ -62,7 +77,7 @@ inventoryScreen.create = function() {
         sprite.drawCircle(0, 0, itemSize);
         sprite.beginFill(0x1463ab);
         sprite.drawCircle(0, 0, itemSize-5);
-        var item = game.add.sprite(0,0, sprite.generateTexture());
+        var item = group.create(0,0, sprite.generateTexture());
 
         item.fixedToCamera = true;
         var x = start.x+(Math.floor(i / itemslots.gx) *itemSize);
