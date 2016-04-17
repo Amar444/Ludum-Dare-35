@@ -1,30 +1,85 @@
 var game = window.game;
 var character = require('character');
+var sound = require('sound');
 
 var hud = {};
 var healthBar;
 var barWidth = 200;
 var healthText;
+var characterTypeDisplay;
+var button;
 
 hud.preload = function(){
+    game.load.image('speakerSound', 'images/sound-on.png');
+    game.load.image('speakerMute', 'images/sound-mute.png');
 };
 
 hud.create = function() {
-    hud.healthBarGroup = game.add.group();
-    hud.healthBarGroup.fixedToCamera = true;
     hud.createHealthBar();
+    hud.createCharacterTypeDisplay();
+    hud.createMuteButton();
 };
 
 hud.render = function() {
     hud.updateHealthBar();
+    hud.updateCharacterType();
 };
 
 hud.update = function() {
 };
 
+//MUTEBUTTON
+hud.createMuteButton = function() {
+    //make group
+    hud.muteButtonGroup = game.add.group();
+    hud.muteButtonGroup.fixedToCamera = true;
+
+    //make muteButtonGroup
+    button = game.add.button(740, 0, 'speakerMute', toggleSound, this);
+
+    //Add to group
+    hud.muteButtonGroup.add(button);
+};
+hud.updateMuteButton = function(){
+    if(sound.sound_enabled){
+        //button image speakerSound
+        button.loadTexture('speakerSound');
+    }else {
+        //button image speakerMute
+        button.loadTexture('speakerMute');
+    }
+};
+function toggleSound () {
+    console.log("BUTTON PRESSED");
+    //toggle sound
+    sound.toggle_mute();
+    hud.updateMuteButton();
+}
 
 
+//CHARACTERTYPE
+hud.createCharacterTypeDisplay = function(){
+    //make group
+    hud.characterTypeGroup = game.add.group();
+    hud.characterTypeGroup.fixedToCamera = true;
+
+    //make textfield
+    characterTypeDisplay = game.add.text(10, 30, character.getCurrentUser().type , { fontSize: '20px', fill: '#FFF' });
+
+    //add to group
+    hud.characterTypeGroup.add(characterTypeDisplay);
+};
+hud.updateCharacterType = function() {
+    characterTypeDisplay.text = character.getCurrentUser().type;
+};
+
+//HEALTHBAR
 hud.createHealthBar = function(){
+    //make group
+    hud.healthBarGroup = game.add.group();
+    hud.healthBarGroup.fixedToCamera = true;
+
+    //make healthbar
     var backgroundBar = game.add.graphics(10, 10);
     healthBar = game.add.graphics(10, 10);
     healthText = game.add.text(15, 11, '', { fontSize: '16px', fill: '#FFF' });
@@ -39,25 +94,23 @@ hud.createHealthBar = function(){
 
     healthBar.width; //if removed healthbar gets fucked up
 
+    //add healthbar to group
     hud.healthBarGroup.add(backgroundBar);
     hud.healthBarGroup.add(healthBar);
     hud.healthBarGroup.add(healthText);
 };
-
 hud.updateHealthBar = function(){
     if(hud.getUserStats().health >= 0){
         healthText.text = hud.getUserStats().health + "/" + hud.getUserStats().maxHealth + " hp";
         healthBar.width = hud.getBarPercentage();
     }
 };
-
 hud.getHealthPercentage = function(){
     return (hud.getUserStats().health * 100) / hud.getUserStats().maxHealth;
 };
 hud.getBarPercentage = function(){
     return(hud.getHealthPercentage() * barWidth) / 100;
 };
-
 hud.getUserStats = function(){
     return character.getCurrentUser().getStats();
 };
