@@ -3,6 +3,7 @@ var stats = require('character');
 var mobType = require('mob');
 var player = require('player');
 var world = require('world');
+var itemFactory = require('itemFactory');
 
 var mobFactory = {};
 
@@ -78,8 +79,9 @@ mobFactory.defaultAi = function () {
         var dmg = this.hitDamage;
         this.current_health -= 1;
         if (this.current_health <= 0) {
-            this.entity.destroy();
             //Drop random item
+            itemFactory.dropRandomItem(this.level, this.entity.x, this.entity.y);
+            this.entity.destroy();
             return;
         }
     }
