@@ -54,7 +54,6 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     mob.update = mobType.ai;
     mob.move = mobType.move;
     mob.entity.body.setCollisionGroup(game.enemyCollisionGroup);
-
     mob.entity.body.collides(game.projectileCollisionGroup);
     mob.entity.body.debug = true;
     mobs.push(mob);
@@ -70,7 +69,6 @@ mobFactory.defaultAi = function () {
     var tiles = world.getTilesAroundPlayer(rad);
     var self = this;
     easystar.setGrid(tiles.grid);
-    console.table(tiles.grid);
     if (m_x >= tiles.pX - rad && m_x <= tiles.pX + rad &&
         m_y >= tiles.pY - rad && m_y <= tiles.pY + rad) {
         easystar.findPath(rad + m_x - tiles.pX, rad + m_y - tiles.pY, rad, rad, (path) => {
@@ -78,11 +76,9 @@ mobFactory.defaultAi = function () {
                 self.move(0, 0);
             } else {
                 var next = path.slice(0, 1)[0];
-                console.log(path);
 
                 var dx = 0;
                 var dy = 0;
-                console.log(next, rad);
                 if (next.x < rad)
                     dx++;
                 if (next.x > rad)

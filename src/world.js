@@ -5,6 +5,7 @@ var simplexNoise = require('perlin');
 var Tile = require('tile');
 var specs = require('specs')
 
+var bmd;
 var world = {};
 var simplex = {};
 
@@ -22,6 +23,9 @@ world.emptyMap = function() {
 
 world.preCreate = function(){
     game.world.setBounds(0, 0, 10000, 10000);
+    bmd = game.add.bitmapData(10000, 10000);
+    bmd.addToWorld();
+    world.bmd = bmd;
     game.physics.startSystem(Phaser.Physics.P2JS);
 
     //INIT FOR COLLISION EVENTS

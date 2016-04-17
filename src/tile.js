@@ -1,4 +1,6 @@
 
+var tile_object = {}
+var bmd;
 var specs = require('specs')
 
 class Tile {
@@ -59,6 +61,7 @@ class Grass extends Tile{
 }
 
 class Mud extends Tile{
+
     render(graphics){
         graphics.beginFill(0x6F4242);
         return graphics;
