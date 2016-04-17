@@ -11,21 +11,21 @@ var easystar;
 
 mobFactory.preload = function(){
     game.load.script('EasyStar', '_plugins/easystar.js');
-
 }
 
-mobFactory.update = function(){
-    for(var mob in this.mobs){
+mobFactory.update = function() {
+    for (var mob in this.mobs) {
         this.mobs[mob].update();
     }
-    if(game.input.mousePointer.isDown && this.mobtest){
+    if (game.input.mousePointer.isDown && this.mobtest) {
         this.mobtest = false;
-        this.spawnMob(player.entity.x+250, player.entity.y+250, mobFactory.defaultMobType, 20);
-    for(var mob in mobs){
-        mobs[mob].update();
-    }
-    easystar.calculate();
-    if(game.input.mousePointer.isDown){
+        this.spawnMob(player.entity.x + 250, player.entity.y + 250, mobFactory.defaultMobType, 20);
+        for (var mob in mobs) {
+            mobs[mob].update();
+        }
+        easystar.calculate();
+        if (game.input.mousePointer.isDown) {
+        }
     }
 }
 
@@ -46,7 +46,7 @@ mobFactory.create = function () {
 }
 
 
-mobFactory.spawnMob = function(locationX, locationY, mobType, level){
+mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     var mob = {};
     mob = stats.random_mob(level);
     mob.entity = game.add.sprite(locationX, locationY, mobType.texture);
@@ -63,7 +63,7 @@ mobFactory.spawnMob = function(locationX, locationY, mobType, level){
     return mob;
 }
 
-mobFactory.defaultAi = function() {
+mobFactory.defaultAi = function () {
     var rad = 7;
     var m_x = Math.floor(this.entity.x / world.getTileSize()); //tile x
     var m_y = Math.floor(this.entity.y / world.getTileSize()); //tile y
@@ -72,10 +72,9 @@ mobFactory.defaultAi = function() {
     easystar.setGrid(tiles.grid);
     console.table(tiles.grid);
     if (m_x >= tiles.pX - rad && m_x <= tiles.pX + rad &&
-        m_y >= tiles.pY - rad && m_y <= tiles.pY + rad)
-    {
+        m_y >= tiles.pY - rad && m_y <= tiles.pY + rad) {
         easystar.findPath(rad + m_x - tiles.pX, rad + m_y - tiles.pY, rad, rad, (path) => {
-             if (path === undefined || path === null || path.length === 0) {
+            if (path === undefined || path === null || path.length === 0) {
                 self.move(0, 0);
             } else {
                 var next = path.slice(0, 1)[0];
@@ -99,7 +98,6 @@ mobFactory.defaultAi = function() {
     } else {
         self.move(0, 0);
     }
-    
-}
+};
 
-module.exports = mobFactory;
+module.exports = mobFactory
