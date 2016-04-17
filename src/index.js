@@ -17,12 +17,12 @@ function create() {
 	for(var i = 0; i < 10;i++){
 		console.log(character.random_mob(10));
 	}
-	world.create();
+	world.preCreate();
 	sound.create();
 	player.create();
 	camera.create();
-
-	game.time.events.loop(Phaser.Timer.SECOND, world.updateMap, this);
+	world.postCreate();
+	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
 }
 
 function update() {
@@ -34,4 +34,7 @@ function render() {
 	player.render();
 }
 
+function tick() {
+	world.updateMap();
+}
 module.exports = game;

@@ -6,7 +6,8 @@ random.newSeed = function (new_seed){
 }
 
 random.newFloat = function () {
-    var x = Math.sin(seed++) * 10000;
+    var y = seed++;
+    var x = Math.sin(y) * 10000;
     return x - Math.floor(x);
 }
 
@@ -18,6 +19,7 @@ random.newFloatBetween = function (min, max) {
     var r = random.newFloat()
     return min + ((max - min) * r);
 }
+
 
 random.newPercentageSplit = function (number){
     var list = [];
