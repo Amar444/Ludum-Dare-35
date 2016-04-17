@@ -43,6 +43,13 @@ player.create = function() {
     game.input.keyboard.addKey(Phaser.Keyboard.C).onDown.add(function () {
         player.mutate();
     }, this);
+    setInterval(function (){
+       var c = player.character.current_health;
+       var m = player.character.getStats().maxHealth;
+        if(c < m){
+            player.character.current_health++
+        }
+    },5000)
 
 }
 
