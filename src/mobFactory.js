@@ -44,7 +44,7 @@ mobFactory.update = function() {
 }
 
 mobFactory.spawn = function() {
-    var freq = 300 - world.getMobLevel() * 10;
+    var freq = 50 - world.getMobLevel() * 4;
     var chance = random.newIntBetween(0, freq);
     if (chance != 1)
         return;
@@ -60,13 +60,17 @@ mobFactory.spawn = function() {
     if (random.newFloat() > 0.5)
         dy = -dy;
     
-    var solid = TileManager.getType(world.simplex.noise(Math.round(x/specs.size)+dx, Math.round(x/specs.size)+dy));
+    var solid = TileManager.getType(world.simplex.noise(
+        Math.round(x/specs.size)+dx, 
+        Math.round(y/specs.size)+dy)
+    );
     if (!solid) {
         this.spawnMob(
             Math.round(x/specs.size)*specs.size + (dx * specs.size),
             Math.round(y/specs.size)*specs.size + (dy * specs.size),
             mobFactory.defaultMobType, world.getMobLevel()
         );
+        console.log("Creature has spawned");
     }
 }
 

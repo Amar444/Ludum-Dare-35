@@ -15,7 +15,7 @@ class TileManager {
     createWithSimplex(x, y, chunk_y, chunk_x, simplex, world){
         var tile;
         switch(true){
-            case(simplex < -0.4):
+            case(simplex < -0.5):
                 tile = new Deepwater(x, y, chunk_y, chunk_x, simplex, world);
                 break;
             case(simplex < -0.3):
