@@ -2,11 +2,11 @@ var game = window.game;
 var itemLibrary = require('item');
 var shapes = require("shapes");
 var player = require("player");
+var character = require("character");
 
 var itemFactory = {};
 var itemSize = 40;
 var dropchance = 30;
-var group;
 
 itemFactory.dropRandomItem = function(level, x, y){
     var randomNumber = Math.random();
@@ -40,7 +40,6 @@ itemFactory.createRandomItem = function(level){
 };
 
 itemFactory.drawItem = function(item, x, y){
-    group = game.add.group();
     var sprite = game.add.graphics(x, y);
     sprite.beginFill(0x444444);
     sprite.drawRect(0, 0, itemSize,itemSize);
@@ -61,7 +60,6 @@ itemFactory.drawItem = function(item, x, y){
         sprite.beginFill(0x222222);
     }
 
-    var itemGroup = group.create(0,0, sprite.generateTexture());
 };
 
 module.exports = itemFactory;
