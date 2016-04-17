@@ -5,7 +5,7 @@ var player = require('player');
 var world = require('world');
 var itemFactory = require('itemFactory');
 
-var projectiles = require("projectileFactory")
+var projectiles = require("projectileFactory");
 var projectile = require("projectile");
 var specs = require('specs');
 var random = require('random');
@@ -20,7 +20,7 @@ var easystar;
 
 mobFactory.preload = function(){
     game.load.script('EasyStar', '_plugins/easystar.js');
-}
+};
 
 mobFactory.update = function() {
     for (var mob in mobs) {
@@ -41,7 +41,7 @@ mobFactory.update = function() {
     }
     easystar.calculate();
     this.spawn();
-}
+};
 
 mobFactory.spawn = function() {
     var freq = 50 - world.getMobLevel() * 4;
@@ -52,16 +52,16 @@ mobFactory.spawn = function() {
     var y = player.entity.y;
     var minDistance = 5;
     var variation = 5;
-    
+
     var dx = random.newIntBetween(minDistance, minDistance + variation);
     var dy = random.newIntBetween(minDistance, minDistance + variation);
     if (random.newFloat() > 0.5)
         dx = -dx;
     if (random.newFloat() > 0.5)
         dy = -dy;
-    
+
     var solid = TileManager.getType(world.simplex.noise(
-        Math.round(x/specs.size)+dx, 
+        Math.round(x/specs.size)+dx,
         Math.round(y/specs.size)+dy)
     );
     if (!solid) {
@@ -72,7 +72,7 @@ mobFactory.spawn = function() {
         );
         console.log("Creature has spawned");
     }
-}
+};
 
 mobFactory.create = function () {
     //-------------------------------------------------------------
@@ -104,14 +104,14 @@ mobFactory.create = function () {
         if(target.sprite.name == "player"){
             console.log("player got hit");
         }
-    }
+    };
 
-    mobFactory.defaultRangedProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultRangedCollisionHandler)
+    mobFactory.defaultRangedProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultRangedCollisionHandler);
     mobFactory.defaultMobType = new mobType(mobFactory.defaultAi, defaultSprite.generateTexture());
     mobFactory.defaultRangedMob = new mobType(mobFactory.defaultRangedAi, defaultRangedSprite.generateTexture());
     defaultSprite.destroy();
     defaultRangedSprite.destroy();
-}
+};
 
 
 mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
@@ -129,7 +129,7 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
 
     /* Returns the mob in case you want to do something special with it */
     return mob;
-}
+};
 
 var last;
 mobFactory.defaultAi = function () {
@@ -159,8 +159,8 @@ mobFactory.defaultAi = function () {
             if (path === undefined || path === null || path.length === 0) {
                 self.move(0, 0);
             } else {
-                var now = path.slice(0, 1)[0]
-                var next = path.slice(1, 2)[0]
+                var now = path.slice(0, 1)[0];
+                var next = path.slice(1, 2)[0];
 
                 var dx = 0;
                 var dy = 0;
@@ -178,14 +178,14 @@ mobFactory.defaultAi = function () {
 mobFactory.defaultRangedAi = function(){
     if(this.defaultAI == undefined) {this.defaultAi = mobFactory.defaultAi;};
     this.defaultAi();
-    projectiles.spawnProjectile(this, player, mobFactory.defaultRangedProjectile)
+    projectiles.spawnProjectile(this, player, mobFactory.defaultRangedProjectile);
 };
 
 
 mobFactory.findMobInCone = function (x,y,direction,spread,range){
-    var out = []
+    var out = [];
     for(var i in mobs){
-        var m = mobs[i]
+        var m = mobs[i];
         var d = Math.sqrt(Math.pow(x-m.entity.x,2) + Math.pow(y-m.entity.y,2));
 
         var sx = player.entity.x;
@@ -195,10 +195,10 @@ mobFactory.findMobInCone = function (x,y,direction,spread,range){
         var angle = Phaser.Point.angle(new Phaser.Point(sx, sy), new Phaser.Point(tx, ty));
         if(d < range){
             // TODO: radius
-            out.push(m)
+            out.push(m);
         }
     }
-    
-    return out
-}
-module.exports = mobFactory
+
+    return out;
+};
+module.exports = mobFactory;
