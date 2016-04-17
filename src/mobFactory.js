@@ -75,6 +75,14 @@ mobFactory.spawn = function() {
 }
 
 mobFactory.create = function () {
+    //-------------------------------------------------------------
+    //-------------- TEMPORARY - DROP RANDOM ITEM ON GROUND -------
+    //-------------------------------------------------------------
+    game.input.keyboard.addKey(Phaser.Keyboard.X).onDown.add(function () {
+        itemFactory.dropRandomItem(10, player.entity.x + 20, player.entity.y + 20);
+    }, this);
+
+
     easystar = new EasyStar.js();
     easystar.setAcceptableTiles([0]);
     easystar.enableDiagonals();

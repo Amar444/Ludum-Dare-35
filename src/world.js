@@ -30,7 +30,7 @@ world.preCreate = function(){
     bmd.addToWorld();
     world.bmd = bmd;
     game.physics.startSystem(Phaser.Physics.P2JS);
-    
+
     world.tileGroup = game.add.group();
 
     game.camera.follow(player.entity);
