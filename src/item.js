@@ -39,23 +39,23 @@ game.random_item = function (level) {
     var points = random.newIntBetween(level * 10, level * 12);
     var item = game.new_item();
     var split = random.newPercentageSplit(4);
-    item.damage = split[0] * points;
+    item.damage = Math.round(split[0]) * points;
     item.affinity = classes.get_random_class(false);
-    item.speed = split[1] * points;
-    item.range = split[2] * points;
-    item.crit_chance = split[3] * points;
+    item.speed = Math.round(split[1]) * points;
+    item.range = Math.round(split[2]) * points;
+    item.crit_chance = Math.round(split[3]) * points;
 
 
 
-    var split = random.point_split(5,level);
+    var split = random.point_split(6,level);
 
-    item.mod_health = split[0];
-    item.mod_maxHealth = split[0];
-    item.mod_speed = split[1];
-    item.mod_strength = split[2];
-    item.mod_wisdom = split[3];
-    item.mod_dexterity = split[4];
-    item.mod_armour = split[5];
+    item.mod_health = Math.round(split[0]);
+    item.mod_maxHealth = Math.round(split[0]);
+    item.mod_speed = Math.round(split[1]);
+    item.mod_strength = Math.round(split[2]);
+    item.mod_wisdom = Math.round(split[3]);
+    item.mod_dexterity = Math.round(split[4]);
+    item.mod_armour = Math.round(split[5]);
 
 
     return item;

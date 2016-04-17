@@ -37,6 +37,8 @@ world.preCreate = function(){
     game.physics.p2.updateBoundsCollisionGroup();
 
     world.tileGroup = game.add.group();
+    
+    console.log(player);
 
     game.camera.follow(player.entity);
 

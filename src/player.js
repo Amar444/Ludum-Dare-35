@@ -40,7 +40,8 @@ player.create = function() {
     player.entity.body.setCollisionGroup(game.playerCollisionGroup)
     player.entity.body.collides([game.mobCollisionGroup,
         game.projectileCollisionGroup,
-        game.playerCollisionGroup]);
+        game.playerCollisionGroup,]
+    );
     game.input.keyboard.addKey(Phaser.Keyboard.C).onDown.add(function () {
         player.mutate();
     }, this);
