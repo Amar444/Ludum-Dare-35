@@ -40,9 +40,7 @@ itemFactory.createRandomItem = function(level){
 };
 
 itemFactory.drawItem = function(item, x, y){
-    var sprite = game.add.graphics(x, y);
-    sprite.beginFill(0x444444);
-    sprite.drawRect(0, 0, itemSize,itemSize);
+    var sprite = game.add.graphics(0, 0);
 
     if(item.type == "weapon"){
         sprite.beginFill(0xffff00);
@@ -59,7 +57,11 @@ itemFactory.drawItem = function(item, x, y){
     }else {
         sprite.beginFill(0x222222);
     }
+    var item = game.add.sprite(x, y, sprite.generateTexture());
+    sprite.destroy();
+    game.physics.p2.enable(item);
 
+    item.body.debug = true;
 };
 
 module.exports = itemFactory;
