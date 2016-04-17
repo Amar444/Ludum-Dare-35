@@ -77,13 +77,8 @@ user_class.new_user = function (){
             armour: 10,
             speed: 10,
             strength: 10,
-            stamina: 10,
-            intelligence: 10,
-            charisma: 10,
             wisdom: 10,
-            willpower: 10,
-            perception: 10,
-            luck: 10
+            dexterity: 10
         };
         for(var k in stats){
             ["weapon","shield","armour","hat"].map(function (item){
@@ -93,7 +88,7 @@ user_class.new_user = function (){
                     if(isFinite(i["mod_"+k])){
                         stats[k] += i["mod_"+k];
                     }else{
-                        console.error("Missing weapon?")
+                        console.error("Missing weapon?", i,"mod_"+k)
                     }
                 }
             })
@@ -111,6 +106,14 @@ user_class.new_user = function (){
 user_class.getCurrentUser = function(){
     if (!singleton) {
         singleton = user_class.new_user();
+        for(var g = 0;g < 3;g++){
+            singleton.inventory.push(item.random_weapon(1));
+            singleton.inventory.push(item.random_armour(1));
+            singleton.inventory.push(item.random_shield(1));
+            singleton.inventory.push(item.random_hat(1));
+        }
+
+
     }
     return singleton;
 }
@@ -136,4 +139,23 @@ user_class.new_sprite_name = function (){
 
 
 }
+
+user_class.getDamage = function(attacker, target) {
+    var dmg = 0;
+    switch(attacker.type) {
+        case "Melee":
+            dmg += attacker.strength;
+            break;
+        case "Range":
+            dmg += attacker.dexterity;
+            break;
+        case "Magic":
+            dmg += attacker.wisdom;
+            break;
+        default:
+            break;
+    }
+    return dmg - target.armour;
+}
+
 module.exports = user_class;

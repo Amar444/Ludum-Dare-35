@@ -1,10 +1,10 @@
 var mobType = function(ai, texture) {
     this.texture = texture;
-    console.log(ai);
     this.ai = ai;
+    this.pathfindRange = 10;
 
     this.move = function(dx, dy) {
-        var nspeed = 100;
+        var nspeed = 200;
         this.entity.body.setZeroVelocity();
 
         if (dx != 0 && dy != 0) {

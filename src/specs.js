@@ -1,5 +1,5 @@
 var specs = {
-    size: 15,
+    size: 30,
     chunk: 15
 }
 
