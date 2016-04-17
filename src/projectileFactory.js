@@ -1,6 +1,7 @@
 var game = window.game;
 var player = require('player');
 var projectile = require("projectile")
+var sound = require("sound")
 
 var projectileFactory = {};
 
@@ -54,6 +55,9 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
         if(projectile.collideGroups != undefined && projectile.collisionHandler != undefined){
             p.entity.body.collides(projectile.collideGroups, projectile.collisionHandler, this);
         }
+
+        // Shoot sound
+        sound.play_effect("shot");
 
         /* Set the cooldown*/
         setTimeout(function () {
