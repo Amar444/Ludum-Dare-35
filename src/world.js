@@ -23,7 +23,7 @@ world.emptyMap = function() {
 }
 
 world.preCreate = function(){
-    game.world.setBounds(0, 0, 1920, 1920);
+    game.world.setBounds(0, 0, 10000, 10000);
     game.physics.startSystem(Phaser.Physics.P2JS);
     world.tileGroup = game.add.group();
     world.startingPointGroup = game.add.group();
@@ -109,61 +109,41 @@ world.updateMap = function() {
 
 }
 
-world.getChunks = function() {
-    var player_chunk_y = Math.floor(player.entity.y / specs.size / specs.chunk);
-    var player_chunk_x = Math.floor(player.entity.x / specs.size / specs.chunk);
-    var coords = [];
-    var chunks = {
-        offsetX: 0,
-        offsetY: 0,
+world.getTilesAroundPlayer = function(r) {  //radius  
+    var p_x = Math.floor(player.entity.x / specs.size); //tile x
+    var p_y = Math.floor(player.entity.y / specs.size); //tile y
+    var tiles = {
+        pX: p_x,
+        pY: p_y,
         grid: []
     };
-    for(var i=0; i<3*specs.chunk; i++) {
-        chunks.grid[i] = new Array(specs.chunk * 3);
+
+    for (var i = 0; i < r*2 + 1; i++) {
+        tiles.grid[i] = new Array(r*2 + 1);
     }
 
-    for (var y = player_chunk_x - 1; y < player_chunk_x + 2; y++) {
-        for (var x = player_chunk_y - 1; x < player_chunk_y + 2; x++) {
-            if (maps.indexOf(y + "." + x) >= 0) {
-                coords.push({x: x, y: y});
+    for (var i = 0; i < r*2 + 1; i++) {
+        for (var j = 0; j < r*2 + 1; j++) {
+            var x = p_x - r + j;
+            var y = p_y - r + i;
+            if (simplex.noise(x, y) > 0) {
+                //obstructable
+                tiles.grid[i][j] = 1;
             } else {
-                coords.push({x: 0.5, y: 0.5});
+                //clear
+                tiles.grid[i][j] = 0;
             }
         }
     }
-    console.log(coords);
-    var i = 0;
-    var cnt = 0;
-    for (var i in coords) {
-        var coord = coords[i];
-        random.setSeed(coord.x, coord.y);
-        var xoff = (i % 3) * specs.chunk;
-        var yoff = Math.floor(i/3) * specs.chunk;
-
-        if (coord.x > 0 && coord.x < 1) {
-            for (var y = 0; y < specs.chunk; y++) {
-                for (var x = 0; x < specs.chunk; x++) {
-                    chunks.grid[y + yoff][x + xoff] = 1;
-                }
-            }
-            continue;
-        }
-
-        for (var y = 0; y < specs.chunk; y++) {
-            for (var x = 0; x < specs.chunk; x++) {
-                if (random.newIntBetween(0, 1) > 0.5)
-                    chunks.grid[y + yoff][x + xoff] = 0;
-                else
-                    chunks.grid[y + yoff][x + xoff] = 1;
-            }
-        }
-        ++i;
-    }
-    return chunks;
+    return tiles;
 }
 
 world.update = function() {
 
+}
+
+world.getTileSize = function() {
+    return specs.size;
 }
 
 world.createStartingPoint = function() {

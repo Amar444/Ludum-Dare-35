@@ -7,14 +7,17 @@ var camera = require('camera');
 var item = require('item');
 var projectile = require('projectile');
 var projectileFactory = require('projectileFactory');
+var mobFactory = require('mobFactory');
 
 var sound = require('sound');
 var character = require('character');
 
 
 function preload() {
+	game.time.advancedTiming = true;
 	world.preload();
 	player.preload();
+	mobFactory.preload();
 	projectile.preload();
 	projectileFactory.preload();
 	sound.preload();
@@ -27,20 +30,24 @@ function create() {
 	world.preCreate();
 	sound.create();
 	player.create();
+	mobFactory.create();
 	projectileFactory.create();
+
 	camera.create();
 	world.postCreate();
-	game.time.events.loop(Phaser.Timer.SECOND * 0.5, tick, this);
+
+	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
+	mobFactory.spawnMob(5100, 5000, mobFactory.defaultMobType, 10);
+}
+
+function init() {
+
 }
 
 var i = 0;
 function update() {
 	player.update();
-	if (!world.emptyMap() && i < 1) {
-		var chunks = world.getChunks();
-		console.log(chunks);
-		i++;
-	}
+	mobFactory.update();
 }
 
 function render() {
