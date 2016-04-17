@@ -62,12 +62,13 @@ mobFactory.defaultAi = function() {
         m_y >= tiles.pY - rad && m_y <= tiles.pY + rad)
     {
         easystar.findPath(rad + m_x - tiles.pX, rad + m_y - tiles.pY, rad, rad, (path) => {
-             if (path === null) {
-                console.log("The path to the destination point was not found.");
+             if (path === undefined || path.length === 0) {
+                self.move(0, 0);
             } else {
+                console.table(tiles.grid);
                 var next = path.slice(0, 1)[0];
-                if (next === undefined)
-                    return;
+                console.log(path);
+
                 var dx = 0;
                 var dy = 0;
                 console.log(next, rad);
@@ -83,6 +84,8 @@ mobFactory.defaultAi = function() {
                 self.move(dx, dy);
             }
         });
+    } else {
+        self.move(0, 0);
     }
     
 }
