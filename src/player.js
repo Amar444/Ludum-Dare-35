@@ -41,7 +41,6 @@ player.create = function() {
     player.entity.body.collides([game.mobCollisionGroup,
         game.projectileCollisionGroup,
         game.playerCollisionGroup]);
-    this.createWeapon();
     game.input.keyboard.addKey(Phaser.Keyboard.C).onDown.add(function () {
         player.mutate();
     }, this);
@@ -74,31 +73,6 @@ player.render = function() {
     sprite.beginFill(0xEDBE00);
     sprite.drawCircle(0, 0, Math.abs(iter) + 5);
     var child = player.entity.addChild(sprite);
-}
-
-
-    weaponsprite = game.add.graphics(0, 0);
-    switch(player.character.type) {
-        case "Range":
-
-            break;
-        case "Melee":
-            weaponsprite.beginFill(0x1463ab);
-            weaponsprite.drawRect(0, 0, 8, 40);
-            break;
-        case "Magic":
-            break;
-        default:
-            break;
-    }
-    weapon = game.add.sprite(player.entity.x + 10, player.entity.y - 35, weaponsprite.generateTexture());
-    weaponsprite.destroy();
-    game.physics.p2.enable(weapon);
-    weapon.body.setCollisionGroup(game.physics.p2.nothingCollisionGroup);
-    
-
-    weapon.xOff = 30;
-    weapon.yOff = -35;
 }
 
 

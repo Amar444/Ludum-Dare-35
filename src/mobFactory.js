@@ -102,6 +102,7 @@ mobFactory.create = function () {
 
     var defaultRangedCollisionHandler = function(mob, player){
         console.log("Do shit when you hit the player")
+    }
 
 
     mobFactory.defaultRangedProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultRangedCollisionHandler);
