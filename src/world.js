@@ -48,7 +48,6 @@ world.createMap = function(chunk_y, chunk_x) {
     random.setSeed(chunk_x, chunk_y);
     for (var y = chunk_y * specs.chunk; (y < specs.chunk + (chunk_y * specs.chunk) ); y++) {
         for (var x = chunk_x * specs.chunk; (x < specs.chunk + (chunk_x * specs.chunk)) ; x++) {
-            console.log(world);
             TileManager.createWithSimplex(x, y, chunk_y, chunk_x, simplex.noise(x, y), world);
         }
     }
@@ -107,9 +106,10 @@ world.updateMap = function() {
 
 };
 
+var first = true;
 world.getTilesAroundPlayer = function(r) {  //radius
-    var p_x = Math.floor(player.entity.x / specs.size); //tile x
-    var p_y = Math.floor(player.entity.y / specs.size); //tile y
+    var p_x = Math.round(player.entity.x / specs.size); //tile x
+    var p_y = Math.round(player.entity.y / specs.size); //tile y
     var tiles = {
         pX: p_x,
         pY: p_y,
@@ -124,7 +124,7 @@ world.getTilesAroundPlayer = function(r) {  //radius
         for (var j = 0; j < r*2 + 1; j++) {
             var x = p_x - r + j;
             var y = p_y - r + i;
-            var solid = TileManager.getType(simplex.noise(x, y)).solid;
+            var solid = TileManager.getType(simplex.noise(x, y));
             if (solid) {
                 //obstructable
                 tiles.grid[i][j] = 1;
@@ -133,6 +133,10 @@ world.getTilesAroundPlayer = function(r) {  //radius
                 tiles.grid[i][j] = 0;
             }
         }
+    }
+    if (first){
+        console.table(tiles.grid);
+        first = false;
     }
     return tiles;
 };

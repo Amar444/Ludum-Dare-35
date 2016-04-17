@@ -41,27 +41,32 @@ mobFactory.update = function() {
 }
 
 mobFactory.spawn = function() {
-    var freq = 120;
+    var freq = 300 - world.getMobLevel() * 10;
     var chance = random.newIntBetween(0, freq);
-    if (chance != 1)
+    if (chance != -1)
         return;
     var x = player.entity.x;
     var y = player.entity.y;
-    var minDistance = 200;
-    var variation = 100;
+    var minDistance = 5;
+    var variation = 5;
     
     var dx = random.newIntBetween(minDistance, minDistance + variation);
     var dy = random.newIntBetween(minDistance, minDistance + variation);
-    if (random.newFloat > 0.5)
+    if (random.newFloat() > 0.5)
         dx = -dx;
-    if (random.newFloat > 0.5)
+    if (random.newFloat() > 0.5)
         dy = -dy;
 
     console.log(dx, dy);
     
-    var solid = TileManager.getType(world.simplex.noise(x+dx, y+dy)).solid;
+    var solid = TileManager.getType(world.simplex.noise(Math.round(x/specs.size)+dx, Math.round(x/specs.size)+dy));
+    console.log(solid);
     if (!solid) {
-        this.spawnMob(x + dx, y + dy, mobFactory.defaultMobType, world.getMobLevel());
+        this.spawnMob(
+            Math.round(x/specs.size)*specs.size + (dx * specs.size),
+            Math.round(y/specs.size)*specs.size + (dy * specs.size),
+            mobFactory.defaultMobType, world.getMobLevel()
+        );
     }
 }
 
@@ -113,6 +118,7 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     return mob;
 }
 
+var last;
 mobFactory.defaultAi = function () {
     var rad = 7;
     //console.log(this.current_health)
@@ -129,8 +135,8 @@ mobFactory.defaultAi = function () {
     }
     var rad = this.pathfindRange;
 
-    var m_x = Math.floor(this.entity.x / specs.size); //tile x
-    var m_y = Math.floor(this.entity.y / specs.size); //tile y
+    var m_x = Math.round(this.entity.x / specs.size); //tile x
+    var m_y = Math.round(this.entity.y / specs.size); //tile y
     var tiles = world.getTilesAroundPlayer(rad);
     var self = this;
     easystar.setGrid(tiles.grid);
@@ -140,19 +146,15 @@ mobFactory.defaultAi = function () {
             if (path === undefined || path === null || path.length === 0) {
                 self.move(0, 0);
             } else {
-                var next = path.slice(0, 1)[0];
+                console.log(path);
+                var now = path.slice(0, 1)[0]
+                var next = path.slice(1, 2)[0]
 
                 var dx = 0;
                 var dy = 0;
-                if (next.x < rad)
-                    dx++;
-                if (next.x > rad)
-                    dx--;
-                if (next.y < rad)
-                    dy++;
-                if (next.y > rad)
-                    dy--;
-
+                dx = next.x - now.x;
+                dy = next.y - now.y;
+                console.log(dx, dy);
                 self.move(dx, dy);
             }
         });

@@ -51,24 +51,17 @@ class TileManager {
         return tile;
     }
     getType(simplex) {
-
-        switch(true) {
-            case(simplex < -0.4):
-                return true; //solid
-                break;
-            case(simplex < -0.3):
-                return false; //not solid
-                break;
-            case(simplex < 0.4):
-                return false; //not solid
-                break;
-            case(simplex < 0.5):
-                return false; //not solid
-                break;
-            default:
-                return true; //solid
-                break;
-        }
+        if(simplex < -0.4)
+            return true; //solid
+        else if(simplex < -0.3)
+            return false; //not solid
+        else if(simplex < 0.4)
+            return false; //not solid
+        else if(simplex < 0.5)
+            return false; //not solid
+        else
+            return true; //solid
+        
     }
 
     getTilesInChunk(chunk_y, chunk_x){
