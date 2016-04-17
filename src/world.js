@@ -20,8 +20,9 @@ world.emptyMap = function() {
 
 world.preCreate = function(){
     random.generateSeed();
-    game.world.setBounds(0, 0, 10000, 10000);
-    bmd = game.add.bitmapData(10000, 10000);
+    var bounds = (specs.size * specs.bounds * specs.chunk);
+    game.world.setBounds(0, 0, bounds, bounds);
+    bmd = game.add.bitmapData(bounds, bounds);
     bmd.addToWorld();
     world.bmd = bmd;
     game.physics.startSystem(Phaser.Physics.P2JS);
@@ -33,22 +34,23 @@ world.preCreate = function(){
     game.physics.p2.updateBoundsCollisionGroup();
 
     world.tileGroup = game.add.group();
-    world.startingPointGroup = game.add.group();
-    world.createStartingPoint();
+
     game.camera.follow(player.entity);
-    game.camera.deadzone = new Phaser.Rectangle(50, 50, 600, 400);
+
     simplex = simplexNoise.create();
 }
 
 world.postCreate = function() {
     this.updateMap();
+
+    environment.createStartingPoint();
 }
 
 world.createMap = function(chunk_y, chunk_x) {
     random.setSeed(chunk_x, chunk_y);
     for (var y = chunk_y * specs.chunk; (y < specs.chunk + (chunk_y * specs.chunk) ); y++) {
         for (var x = chunk_x * specs.chunk; (x < specs.chunk + (chunk_x * specs.chunk)) ; x++) {
-            TileManager.create(x, y, chunk_y, chunk_x, simplex.noise(x, y), world);
+            TileManager.createWithSimplex(x, y, chunk_y, chunk_x, simplex.noise(x, y), -);
         }
     }
     game.world.sendToBack(world.tileGroup);
@@ -141,20 +143,7 @@ world.update = function() {
 
 }
 
-world.getTileSize = function() {
-    return specs.size;
+world.render = function(){
+    game.debug.body(sprite);
 }
-
-world.createStartingPoint = function() {
-    var width = 150;
-    var height = 150;
-
-    var startingPoint = game.add.graphics(game.world.centerX - (width/2), game.world.centerY - (height/2));
-    startingPoint.beginFill(0xC2AB4F);
-    startingPoint.drawRect(0, 0, width, height);
-
-    world.startingPointGroup.add(startingPoint);
-}
-
-
 module.exports = world;

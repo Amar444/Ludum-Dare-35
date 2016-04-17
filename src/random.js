@@ -1,5 +1,5 @@
 var random = {};
-var seed = 1;
+var seed = 1925; //BERNLEF VO
 
 random.generateSeed = function() {
     seed = Math.floor(Math.random() * 1000);

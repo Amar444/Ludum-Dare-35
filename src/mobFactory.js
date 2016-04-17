@@ -3,6 +3,7 @@ var stats = require('character');
 var mobType = require('mob');
 var player = require('player');
 var world = require('world');
+var specs = require('specs');
 
 var mobFactory = {};
 
@@ -85,8 +86,8 @@ mobFactory.defaultAi = function () {
     var rad = this.pathfindRange;
     console.log(rad);
 
-    var m_x = Math.floor(this.entity.x / world.getTileSize()); //tile x
-    var m_y = Math.floor(this.entity.y / world.getTileSize()); //tile y
+    var m_x = Math.floor(this.entity.x / specs.size); //tile x
+    var m_y = Math.floor(this.entity.y / specs.size); //tile y
     var tiles = world.getTilesAroundPlayer(rad);
     var self = this;
     easystar.setGrid(tiles.grid);
