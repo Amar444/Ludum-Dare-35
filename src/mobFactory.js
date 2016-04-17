@@ -70,6 +70,17 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
 
 mobFactory.defaultAi = function () {
     var rad = 7;
+    if (this.hit) {
+        rad += 10;
+        this.hit = false;
+        var dmg = this.hitDamage;
+        this.current_health -= 1;
+        if (this.current_health <= 0) {
+            this.entity.destroy();
+        }
+        return;
+    }
+
     var m_x = Math.floor(this.entity.x / world.getTileSize()); //tile x
     var m_y = Math.floor(this.entity.y / world.getTileSize()); //tile y
     var tiles = world.getTilesAroundPlayer(rad);
@@ -99,15 +110,6 @@ mobFactory.defaultAi = function () {
         });
     } else {
         self.move(0, 0);
-    }
-
-    if (this.hit) {
-        this.hit = false;
-        var dmg = this.hitDamage;
-        this.current_health -= 1;
-        if (this.current_health <= 0) {
-            this.entity.destroy();
-        }
     }
 };
 

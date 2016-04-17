@@ -60,7 +60,6 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
         p.entity.body.parent = p;
 
 
-        /*DEBUG MESSAGES*/
         console.log(projectile.collideGroups);
         if(projectile.collideGroups != undefined && projectile.collisionHandler != undefined){
             p.entity.body.collides([projectile.collideGroups, game.projectileCollisionGroup], projectile.collisionHandler);
