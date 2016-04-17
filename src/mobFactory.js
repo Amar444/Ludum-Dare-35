@@ -24,7 +24,7 @@ mobFactory.update = function() {
     }
     if (game.input.mousePointer.isDown && this.mobtest) {
         this.mobtest = false;
-        this.spawnMob(player.entity.x + 250, player.entity.y + 250, mobFactory.defaultMobType, 20);
+        this.spawnMob(player.entity.x + 250, player.entity.y + 250, mobFactory.defaultMobType, world.getMobLevel());
         for (var mob in mobs) {
             mobs[mob].update();
         }
@@ -80,11 +80,11 @@ mobFactory.defaultAi = function () {
         this.current_health -= 1;
         if (this.current_health <= 0) {
             this.entity.destroy();
+            //Drop random item
             return;
         }
     }
     var rad = this.pathfindRange;
-    console.log(rad);
 
     var m_x = Math.floor(this.entity.x / specs.size); //tile x
     var m_y = Math.floor(this.entity.y / specs.size); //tile y

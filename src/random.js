@@ -45,4 +45,15 @@ random.newPercentageSplit = function (number){
     return out;
 }
 
+random.point_split = function (splits,points){
+    var list = [];
+    for(var i =0;i < splits; i++){
+        list.push(0);
+    }
+    for(var i =0;i < points; i++){
+        list[Math.floor(Math.random() * list.length)]++;
+    }
+    return list;
+}
+
 module.exports =  random;

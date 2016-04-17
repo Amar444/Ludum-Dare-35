@@ -88,7 +88,7 @@ user_class.new_user = function (){
                     if(isFinite(i["mod_"+k])){
                         stats[k] += i["mod_"+k];
                     }else{
-                        console.error("Missing weapon?", i,"mod_"+k)
+                        console.error("Missing weapon?", i,"mod_"+k);
                     }
                 }
             })

@@ -159,6 +159,25 @@ inventoryScreen.createInventory = function() {
 
         // Limit drop location to only the 2 columns.
         (function (const_i){
+            var over = null
+            item.events.onInputOver.add(function (item) {
+                if(over == null || over.is_destroyed){
+                    var item = user.inventory[parseInt(const_i)]
+                    var lines = [];
+                    for(var i in item){
+                        lines.push(i +": "+item[i])
+                    }
+
+                    over = inventoryScreen.popup("test",lines,game.input.x, game.input.y)
+                }
+
+            })
+            item.events.onInputOut.add(function (item) {
+                if(over != null){
+                    over.destroy()
+                }
+
+            })
             item.events.onDragStop.add(function (item) {
                 console.log(const_i,item);
                 var pos = item.cameraOffset;
@@ -170,11 +189,12 @@ inventoryScreen.createInventory = function() {
                                 var x = itemslots.x + itemslots.border / 2;
                                 var y = (count * item_left_size) +itemslots.y + itemslots.border/2;
 
-
-                                user[types[type]] = parseInt(const_i)
-                                item.cameraOffset.setTo(x, y);
-                                inventoryScreen.showStats()
-                                return;
+                                if(user[types[type]] == -1){
+                                    user[types[type]] = parseInt(const_i)
+                                    item.cameraOffset.setTo(x, y);
+                                    inventoryScreen.showStats()
+                                    return;
+                                }
 
 
                             }
@@ -219,15 +239,21 @@ inventoryScreen.showStats = function (){
         var t =group.create(0,0, sprite.generateTexture());
         sprite.destroy()
         t.fixedToCamera = true;
-        t.cameraOffset.setTo(startx+10,starty+10 + (id*12));
+        t.cameraOffset.setTo(startx+10,starty+12 + (id*12));
     }
 
     var line = 0;
     // printText("Name",user.name,line++);
     printText("Class",user.type,line++);
+    starty += 10;
     var stats = user.getStats();
     for(var t in stats){
-        printText(t,stats[t],line++);
+        var key = t;
+        if (t == "maxHealth")
+            key = "health";
+        if (t == "health")
+            continue;
+        printText(key,stats[t],line++);
     }
 
 
@@ -235,9 +261,47 @@ inventoryScreen.showStats = function (){
 };
 
 
-inventoryScreen.render = function() {
-    game.debug.text('Group Left.', 100, 560);
-    game.debug.text('Group Right.', 280, 560);
+inventoryScreen.popup = function(title, lines,x,y) {
+    var popup = game.add.group();
+
+    var sprite = game.add.graphics(0, 0);
+    sprite.beginFill(0x222222);
+    sprite.drawRect(0, 0, 300,(1+lines.length)*12+10);
+
+    sprite.beginFill(0xffffff);
+    sprite.drawRect(5, 5, 280,(1+lines.length)*12);
+    var item = popup.create(0,0, sprite.generateTexture());
+    sprite.destroy();
+    item.fixedToCamera = true;
+    item.cameraOffset.setTo(x,y);
+
+    var id =0;
+    for(var i in lines){
+        var sprite = game.add.text(0,0, lines[i], {font: "12px Arial", fill: "#000000"});
+        var t =popup.create(0,0, sprite.generateTexture());
+        sprite.destroy()
+        t.fixedToCamera = true;
+        t.cameraOffset.setTo(10+x,10+y+(i*12));
+    }
+    var is_destroyed = false;
+    setTimeout(function (){
+        if(!is_destroyed){
+            is_destroyed = true;
+            popup.destroy()
+        }
+    },2000);
+    return {
+        is_destroyed: function (){
+            return is_destroyed
+        },
+        destroy: function (){
+            if(!is_destroyed){
+                is_destroyed = true;
+                popup.destroy()
+            }
+        }
+    }
+
 };
 
 inventoryScreen.update = function() {

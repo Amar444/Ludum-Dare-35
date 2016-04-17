@@ -2,21 +2,25 @@ var game = window.game;
 var player = require('player');
 var random = require('random');
 var simplexNoise = require('perlin');
+
 var TileManager = require('tileManager');
-var specs = require('specs')
+var specs = require('specs');
 var environment = require('environment');
 var bmd;
 var world = {};
 var simplex = {};
+var mobLevelUpAfterPixels = 600;
+var mobLevel;
+
 var maps = [];
 
 world.preload = function(){
 
-}
+};
 
 world.emptyMap = function() {
     return maps === undefined || maps.length === 0;
-}
+};
 
 world.preCreate = function(){
     random.generateSeed();
@@ -38,11 +42,10 @@ world.preCreate = function(){
     game.camera.follow(player.entity);
 
     simplex = simplexNoise.create();
-}
+};
 
 world.postCreate = function() {
     this.updateMap();
-
     environment.createStartingPoint();
 }
 
@@ -50,13 +53,12 @@ world.createMap = function(chunk_y, chunk_x) {
     random.setSeed(chunk_x, chunk_y);
     for (var y = chunk_y * specs.chunk; (y < specs.chunk + (chunk_y * specs.chunk) ); y++) {
         for (var x = chunk_x * specs.chunk; (x < specs.chunk + (chunk_x * specs.chunk)) ; x++) {
-            TileManager.createWithSimplex(x, y, chunk_y, chunk_x, simplex.noise(x, y), -);
+            TileManager.createWithSimplex(x, y, chunk_y, chunk_x, simplex.noise(x, y), world);
         }
     }
     game.world.sendToBack(world.tileGroup);
     environment.create(chunk_y, chunk_x);
-
-}
+};
 world.updateMap = function() {
     var coordinates = player.entity;
     var player_chunk_y = Math.floor(coordinates.y / specs.size / specs.chunk);
@@ -107,9 +109,9 @@ world.updateMap = function() {
         }
     }
 
-}
+};
 
-world.getTilesAroundPlayer = function(r) {  //radius  
+world.getTilesAroundPlayer = function(r) {  //radius
     var p_x = Math.floor(player.entity.x / specs.size); //tile x
     var p_y = Math.floor(player.entity.y / specs.size); //tile y
     var tiles = {
@@ -137,13 +139,51 @@ world.getTilesAroundPlayer = function(r) {  //radius
         }
     }
     return tiles;
-}
+};
 
 world.update = function() {
-
-}
+    world.calculateMobLevel();
+};
 
 world.render = function(){
     game.debug.body(sprite);
 }
+
+world.getTileSize = function() {
+    return specs.size;
+};
+
+world.createStartingPoint = function() {
+    var width = 150;
+    var height = 150;
+
+    var startingPoint = game.add.graphics(game.world.centerX - (width/2), game.world.centerY - (height/2));
+    startingPoint.beginFill(0xC2AB4F);
+    startingPoint.drawRect(0, 0, width, height);
+
+    world.startingPointGroup.add(startingPoint);
+};
+
+world.calculateMobLevel = function(){
+    var level = world.getPlayerDistanceOfCenter() / mobLevelUpAfterPixels;
+    if(level <1){
+        mobLevel = 1;
+    } else {
+        mobLevel = Math.floor(level);
+    }
+
+};
+world.getPlayerDistanceOfCenter = function(){
+    var playerDistanceOfCenterX = player.entity.x - game.world.centerX;
+    var playerDistanceOfCenterY = player.entity.y - game.world.centerX;
+    var playerDistanceOfCenter = Math.sqrt((Math.pow(playerDistanceOfCenterX,2))+(Math.pow(playerDistanceOfCenterY,2)));
+
+    return playerDistanceOfCenter;
+};
+
+world.getMobLevel = function(){
+    return mobLevel;
+};
+
+
 module.exports = world;
