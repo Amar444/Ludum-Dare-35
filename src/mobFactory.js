@@ -14,8 +14,8 @@ mobFactory.preload = function(){
 }
 
 mobFactory.update = function() {
-    for (var mob in this.mobs) {
-        this.mobs[mob].update();
+    for (var mob in mobs) {
+        mobs[mob].update();
     }
     if (game.input.mousePointer.isDown && this.mobtest) {
         this.mobtest = false;
@@ -23,10 +23,10 @@ mobFactory.update = function() {
         for (var mob in mobs) {
             mobs[mob].update();
         }
-        easystar.calculate();
         if (game.input.mousePointer.isDown) {
         }
     }
+    easystar.calculate();
 }
 
 mobFactory.create = function () {

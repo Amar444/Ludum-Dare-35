@@ -28,6 +28,27 @@ class Tile {
         return tile;
     }
 
+    static getType(simplex) {
+        switch(true) {
+            case(simplex < -0.4):
+                return true; //solid
+                break;
+            case(simplex < -0.3):
+                return false; //not solid
+                break;
+            case(simplex < 0.4):
+                return false; //not solid
+                break;
+            case(simplex < 0.5):
+                return false; //not solid
+                break;
+            default:
+                return true; //solid
+                break;
+        }
+    }
+
+
     constructor(x, y, simplex, world) {
         this.x = x;
         this.y = y;
