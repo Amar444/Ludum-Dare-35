@@ -2,6 +2,7 @@ var game = window.game;
 var player = require('player');
 var random = require('random');
 var simplexNoise = require('perlin');
+var tile = require('tile');
 
 var world = {};
 var simplex = {};
@@ -9,6 +10,7 @@ var specs = {
     size: 30,
     chunk: 15
 }
+var tiles = [];
 
 var maps = [];
 
@@ -29,6 +31,7 @@ world.preCreate = function(){
     game.camera.follow(player.entity);
     game.camera.deadzone = new Phaser.Rectangle(50, 50, 600, 400);
     simplex = simplexNoise.create();
+
 }
 
 world.postCreate = function() {
@@ -39,19 +42,14 @@ world.createMap = function(chunk_y, chunk_x) {
     random.setSeed(chunk_x, chunk_y);
     for (var y = chunk_y * specs.chunk; (y < specs.chunk + (chunk_y * specs.chunk) ); y++) {
         for (var x = chunk_x * specs.chunk; (x < specs.chunk + (chunk_x * specs.chunk)) ; x++) {
-            var bounds = new Phaser.Rectangle(y * specs.size, x * specs.size, specs.size, specs.size);
-            var graphics = game.add.graphics(bounds.y, bounds.x);
-            if (simplex.noise(x, y) > 0){
-                graphics.beginFill(0x00ADA7);
-                game.physics.p2.enable(graphics, true);
-                graphics.body.static = true;
-            } else{
-                graphics.beginFill(0xD9CC3C);
+            var rng = simplex.noise(x, y)
+            if(tiles[chunk_x] == undefined){
+                tiles[chunk_x] = [];
             }
-            graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
-            graphics.z = 0;
-
-            world.tileGroup.add(graphics);
+            if(tiles[chunk_x][chunk_y] == undefined){
+                tiles[chunk_x][chunk_y] = [];
+            }
+            tiles[chunk_x][chunk_y].push(tile.create(x, y, rng, specs, world));
         }
     }
     game.world.sendToBack(world.tileGroup);
@@ -73,9 +71,10 @@ world.updateMap = function() {
 
     for(var x in accepted_maps) {
         var acceptedMapCoordinates = accepted_maps[x].split(".");
-
+        var found = false;
         var accepted = true;
         for(var y in maps) {
+            found = true;
             var mapCoordinates = maps[y].split(".");
             if (acceptedMapCoordinates[0] == mapCoordinates[0] && acceptedMapCoordinates[1] == mapCoordinates[1]) {
                 accepted = false;
@@ -84,12 +83,30 @@ world.updateMap = function() {
 
         if(accepted) {
             maps.push(acceptedMapCoordinates[0] + "." + acceptedMapCoordinates[1]);
-            setTimeout(function(acceptedMapCoordinates){
-                world.createMap(acceptedMapCoordinates[0], acceptedMapCoordinates[1]);
-            }, 0, acceptedMapCoordinates)
-
+            world.createMap(acceptedMapCoordinates[0], acceptedMapCoordinates[1]);
         }
     }
+    for(var y in maps) {
+        var notFoundMapCoordinates = maps[y].split(".");
+        var found = false;
+        for (var x in accepted_maps) {
+            var acceptedMapCoordinates = accepted_maps[x].split(".");
+            if (acceptedMapCoordinates[0] == notFoundMapCoordinates[0] && acceptedMapCoordinates[1] == notFoundMapCoordinates[1]) {
+                found = true
+                break;
+            }
+        }
+        if(!found){
+            console.log(player_chunk_y + " " +player_chunk_x + " " + notFoundMapCoordinates[0] + " " + notFoundMapCoordinates[1]);
+            var chunkTiles = tiles[notFoundMapCoordinates[1]][notFoundMapCoordinates[0]];
+
+            for (x in chunkTiles) {
+                chunkTiles[x].destroy();
+            }
+            maps.splice(y, 1);
+        }
+    }
+
 }
 
 world.getChunks = function() {

@@ -18,7 +18,6 @@ function preload() {
 	projectile.preload();
 	projectileFactory.preload();
 	sound.preload();
-
 }
 
 function create() {
@@ -31,7 +30,7 @@ function create() {
 	projectileFactory.create();
 	camera.create();
 	world.postCreate();
-	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
+	game.time.events.loop(Phaser.Timer.SECOND * 0.5, tick, this);
 }
 
 var i = 0;
