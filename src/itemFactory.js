@@ -5,13 +5,14 @@ var player = require("player");
 
 var itemFactory = {};
 var itemSize = 40;
+var dropchance = 30;
 var group;
 
 itemFactory.dropRandomItem = function(level, x, y){
     var randomNumber = Math.random();
 
     //Chance a weapon drops
-    if(randomNumber >= 0 && randomNumber < 0.50 ){
+    if(randomNumber >= 0 && randomNumber < (dropchance/100) ){
         var item = itemFactory.createRandomItem(level);
         itemFactory.drawItem(item, x, y);
     }
@@ -40,7 +41,7 @@ itemFactory.createRandomItem = function(level){
 
 itemFactory.drawItem = function(item, x, y){
     group = game.add.group();
-    var sprite = game.add.graphics(player.entity.x, player.entity.y);
+    var sprite = game.add.graphics(x, y);
     sprite.beginFill(0x444444);
     sprite.drawRect(0, 0, itemSize,itemSize);
 
