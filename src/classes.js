@@ -35,21 +35,19 @@ classes.calculate_modifier = function (character, stats){
     
     if(character.getWeapon() != null){
         if(character.getWeapon().affinity != character.type){
-            stats.strength -= 5
-            stats.wisdom -= 5
-            stats.luck -= 5
-            stats.dexterity -= 5
+            stats.strength -= 5;
+            stats.wisdom -= 5;
+            stats.dexterity -= 5;
         }
     }else{
-        stats.strength -= 10
-        stats.wisdom -= 10
-        stats.luck -= 10
-        stats.dexterity -= 10
+        stats.strength -= 10;
+        stats.wisdom -= 10;
+        stats.dexterity -= 10;
     }
     if(character.getArmour() != null){
         if(character.getArmour().affinity != character.type){
-            stats.speed -= 5
-            stats.armour -= 3
+            stats.speed -= 5;
+            stats.armour -= 3;
         }
     }else{
         // no armour
@@ -58,12 +56,12 @@ classes.calculate_modifier = function (character, stats){
 
     if(character.getShield() != null){
         if(character.getShield().affinity != character.type){
-            stats.strength += 2
-            stats.armour -= 2
+            stats.strength += 2;
+            stats.armour -= 2;
         }
     }else{
-        stats.strength += 5
-        stats.armour -= 5
+        stats.strength += 5;
+        stats.armour -= 5;
     }
     
 
