@@ -11,12 +11,12 @@ projectileFactory.preload = function(){
 };
 
 projectileFactory.create = function () {
-    var defaultCollisionHandler = function(projectile, target){
-        target.parent.hit = true;
-        target.parent.hitDamage = projectile.parent.damage;
-        projectile.parent.entity.destroy();
-    };
-    this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, game.enemyCollisionGroup, defaultCollisionHandler);
+    var defaultCollisionHandler = function(target, A, B, equation){
+        if(target.sprite.name == "enemy"){
+            
+        }
+    }
+    this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultCollisionHandler);
 }
 
 projectileFactory.update = function () {
@@ -54,17 +54,10 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
         p.entity = game.add.sprite(sx, sy, projectile.texture);
         game.physics.p2.enable(p.entity);
         p.entity.body.angle = angle*180/Math.PI;
-        p.damageValue = projectile.damageValue;
         p.entity.body.velocity.x = x_velocity;
         p.entity.body.velocity.y = y_velocity;
-        p.entity.body.setCollisionGroup(game.projectileCollisionGroup);
-        p.entity.body.parent = p;
-
-
-        console.log(projectile.collideGroups);
-        if(projectile.collideGroups != undefined && projectile.collisionHandler != undefined){
-            p.entity.body.collides([projectile.collideGroups, game.projectileCollisionGroup], projectile.collisionHandler);
-        }
+        p.entity.body.onBeginContact.add(projectile.collisionHandler)
+        p.entity.name == "projectile";
 
         // Shoot sound
         sound.play_effect("shot");

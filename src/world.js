@@ -30,13 +30,7 @@ world.preCreate = function(){
     bmd.addToWorld();
     world.bmd = bmd;
     game.physics.startSystem(Phaser.Physics.P2JS);
-
-    //INIT FOR COLLISION EVENTS
-    game.physics.p2.setImpactEvents(true);
-    game.enemyCollisionGroup = game.physics.p2.createCollisionGroup();
-    game.projectileCollisionGroup = game.physics.p2.createCollisionGroup();
-    game.physics.p2.updateBoundsCollisionGroup();
-
+    
     world.tileGroup = game.add.group();
 
     game.camera.follow(player.entity);
