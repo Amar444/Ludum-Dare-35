@@ -13,6 +13,7 @@ var character = require('character');
 
 
 function preload() {
+	game.time.advancedTiming = true;
 	world.preload();
 	player.preload();
 	projectile.preload();
