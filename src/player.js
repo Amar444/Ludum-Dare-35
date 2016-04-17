@@ -13,6 +13,7 @@ var weaponsprite;
 var player = {};
 var projectile = require("projectileFactory")
 var init_char = require("character")
+var particles = require("particles")
 var shapes = require("shapes");
 
 player.preload = function(){
@@ -39,6 +40,15 @@ player.create = function() {
     };
 
     this.createWeapon();
+    game.input.keyboard.addKey(Phaser.Keyboard.C).onDown.add(function () {
+        player.mutate();
+    }, this);
+
+}
+
+player.mutate = function (){
+    player.character.changeType()
+    particles.explosion(player.entity.x,player.entity.y);
 }
 
 player.render = function() {
@@ -58,8 +68,8 @@ player.render = function() {
 }
 
 player.createWeapon = function() {
-    if (player.character.type != "Melee")
-        return;
+    // if (player.character.type != "Melee")
+    //     return;
 
     weaponsprite = game.add.graphics(0, 0);
     switch(player.character.type) {

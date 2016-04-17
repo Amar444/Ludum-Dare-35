@@ -67,6 +67,9 @@ user_class.new_user = function (){
             return null;
         }
     };
+    user.changeType = function (){
+        user.type = classes.get_random_class(true);
+    };
 
 
 
