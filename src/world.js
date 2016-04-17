@@ -59,6 +59,7 @@ world.updateMap = function() {
     var player_chunk_y = Math.floor(coordinates.y / specs.size / specs.chunk);
     var player_chunk_x = Math.floor(coordinates.x / specs.size / specs.chunk);
     var accepted_maps = [];
+    var newworld = this.emptyMap();
 
     //check surrouding neighbours
     for(var i = player_chunk_x-1; i <= player_chunk_x+1; i++) {
@@ -104,6 +105,20 @@ world.updateMap = function() {
         }
     }
 
+
+
+    if (newworld) {
+        var solid = true;
+        var x = 0;
+        var y = 0;
+        do {
+            player.entity.body.x += specs.size;
+            x = Math.round(player.entity.body.x / specs.size); //tile x
+            y = Math.round(player.entity.body.y / specs.size); //tile y
+            solid = TileManager.getType(simplex.noise(x, y));
+            console.log(player);
+        } while (solid);
+    }
 };
 
 var first = true;
