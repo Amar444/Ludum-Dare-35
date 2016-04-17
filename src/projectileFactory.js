@@ -6,16 +6,20 @@ var sound = require("sound")
 var projectileFactory = {};
 
 projectileFactory.preload = function(){
-    var defaultCollisionHandler = function(projectile, target){
-        projectile.destroy();
-        /* Do other stuff */
-    };
-    this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultCollisionHandler);
+
 
 };
 
 projectileFactory.create = function () {
     game.projectileCollisionGroup = game.physics.p2.createCollisionGroup();
+    var defaultCollisionHandler = function(projectile, target){
+        target.destroy();
+        projectile.destroy();
+        console.log('shitwnenenentdown')
+        /* Do other stuff */
+    };
+    this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, game.enemyCollisionGroup, defaultCollisionHandler);
+
 }
 
 projectileFactory.spawnProjectile = function(source, target, projectile) {

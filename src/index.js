@@ -7,6 +7,7 @@ var camera = require('camera');
 var item = require('item');
 var projectile = require('projectile');
 var projectileFactory = require('projectileFactory');
+var mobFactory = require('mobFactory');
 
 var sound = require('sound');
 var character = require('character');
@@ -16,9 +17,11 @@ function preload() {
 	game.time.advancedTiming = true;
 	world.preload();
 	player.preload();
+	mobFactory.preload();
 	projectile.preload();
 	projectileFactory.preload();
 	sound.preload();
+
 
 }
 
@@ -29,7 +32,9 @@ function create() {
 	world.create();
 	sound.create();
 	player.create();
+	mobFactory.create();
 	projectileFactory.create();
+
 	camera.create();
 	game.time.events.loop(Phaser.Timer.SECOND, world.updateMap, this);
 
@@ -37,6 +42,7 @@ function create() {
 
 function update() {
 	player.update();
+	mobFactory.update();
 }
 
 function render() {
