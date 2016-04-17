@@ -40,8 +40,9 @@ function create() {
 
 	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
 	inventoryScreen.create();
-	mobFactory.spawnMob(5100, 5000, mobFactory.defaultRangedMob, 50);
-	mobFactory.spawnMob(5150, 5150, mobFactory.defaultMobType, 50);
+	mobFactory.spawnMob(player.entity.x - 50, player.entity.y + 50, mobFactory.defaultRangedMob, 50);
+	mobFactory.spawnMob(player.entity.x + 50, player.entity.y - 50, mobFactory.defaultMobType, 50);
+
 
 }
 
