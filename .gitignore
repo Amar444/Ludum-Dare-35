@@ -1,5 +1,7 @@
 node_modules
 build
+!build/scripts/
+!build/index.html
 .idea
 *.log
 *.tmp

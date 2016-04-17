@@ -2,6 +2,7 @@ var game = window.game;
 var player = require('player');
 var random = require('random');
 var simplexNoise = require('perlin');
+var tile = require('tile');
 
 var world = {};
 var simplex = {};
@@ -9,6 +10,7 @@ var specs = {
     size: 30,
     chunk: 15
 }
+var tiles = [];
 
 var maps = [];
 
@@ -36,6 +38,7 @@ world.preCreate = function(){
     game.camera.follow(player.entity);
     game.camera.deadzone = new Phaser.Rectangle(50, 50, 600, 400);
     simplex = simplexNoise.create();
+
 }
 
 world.postCreate = function() {
@@ -46,19 +49,14 @@ world.createMap = function(chunk_y, chunk_x) {
     random.setSeed(chunk_x, chunk_y);
     for (var y = chunk_y * specs.chunk; (y < specs.chunk + (chunk_y * specs.chunk) ); y++) {
         for (var x = chunk_x * specs.chunk; (x < specs.chunk + (chunk_x * specs.chunk)) ; x++) {
-            var bounds = new Phaser.Rectangle(y * specs.size, x * specs.size, specs.size, specs.size);
-            var graphics = game.add.graphics(bounds.y, bounds.x);
-            if (simplex.noise(x, y) > 0){
-                graphics.beginFill(0x00ADA7);
-                game.physics.p2.enable(graphics, true);
-                graphics.body.static = true;
-            } else{
-                graphics.beginFill(0xD9CC3C);
+            var rng = simplex.noise(x, y)
+            if(tiles[chunk_x] == undefined){
+                tiles[chunk_x] = [];
             }
-            graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
-            graphics.z = 0;
-
-            world.tileGroup.add(graphics);
+            if(tiles[chunk_x][chunk_y] == undefined){
+                tiles[chunk_x][chunk_y] = [];
+            }
+            tiles[chunk_x][chunk_y].push(tile.create(x, y, rng, specs, world));
         }
     }
     game.world.sendToBack(world.tileGroup);
@@ -80,9 +78,10 @@ world.updateMap = function() {
 
     for(var x in accepted_maps) {
         var acceptedMapCoordinates = accepted_maps[x].split(".");
-
+        var found = false;
         var accepted = true;
         for(var y in maps) {
+            found = true;
             var mapCoordinates = maps[y].split(".");
             if (acceptedMapCoordinates[0] == mapCoordinates[0] && acceptedMapCoordinates[1] == mapCoordinates[1]) {
                 accepted = false;
@@ -91,69 +90,68 @@ world.updateMap = function() {
 
         if(accepted) {
             maps.push(acceptedMapCoordinates[0] + "." + acceptedMapCoordinates[1]);
-            setTimeout(function(acceptedMapCoordinates){
-                world.createMap(acceptedMapCoordinates[0], acceptedMapCoordinates[1]);
-            }, 0, acceptedMapCoordinates)
-
+            world.createMap(acceptedMapCoordinates[0], acceptedMapCoordinates[1]);
         }
     }
+    for(var y in maps) {
+        var notFoundMapCoordinates = maps[y].split(".");
+        var found = false;
+        for (var x in accepted_maps) {
+            var acceptedMapCoordinates = accepted_maps[x].split(".");
+            if (acceptedMapCoordinates[0] == notFoundMapCoordinates[0] && acceptedMapCoordinates[1] == notFoundMapCoordinates[1]) {
+                found = true
+                break;
+            }
+        }
+        if(!found){
+            console.log(player_chunk_y + " " +player_chunk_x + " " + notFoundMapCoordinates[0] + " " + notFoundMapCoordinates[1]);
+            var chunkTiles = tiles[notFoundMapCoordinates[1]][notFoundMapCoordinates[0]];
+
+            for (x in chunkTiles) {
+                chunkTiles[x].destroy();
+            }
+            maps.splice(y, 1);
+        }
+    }
+
 }
 
-world.getChunks = function() {
-    var player_chunk_y = Math.floor(player.entity.y / specs.size / specs.chunk);
-    var player_chunk_x = Math.floor(player.entity.x / specs.size / specs.chunk);
-    var coords = [];
-    var chunks = {
-        offsetX: 0,
-        offsetY: 0,
+world.getTilesAroundPlayer = function(r) {  //radius  
+    var p_x = Math.floor(player.entity.x / specs.size); //tile x
+    var p_y = Math.floor(player.entity.y / specs.size); //tile y
+    var tiles = {
+        pX: p_x,
+        pY: p_y,
         grid: []
     };
-    for(var i=0; i<3*specs.chunk; i++) {
-        chunks.grid[i] = new Array(specs.chunk * 3);
+
+    for (var i = 0; i < r*2 + 1; i++) {
+        tiles.grid[i] = new Array(r*2 + 1);
     }
 
-    for (var y = player_chunk_x - 1; y < player_chunk_x + 2; y++) {
-        for (var x = player_chunk_y - 1; x < player_chunk_y + 2; x++) {
-            if (maps.indexOf(y + "." + x) >= 0) {
-                coords.push({x: x, y: y});
+    for (var i = 0; i < r*2 + 1; i++) {
+        for (var j = 0; j < r*2 + 1; j++) {
+            var x = p_x - r + j;
+            var y = p_y - r + i;
+            var solid = tile.getType(simplex.noise(x, y)).solid;
+            if (solid) {
+                //obstructable
+                tiles.grid[i][j] = 1;
             } else {
-                coords.push({x: 0.5, y: 0.5});
+                //clear
+                tiles.grid[i][j] = 0;
             }
         }
     }
-    console.log(coords);
-    var i = 0;
-    var cnt = 0;
-    for (var i in coords) {
-        var coord = coords[i];
-        random.setSeed(coord.x, coord.y);
-        var xoff = (i % 3) * specs.chunk;
-        var yoff = Math.floor(i/3) * specs.chunk;
-
-        if (coord.x > 0 && coord.x < 1) {
-            for (var y = 0; y < specs.chunk; y++) {
-                for (var x = 0; x < specs.chunk; x++) {
-                    chunks.grid[y + yoff][x + xoff] = 1;
-                }
-            }
-            continue;
-        }
-
-        for (var y = 0; y < specs.chunk; y++) {
-            for (var x = 0; x < specs.chunk; x++) {
-                if (random.newIntBetween(0, 1) > 0.5)
-                    chunks.grid[y + yoff][x + xoff] = 0;
-                else
-                    chunks.grid[y + yoff][x + xoff] = 1;
-            }
-        }
-        ++i;
-    }
-    return chunks;
+    return tiles;
 }
 
 world.update = function() {
 
+}
+
+world.getTileSize = function() {
+    return specs.size;
 }
 
 world.createStartingPoint = function() {

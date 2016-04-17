@@ -2,6 +2,7 @@ var game = {};
 
 var items = require('../static/items.json');
 var random = require('random');
+var classes = require('classes');
 
 game.random_weapon = function (level) {
     var item = game.random_item(level);
@@ -30,6 +31,7 @@ game.random_item = function (level) {
     var item = game.new_item();
     var split = random.newPercentageSplit(4);
     item.damage = split[0] * points;
+    item.affinity = classes.get_random_class(false);
     item.speed = split[1] * points;
     item.range = split[2] * points;
     item.crit_chance = split[3] * points;
@@ -39,7 +41,7 @@ game.random_item = function (level) {
         return  Math.round((s*level));
     }
 
-    var split = random.newPercentageSplit(10);
+    var split = random.newPercentageSplit(11);
 
     item.mod_health = mod_calc(split[0]);
     item.mod_speed = mod_calc(split[1]);
@@ -51,6 +53,7 @@ game.random_item = function (level) {
     item.mod_willpower = mod_calc(split[7]);
     item.mod_perception = mod_calc(split[8]);
     item.mod_luck = mod_calc(split[9]);
+    item.mod_armour = mod_calc(split[10]);
 
 
     return item
