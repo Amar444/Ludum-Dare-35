@@ -13,7 +13,7 @@ projectileFactory.preload = function(){
 projectileFactory.create = function () {
     var defaultCollisionHandler = function(projectile, target){
         target.parent.hit = true;
-        target.parent.hitDamage = projectile.parent.damage;
+        target.parent.hitDamage = projectile.parent.damageValue;
         projectile.parent.entity.destroy();
     };
     this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, game.enemyCollisionGroup, defaultCollisionHandler);

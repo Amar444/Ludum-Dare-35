@@ -70,6 +70,7 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
 
 mobFactory.defaultAi = function () {
     var rad = 7;
+    console.log(this.current_health)
     if (this.hit) {
         rad += 10;
         this.hit = false;
