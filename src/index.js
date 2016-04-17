@@ -19,7 +19,6 @@ var hud = require('hud');
 function preload() {
 
 	game.time.advancedTiming = true;
-	game.junkGroup = game.add.group();
 	world.preload();
 	player.preload();
 	mobFactory.preload();
@@ -38,14 +37,15 @@ function create() {
 	mobFactory.create();
 	projectileFactory.create();
 	particles.create();
-
 	camera.create();
 	hud.create();
 	world.postCreate();
 
 	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
 	inventoryScreen.create();
+	mobFactory.spawnMob(5100, 5000, mobFactory.defaultRangedMob, 50);
 	mobFactory.spawnMob(5150, 5150, mobFactory.defaultMobType, 50);
+
 }
 
 var i = 0;

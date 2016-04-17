@@ -9,7 +9,7 @@ var environment = require('environment');
 var bmd;
 var world = {};
 var simplex = {};
-var mobLevelUpAfterPixels = 800;
+var mobLevelUpAfterPixels = 600;
 var mobLevel;
 
 var maps = [];
@@ -24,35 +24,30 @@ world.emptyMap = function() {
 
 world.preCreate = function(){
     random.generateSeed();
-    game.world.setBounds(0, 0, 10000, 10000);
-    bmd = game.add.bitmapData(10000, 10000);
+    var bounds = (specs.size * specs.bounds * specs.chunk);
+    game.world.setBounds(0, 0, bounds, bounds);
+    bmd = game.add.bitmapData(bounds, bounds);
     bmd.addToWorld();
     world.bmd = bmd;
     game.physics.startSystem(Phaser.Physics.P2JS);
-
-    //INIT FOR COLLISION EVENTS
-    game.physics.p2.setImpactEvents(true);
-    game.enemyCollisionGroup = game.physics.p2.createCollisionGroup();
-    game.projectileCollisionGroup = game.physics.p2.createCollisionGroup();
-    game.physics.p2.updateBoundsCollisionGroup();
-
+    
     world.tileGroup = game.add.group();
-    world.startingPointGroup = game.add.group();
-    world.createStartingPoint();
+
     game.camera.follow(player.entity);
-    game.camera.deadzone = new Phaser.Rectangle(50, 50, 600, 400);
+
     simplex = simplexNoise.create();
 };
 
 world.postCreate = function() {
     this.updateMap();
-};
+    environment.createStartingPoint();
+}
 
 world.createMap = function(chunk_y, chunk_x) {
     random.setSeed(chunk_x, chunk_y);
     for (var y = chunk_y * specs.chunk; (y < specs.chunk + (chunk_y * specs.chunk) ); y++) {
         for (var x = chunk_x * specs.chunk; (x < specs.chunk + (chunk_x * specs.chunk)) ; x++) {
-            TileManager.create(x, y, chunk_y, chunk_x, simplex.noise(x, y), world);
+            TileManager.createWithSimplex(x, y, chunk_y, chunk_x, simplex.noise(x, y), world);
         }
     }
     game.world.sendToBack(world.tileGroup);
@@ -143,6 +138,10 @@ world.getTilesAroundPlayer = function(r) {  //radius
 world.update = function() {
     world.calculateMobLevel();
 };
+
+world.render = function(){
+    game.debug.body(sprite);
+}
 
 world.getTileSize = function() {
     return specs.size;

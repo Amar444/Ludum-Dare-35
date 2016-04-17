@@ -7,6 +7,9 @@ var sprite = 0;
 var iter = 0;
 var speed = 200;
 
+var weapon;
+var weaponsprite;
+
 var player = {};
 var projectile = require("projectileFactory")
 var init_char = require("character")
@@ -17,15 +20,16 @@ player.preload = function(){
 
 player.create = function() {
     player.character = init_char.getCurrentUser();
+
     var sprite = game.add.graphics(0, 0);
     sprite.beginFill(0x222222);
     sprite.drawCircle(0, 0, 32);
     sprite.beginFill(0x1463ab);
     sprite.drawCircle(0, 0, 25);
     player.entity = game.add.sprite(game.world.centerX, game.world.centerY, sprite.generateTexture());
+    player.entity.name = "player";
     sprite.destroy();
     game.physics.p2.enable(player.entity);
-    player.entity.body.parent = player;
     cursors = game.input.keyboard.createCursorKeys();
     keys = {
         w: game.input.keyboard.addKey(Phaser.Keyboard.W),
@@ -33,6 +37,8 @@ player.create = function() {
         s: game.input.keyboard.addKey(Phaser.Keyboard.S),
         d: game.input.keyboard.addKey(Phaser.Keyboard.D)
     };
+
+    this.createWeapon();
 }
 
 player.render = function() {
@@ -51,15 +57,42 @@ player.render = function() {
     var child = player.entity.addChild(sprite);
 }
 
-player.drawWeapon = function(sprite) {
+player.createWeapon = function() {
+    if (player.character.type != "Melee")
+        return;
+
+    weaponsprite = game.add.graphics(0, 0);
     switch(player.character.type) {
         case "Range":
-            player.entity.body.angle = 0;
-            var sx = player.entity.x;
-            var sy = player.entity.y;
-            var tx = game.input.worldX;
-            var ty = game.input.worldY;
-            var angle = Phaser.Point.angle(new Phaser.Point(sx, sy), new Phaser.Point(tx, ty));
+
+            break;
+        case "Melee":
+            weaponsprite.beginFill(0x1463ab);
+            weaponsprite.drawRect(0, 0, 8, 40);
+            break;
+        case "Magic":
+            break;
+        default:
+            break;
+    }
+    weapon = game.add.sprite(player.entity.x + 10, player.entity.y - 35, weaponsprite.generateTexture());
+    weaponsprite.destroy();
+    game.physics.p2.enable(weapon);
+    weapon.body.setCollisionGroup(game.physics.p2.nothingCollisionGroup);
+
+    weapon.xOff = 30;
+    weapon.yOff = -35;
+}
+
+player.drawWeapon = function(sprite) {
+    player.entity.body.angle = 0;
+    var sx = player.entity.x;
+    var sy = player.entity.y;
+    var tx = game.input.worldX;
+    var ty = game.input.worldY;
+    var angle = Phaser.Point.angle(new Phaser.Point(sx, sy), new Phaser.Point(tx, ty));
+    switch(player.character.type) {
+        case "Range":
             var x = -Math.cos(angle);
             var y = -Math.sin(angle);
             sprite.lineStyle(5, 0xEDBE00, 1);
@@ -67,13 +100,15 @@ player.drawWeapon = function(sprite) {
             sprite.lineTo(x*25, y*25);            
             break;
         case "Melee":
-            shapes.item_weapon(sprite, 32);
+            weapon.body.rotation = angle - (1/2) * Math.PI;
+            weapon.body.debug = true;
             break;
         case "Magic":
             break;
         default:
             break;
     }
+    
 }
 
 player.update = function() {
@@ -119,6 +154,11 @@ player.update = function() {
             default:
                 break;
         }
+    }
+
+    if (weapon !== undefined) {
+        weapon.body.x = player.entity.x + Math.sin(weapon.body.rotation) * weapon.xOff;
+        weapon.body.y = player.entity.y + Math.cos(weapon.body.rotation) * weapon.yOff;
     }
 }
 
