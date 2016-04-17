@@ -90,7 +90,7 @@ SimplexNoise.noise = function(xin, yin) {
     }
     // Add contributions from each corner to get the final noise value.
     // The result is scaled to return values in the interval [-1,1].
-    return 70.0 * (n0 + n1 + n2);
+    return 90.0 * (n0 + n1 + n2);
 };
 
 module.exports = SimplexNoise

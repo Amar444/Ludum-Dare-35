@@ -25,8 +25,11 @@ environment.plantTree = function(tile){
     if(tile.constructor.name == "Grass" && random.newFloatBetween(0, 1) < 0.005){
         var bounds = new Phaser.Rectangle(tile.x * specs.size, tile.y * specs.size, specs.size, specs.size);
         var graphics = game.add.graphics(bounds.x, bounds.y);
-        graphics.beginFill(0x006400);
-        graphics.drawCircle((specs.size / 5) * - 1, (specs.size / 5) * - 1, bounds.width * 3, bounds.height * 3)
+        graphics.z = -1;
+        graphics.beginFill(0x008911);
+        graphics.drawCircle((specs.size / 5) * - 1, (specs.size / 5) * - 1, bounds.width * 3);
+        graphics.beginFill(0x1E8932);
+        graphics.drawCircle((specs.size / 5) * - 1, (specs.size / 5) * - 1, bounds.width * 2.5);
         game.physics.p2.enable(graphics);
         graphics.body.static = true;
         environment.entities.push(graphics);
