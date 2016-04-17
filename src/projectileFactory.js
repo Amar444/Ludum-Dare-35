@@ -31,6 +31,7 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
     if (projectile.cooldown === false){
         projectile.cooldown = true;
 
+
         /*Variables used in velocity calulations*/
         var sx, sy, tx, ty, angle, x_velocity, y_velocity;
 

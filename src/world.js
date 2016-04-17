@@ -2,15 +2,14 @@ var game = window.game;
 var player = require('player');
 var random = require('random');
 var simplexNoise = require('perlin');
-var Tile = require('tile');
-var specs = require('specs');
 
+var TileManager = require('tileManager');
+var specs = require('specs')
+var environment = require('environment');
 var bmd;
 var world = {};
 var simplex = {};
 var mobLevel = 1;
-
-var tiles = [];
 
 var maps = [];
 
@@ -52,22 +51,18 @@ world.createMap = function(chunk_y, chunk_x) {
     random.setSeed(chunk_x, chunk_y);
     for (var y = chunk_y * specs.chunk; (y < specs.chunk + (chunk_y * specs.chunk) ); y++) {
         for (var x = chunk_x * specs.chunk; (x < specs.chunk + (chunk_x * specs.chunk)) ; x++) {
-            var rng = simplex.noise(x, y)
-            if(tiles[chunk_x] == undefined){
-                tiles[chunk_x] = [];
-            }
-            if(tiles[chunk_x][chunk_y] == undefined){
-                tiles[chunk_x][chunk_y] = [];
-            }
-
-
-            tiles[chunk_x][chunk_y].push(Tile.create(x, y, rng, world).preRender());
+            TileManager.create(x, y, chunk_y, chunk_x, simplex.noise(x, y), world);
         }
     }
     game.world.sendToBack(world.tileGroup);
+<<<<<<< HEAD
 };
 
+=======
+    environment.create(chunk_y, chunk_x);
+>>>>>>> 82eb3b8c2c8da427b7a42e29b34c08e586e548c2
 
+}
 world.updateMap = function() {
     var coordinates = player.entity;
     var player_chunk_y = Math.floor(coordinates.y / specs.size / specs.chunk);
@@ -110,10 +105,9 @@ world.updateMap = function() {
             }
         }
         if(!found){
-            var chunkTiles = tiles[notFoundMapCoordinates[1]][notFoundMapCoordinates[0]];
-
+            var chunkTiles = TileManager.getTilesInChunk(notFoundMapCoordinates[0], notFoundMapCoordinates[1]);
             for (x in chunkTiles) {
-                chunkTiles[x].destroy();
+                chunkTiles[x].graphics.destroy();
             }
             maps.splice(y, 1);
         }
@@ -138,7 +132,7 @@ world.getTilesAroundPlayer = function(r) {  //radius
         for (var j = 0; j < r*2 + 1; j++) {
             var x = p_x - r + j;
             var y = p_y - r + i;
-            var solid = Tile.getType(simplex.noise(x, y)).solid;
+            var solid = TileManager.getType(simplex.noise(x, y)).solid;
             if (solid) {
                 //obstructable
                 tiles.grid[i][j] = 1;
