@@ -4,13 +4,21 @@ window.game = game;
 var player = require('player');
 var world = require('world');
 var camera = require('camera');
+var item = require('item');
+var projectile = require('projectile');
+var projectileFactory = require('projectileFactory');
+
 var sound = require('sound');
 var character = require('character');
+
 
 function preload() {
 	world.preload();
 	player.preload();
+	projectile.preload();
+	projectileFactory.preload();
 	sound.preload();
+
 }
 
 function create() {
@@ -20,6 +28,7 @@ function create() {
 	world.preCreate();
 	sound.create();
 	player.create();
+	projectileFactory.create();
 	camera.create();
 	world.postCreate();
 	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
@@ -37,4 +46,5 @@ function render() {
 function tick() {
 	world.updateMap();
 }
+
 module.exports = game;

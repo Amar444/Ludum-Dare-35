@@ -20,7 +20,8 @@ world.preCreate = function(){
     game.world.setBounds(0, 0, 1920, 1920);
     game.physics.startSystem(Phaser.Physics.P2JS);
     world.tileGroup = game.add.group();
-    world.tileGroup.zIndex = 0;
+    world.startingPointGroup = game.add.group();
+    world.createStartingPoint();
     game.camera.follow(player.entity);
     game.camera.deadzone = new Phaser.Rectangle(50, 50, 600, 400);
     simplex = simplexNoise.create();
@@ -63,6 +64,7 @@ world.updateMap = function(){
         for(var j = player_chunk_y-1; j <= player_chunk_y+1; j++) {
             //check if already made
             accepted_maps.push(j  + "." +  i);
+
         }
     }
 
@@ -89,6 +91,17 @@ world.updateMap = function(){
 
 world.update = function() {
 
+}
+
+world.createStartingPoint = function() {
+    var width = 200;
+    var height = 200;
+
+    var startingPoint = game.add.graphics(game.world.centerX - (width/2), game.world.centerY - (height/2));
+    startingPoint.beginFill(0xC2AB4F);
+    startingPoint.drawRect(0, 0, width, height);
+
+    world.startingPointGroup.add(startingPoint);
 }
 
 
