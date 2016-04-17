@@ -37,7 +37,12 @@ player.create = function() {
         s: game.input.keyboard.addKey(Phaser.Keyboard.S),
         d: game.input.keyboard.addKey(Phaser.Keyboard.D)
     };
+    console.log("HI")
 
+    player.entity.body.setCollisionGroup(game.playerCollisionGroup)
+    player.entity.body.collides([game.mobCollisionGroup,
+        game.projectileCollisionGroup,
+        game.playerCollisionGroup]);
     this.createWeapon();
 }
 
@@ -79,6 +84,7 @@ player.createWeapon = function() {
     weaponsprite.destroy();
     game.physics.p2.enable(weapon);
     weapon.body.setCollisionGroup(game.physics.p2.nothingCollisionGroup);
+    
 
     weapon.xOff = 30;
     weapon.yOff = -35;

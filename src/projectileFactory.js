@@ -12,11 +12,9 @@ projectileFactory.preload = function(){
 };
 
 projectileFactory.create = function () {
-    var defaultCollisionHandler = function(target, A, B, equation){
-        if(target.sprite.name == "enemy"){
-            
-        }
-    }
+    var defaultCollisionHandler = function(projectile, enemy){
+        console.log("do stuff here");
+    };
     this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultCollisionHandler);
 }
 
@@ -52,13 +50,15 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
 
         /*creations of the actual projectile*/
         var p = {};
-        p.entity = game.add.sprite(sx, sy, projectile.texture);
+        p.entity = game.add.sprite(sx + (-Math.cos(angle)*10), sy + (-Math.sin(angle)*10), projectile.texture);
         game.physics.p2.enable(p.entity);
         p.entity.body.angle = angle*180/Math.PI;
         p.entity.body.velocity.x = x_velocity;
         p.entity.body.velocity.y = y_velocity;
-        p.entity.body.onBeginContact.add(projectile.collisionHandler)
-        p.entity.body.data.shapes[0].sensor = true;
+        p.entity.body.setCollisionGroup(game.projectileCollisionGroup);
+        p.entity.body.collides([game.projectileCollisionGroup]);
+        p.entity.body.collides([game.playerCollisionGroup, game.mobCollisionGroup], projectile.collisionHandler);
+        p.entity.body.daddy = p;
         p.entity.name == "projectile";
 
         // Shoot sound

@@ -30,7 +30,11 @@ world.preCreate = function(){
     bmd.addToWorld();
     world.bmd = bmd;
     game.physics.startSystem(Phaser.Physics.P2JS);
-    
+    game.physics.p2.setImpactEvents(true);
+    game.projectileCollisionGroup = game.physics.p2.createCollisionGroup();
+    game.playerCollisionGroup = game.physics.p2.createCollisionGroup();
+    game.mobCollisionGroup = game.physics.p2.createCollisionGroup();
+    game.physics.p2.updateBoundsCollisionGroup();
     world.tileGroup = game.add.group();
 
     game.camera.follow(player.entity);
@@ -47,7 +51,6 @@ world.createMap = function(chunk_y, chunk_x) {
     random.setSeed(chunk_x, chunk_y);
     for (var y = chunk_y * specs.chunk; (y < specs.chunk + (chunk_y * specs.chunk) ); y++) {
         for (var x = chunk_x * specs.chunk; (x < specs.chunk + (chunk_x * specs.chunk)) ; x++) {
-            console.log(world);
             TileManager.createWithSimplex(x, y, chunk_y, chunk_x, simplex.noise(x, y), world);
         }
     }
