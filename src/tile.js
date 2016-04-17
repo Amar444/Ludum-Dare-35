@@ -1,71 +1,72 @@
-var game = window.game;
 
 var tile_object = {}
 var bmd;
+var specs = require('specs')
 
+class Tile {
+    constructor(x, y, simplex, world) {
+        this.x = x;
+        this.y = y;
+        this.simplex = simplex;
 
-tile_object.create = function(x, y, simplex, specs, world){
-    bmd = world.bmd;
-    var bounds = new Phaser.Rectangle(y * specs.size, x * specs.size, specs.size, specs.size);
-    var graphics = game.add.graphics(bounds.y, bounds.x);
-    var tile;
+        if(this.simplex < -0.3){
+            this.type = new water();
+        } else if(this.simplex > 0.5) {
+            this.type = new stone();
+        } else if(this.simplex > 0.4 && this.simplex < 0.5){
+            this.type = new mud();
+        } else {
+            this.type = new grass();
+        }
+        this.world = world;
 
-    tile = tile_object.getType(simplex);
-    tile.render(graphics, x, y, specs.size);
-
-    graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
-    graphics.z = 0;
-
-    world.tileGroup.add(graphics);
-
-    return graphics;
-}
-
-tile_object.getType = function(simplex) {
-    var tile;
-    if(simplex < -0.3){
-        tile = tiles.water;
-    } else if(simplex > 0.5) {
-        tile = tiles.stone;
-    } else if(simplex > 0.4 && simplex < 0.5){
-        tile = tiles.mud;
-    } else {
-        tile = tiles.grass;
     }
-    return tile;
-}
 
-var tiles = {
-    water: {
-        solid: true,
-        render: function(graphics, x, y, tilesize){
-            graphics.beginFill(0x40a4df);
-            game.physics.p2.enable(graphics);
-            graphics.body.static = true;
+    render() {
+        var bounds = new Phaser.Rectangle(this.y * specs.size, this.x * specs.size, specs.size, specs.size);
+        var graphics = game.add.graphics(bounds.y, bounds.x);
+        graphics = this.type.render(graphics);
+        graphics.z = 0;
+        graphics.drawRect((specs.size / 2) * - 1, (specs.size / 2) * - 1, bounds.width, bounds.height);
+        
+        this.world.tileGroup.add(graphics);
 
-            //var c = Phaser.Color.interpolateColor(0x66d973, 0x40b54d, 30, 5);
-            //bmd.rect(x * tilesize, y * tilesize, tilesize, tilesize, Phaser.Color.getWebRGB(c));
-        }
-    },
-    grass: {
-        solid: false,
-        render: function(graphics) {
-            graphics.beginFill(0x4DBD33);
-        }
-    },
-    stone: {
-        solid: true,
-        render: function(graphics){
-            graphics.beginFill(0x5C4033);
-            game.physics.p2.enable(graphics);
-            graphics.body.static = true;
-        }
-    },
-    mud: {
-        solid: false,
-        render: function(graphics){
-            graphics.beginFill(0x6F4242);
-        }
+        return graphics;
     }
 }
-module.exports = tile_object;
+
+class water{
+    render(graphics){
+        graphics.beginFill(0x40a4df);
+        game.physics.p2.enable(graphics);
+        graphics.body.static = true;
+        return graphics;
+    }
+}
+
+class grass{
+    render(graphics) {
+        graphics.beginFill(0x4DBD33);
+        return graphics;
+    }
+}
+
+
+class mud{
+    render(graphics){
+        graphics.beginFill(0x6F4242);
+        return graphics;
+    }
+
+}
+
+class stone{
+    render(graphics){
+        graphics.beginFill(0x5C4033);
+        game.physics.p2.enable(graphics);
+        graphics.body.static = true;
+        return graphics;
+    }
+}
+
+module.exports = Tile;

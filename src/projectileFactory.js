@@ -11,15 +11,12 @@ projectileFactory.preload = function(){
 };
 
 projectileFactory.create = function () {
-    game.projectileCollisionGroup = game.physics.p2.createCollisionGroup();
     var defaultCollisionHandler = function(projectile, target){
-        target.destroy();
+        console.log(projectile.entity)
         projectile.destroy();
-        console.log('shitwnenenentdown')
-        /* Do other stuff */
+        target.destroy();
     };
     this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, game.enemyCollisionGroup, defaultCollisionHandler);
-
 }
 
 projectileFactory.spawnProjectile = function(source, target, projectile) {
@@ -56,18 +53,23 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
         p.entity.body.velocity.x = x_velocity;
         p.entity.body.velocity.y = y_velocity;
         p.entity.body.setCollisionGroup(game.projectileCollisionGroup);
+
+        /*DEBUG MESSAGES*/
+        console.log(projectile.collideGroups);
         if(projectile.collideGroups != undefined && projectile.collisionHandler != undefined){
-            p.entity.body.collides(projectile.collideGroups, projectile.collisionHandler, this);
+            p.entity.body.collides([projectile.collideGroups, game.projectileCollisionGroup], projectile.collisionHandler);
+            console.log("added handler")
         }
 
         // Shoot sound
         sound.play_effect("shot");
-
+        p.entity.body.debug = true;
         /* Set the cooldown*/
         setTimeout(function () {
             projectile.cooldown = false;
         }, projectile.cooldownTime);
         /* Returns the projectile in case you want to do something special with it */
+        console.log(p)
         return p;
     }
 };

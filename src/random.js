@@ -25,6 +25,7 @@ random.newFloatBetween = function (min, max) {
 }
 
 
+
 random.newPercentageSplit = function (number){
     var list = [];
     var count = 0;
