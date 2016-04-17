@@ -1,7 +1,6 @@
 var game = window.game;
 var player = require('player');
 var projectile = require("projectile")
-var particles = require("particles")
 var sound = require("sound")
 
 var projectileFactory = {};
@@ -31,7 +30,6 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
      */
     if (projectile.cooldown === false){
         projectile.cooldown = true;
-        particles.explosion(source.entity.x,source.entity.y)
 
         /*Variables used in velocity calulations*/
         var sx, sy, tx, ty, angle, x_velocity, y_velocity;
@@ -58,6 +56,7 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
         p.entity.body.velocity.x = x_velocity;
         p.entity.body.velocity.y = y_velocity;
         p.entity.body.onBeginContact.add(projectile.collisionHandler)
+        p.entity.body.data.shapes[0].sensor = true;
         p.entity.name == "projectile";
 
         // Shoot sound

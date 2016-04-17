@@ -135,7 +135,6 @@ world.getTilesAroundPlayer = function(r) {  //radius
         }
     }
     if (first){
-        console.table(tiles.grid);
         first = false;
     }
     return tiles;

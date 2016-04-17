@@ -25,7 +25,7 @@ particles.explosion = function(x,y){
     //  The third is ignored when using burst/explode mode
     //  The final parameter (10) is how many particles will be emitted in this single burst
 
-    emitter.setScale(0.01, 0.1, 0.01, 0.1, 500, Phaser.Easing.Quintic.Out);
+    emitter.setScale(0.01, 1, 0.01, 1, 500, Phaser.Easing.Quintic.Out);
     emitter.start(true, 1000, null, 10);
 }
 

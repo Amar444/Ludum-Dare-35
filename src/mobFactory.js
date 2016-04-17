@@ -3,11 +3,14 @@ var stats = require('character');
 var mobType = require('mob');
 var player = require('player');
 var world = require('world');
+var itemFactory = require('itemFactory');
+
 var projectiles = require("projectileFactory")
 var projectile = require("projectile");
 var specs = require('specs');
 var random = require('random');
 var TileManager = require('tileManager');
+
 
 
 var mobFactory = {};
@@ -43,7 +46,7 @@ mobFactory.update = function() {
 mobFactory.spawn = function() {
     var freq = 300 - world.getMobLevel() * 10;
     var chance = random.newIntBetween(0, freq);
-    if (chance != -1)
+    if (chance != 1)
         return;
     var x = player.entity.x;
     var y = player.entity.y;
@@ -56,11 +59,8 @@ mobFactory.spawn = function() {
         dx = -dx;
     if (random.newFloat() > 0.5)
         dy = -dy;
-
-    console.log(dx, dy);
     
     var solid = TileManager.getType(world.simplex.noise(Math.round(x/specs.size)+dx, Math.round(x/specs.size)+dy));
-    console.log(solid);
     if (!solid) {
         this.spawnMob(
             Math.round(x/specs.size)*specs.size + (dx * specs.size),
@@ -121,15 +121,15 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
 var last;
 mobFactory.defaultAi = function () {
     var rad = 7;
-    //console.log(this.current_health)
     if (this.hit) {
         this.pathfindRange = 15;
         this.hit = false;
         var dmg = this.hitDamage;
         this.current_health -= 1;
         if (this.current_health <= 0) {
-            this.entity.destroy();
             //Drop random item
+            itemFactory.dropRandomItem(this.level, this.entity.x, this.entity.y);
+            this.entity.destroy();
             return;
         }
     }
@@ -146,7 +146,6 @@ mobFactory.defaultAi = function () {
             if (path === undefined || path === null || path.length === 0) {
                 self.move(0, 0);
             } else {
-                console.log(path);
                 var now = path.slice(0, 1)[0]
                 var next = path.slice(1, 2)[0]
 
@@ -154,7 +153,6 @@ mobFactory.defaultAi = function () {
                 var dy = 0;
                 dx = next.x - now.x;
                 dy = next.y - now.y;
-                console.log(dx, dy);
                 self.move(dx, dy);
             }
         });
@@ -171,5 +169,3 @@ mobFactory.defaultRangedAi = function(){
 };
 
 module.exports = mobFactory
-
-
