@@ -41,7 +41,7 @@ player.render = function() {
 
     sprite.beginFill(0xD9C021);
     sprite.drawCircle(0, 0, Math.abs(iter) + 5);
-    player.entity.addChild(sprite);
+    player.entity.addChild(sprite);game.debug.spriteInfo(player.entity, 32, 32);
 }
 
 player.update = function() {

@@ -25,17 +25,23 @@ function create() {
 	for(var i = 0; i < 10;i++){
 		console.log(character.random_mob(10));
 	}
-	world.create();
+	world.preCreate();
 	sound.create();
 	player.create();
 	projectileFactory.create();
 	camera.create();
-	game.time.events.loop(Phaser.Timer.SECOND, world.updateMap, this);
-
+	world.postCreate();
+	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
 }
 
+var i = 0;
 function update() {
 	player.update();
+	if (!world.emptyMap() && i < 1) {
+		var chunks = world.getChunks();
+		console.log(chunks);
+		i++;
+	}
 }
 
 function render() {
@@ -43,6 +49,8 @@ function render() {
 	player.render();
 }
 
-
+function tick() {
+	world.updateMap();
+}
 
 module.exports = game;
