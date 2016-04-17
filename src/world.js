@@ -4,7 +4,7 @@ var random = require('random');
 var simplexNoise = require('perlin');
 
 var TileManager = require('tileManager');
-var specs = require('specs')
+var specs = require('specs');
 var environment = require('environment');
 var bmd;
 var world = {};
@@ -55,14 +55,8 @@ world.createMap = function(chunk_y, chunk_x) {
         }
     }
     game.world.sendToBack(world.tileGroup);
-<<<<<<< HEAD
-};
-
-=======
     environment.create(chunk_y, chunk_x);
->>>>>>> 82eb3b8c2c8da427b7a42e29b34c08e586e548c2
-
-}
+};
 world.updateMap = function() {
     var coordinates = player.entity;
     var player_chunk_y = Math.floor(coordinates.y / specs.size / specs.chunk);
