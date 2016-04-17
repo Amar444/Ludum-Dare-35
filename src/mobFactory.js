@@ -102,6 +102,7 @@ mobFactory.create = function () {
 
     var defaultRangedCollisionHandler = function(mob, player){
         console.log("Do shit when you hit the player")
+    }
 
 
     mobFactory.defaultRangedProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultRangedCollisionHandler);
@@ -127,6 +128,7 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     //mob.entity.onBeginContact.add(mobType.collisionHandler);
     mob.entity.body.setCollisionGroup(game.mobCollisionGroup);
     mob.entity.body.collides(game.allCollisionGroups);
+    //console.log(mobType.collisonHandler)
     mob.entity.body.collides(game.playerCollisionGroup, mobType.collisionHandler)
     /* Returns the mob in case you want to do something special with it */
     return mob;
