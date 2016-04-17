@@ -34,7 +34,6 @@ function create() {
 	player.create();
 	mobFactory.create();
 	projectileFactory.create();
-
 	camera.create();
 	hud.create();
 	world.postCreate();
