@@ -8,8 +8,13 @@ var itemSize = 40;
 var group;
 
 itemFactory.dropRandomItem = function(level, x, y){
-    var item = itemFactory.createRandomItem(level);
-    itemFactory.drawItem(item, x, y);
+    var randomNumber = Math.random();
+
+    //Chance a weapon drops
+    if(randomNumber >= 0 && randomNumber < 0.50 ){
+        var item = itemFactory.createRandomItem(level);
+        itemFactory.drawItem(item, x, y);
+    }
 };
 
 itemFactory.createRandomItem = function(level){
