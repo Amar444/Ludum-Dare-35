@@ -22,6 +22,7 @@ world.emptyMap = function() {
 }
 
 world.preCreate = function(){
+    random.generateSeed();
     game.world.setBounds(0, 0, 10000, 10000);
     bmd = game.add.bitmapData(10000, 10000);
     bmd.addToWorld();
@@ -40,7 +41,6 @@ world.preCreate = function(){
     game.camera.follow(player.entity);
     game.camera.deadzone = new Phaser.Rectangle(50, 50, 600, 400);
     simplex = simplexNoise.create();
-
 }
 
 world.postCreate = function() {
