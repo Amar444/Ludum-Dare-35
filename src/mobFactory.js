@@ -16,6 +16,7 @@ mobFactory.preload = function(){
 mobFactory.update = function() {
     for (var mob in mobs) {
         mobs[mob].update();
+
         if (mobs[mob].current_health <= 0) {
             mobs.splice(mob, 1);
         }
@@ -62,7 +63,6 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     mob.entity.body.debug = true;
     mobs.push(mob);
     game.junkGroup.add(mob.entity);
-    mob.entity.body.parent = mob;
 
     /* Returns the mob in case you want to do something special with it */
     return mob;
