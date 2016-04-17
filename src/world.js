@@ -18,7 +18,7 @@ world.emptyMap = function() {
 
 
 world.create = function(){
-    game.world.setBounds(0, 0, 1920, 1920);
+    game.world.setBounds(0, 0, 10000, 10000);
     game.physics.startSystem(Phaser.Physics.P2JS);
     world.tileGroup = game.add.group();
     world.startingPointGroup = game.add.group();
