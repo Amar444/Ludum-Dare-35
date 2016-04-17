@@ -14,6 +14,7 @@ var character = require('character');
 
 
 function preload() {
+
 	game.time.advancedTiming = true;
 	world.preload();
 	player.preload();
@@ -21,7 +22,7 @@ function preload() {
 	projectile.preload();
 	projectileFactory.preload();
 	sound.preload();
-
+	
 
 }
 

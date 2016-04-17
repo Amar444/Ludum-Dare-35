@@ -23,6 +23,13 @@ world.emptyMap = function() {
 world.preCreate = function(){
     game.world.setBounds(0, 0, 10000, 10000);
     game.physics.startSystem(Phaser.Physics.P2JS);
+
+    //INIT FOR COLLISION EVENTS
+    game.physics.p2.setImpactEvents(true);
+    game.enemyCollisionGroup = game.physics.p2.createCollisionGroup();
+    game.projectileCollisionGroup = game.physics.p2.createCollisionGroup();
+    game.physics.p2.updateBoundsCollisionGroup();
+
     world.tileGroup = game.add.group();
     world.startingPointGroup = game.add.group();
     world.createStartingPoint();
