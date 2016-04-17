@@ -8,19 +8,19 @@ var iter = 0;
 var speed = 200;
 
 var player = {};
+var projectile = require("projectileFactory")
 
 player.preload = function(){
 }
 
 player.create = function() {
-
     var sprite = game.add.graphics(0, 0);
     sprite.beginFill(0x222222);
     sprite.drawCircle(0, 0, 32);
     sprite.beginFill(0x1463ab);
     sprite.drawCircle(0, 0, 25);
     player.entity = game.add.sprite(game.world.centerX, game.world.centerY, sprite.generateTexture());
-
+    sprite.destroy();
     game.physics.p2.enable(player.entity);
     cursors = game.input.keyboard.createCursorKeys();
     keys = {
@@ -41,7 +41,7 @@ player.render = function() {
 
     sprite.beginFill(0xD9C021);
     sprite.drawCircle(0, 0, Math.abs(iter) + 5);
-    player.entity.addChild(sprite);
+    player.entity.addChild(sprite);game.debug.spriteInfo(player.entity, 32, 32);
 }
 
 player.update = function() {
@@ -73,6 +73,10 @@ player.update = function() {
         player.entity.body.moveLeft(nspeed);
     if (cursors.right.isDown || keys.d.isDown)
         player.entity.body.moveRight(nspeed);
+
+    if(game.input.mousePointer.isDown){
+        projectile.spawnProjectile(player, "mouse", projectile.defaultProjectile);
+    }
 }
 
 module.exports = player;

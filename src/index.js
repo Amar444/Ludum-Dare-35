@@ -4,13 +4,23 @@ window.game = game;
 var player = require('player');
 var world = require('world');
 var camera = require('camera');
+var item = require('item');
+var projectile = require('projectile');
+var projectileFactory = require('projectileFactory');
+var mobFactory = require('mobFactory');
+
 var sound = require('sound');
 var character = require('character');
 var hud = require('hud');
 
+
 function preload() {
+	game.time.advancedTiming = true;
 	world.preload();
 	player.preload();
+	mobFactory.preload();
+	projectile.preload();
+	projectileFactory.preload();
 	sound.preload();
 	hud.preload();
 }
@@ -19,23 +29,37 @@ function create() {
 	for(var i = 0; i < 10;i++){
 		console.log(character.random_mob(10));
 	}
-	world.create();
+	world.preCreate();
 	sound.create();
 	player.create();
+	mobFactory.create();
+	projectileFactory.create();
+
 	camera.create();
 	hud.create();
+	world.postCreate();
 
-	game.time.events.loop(Phaser.Timer.SECOND, world.updateMap, this);
+	game.time.events.loop(Phaser.Timer.SECOND, tick, this);
+	mobFactory.spawnMob(5100, 5000, mobFactory.defaultMobType, 10);
 }
 
+function init() {
+}
+
+var i = 0;
 function update() {
 	player.update();
+	mobFactory.update();
 }
 
 function render() {
 	camera.render();
 	player.render();
 	hud.render();
+}
+
+function tick() {
+	world.updateMap();
 }
 
 module.exports = game;
