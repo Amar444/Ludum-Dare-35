@@ -16,7 +16,8 @@ mobFactory.preload = function(){
 mobFactory.update = function() {
     for (var mob in mobs) {
         mobs[mob].update();
-        if (mobs[mob].stats.current_health <= 0) {
+        console.log(mobs);
+        if (mobs[mob].current_health <= 0) {
             mobs.splice(mob, 1);
         }
     }
@@ -100,9 +101,10 @@ mobFactory.defaultAi = function () {
     }
 
     if (this.entity.body.hit) {
+        this.entity.body.hit = false;
         var dmg = this.entity.body.hitDamage;
-        this.stats.current_health -= dmg;
-        if (this.stats.current_health <= 0) {
+        this.current_health -= 1;
+        if (this.current_health <= 0) {
             this.entity.destroy();
         }
     }
