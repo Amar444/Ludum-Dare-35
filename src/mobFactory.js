@@ -23,6 +23,15 @@ mobFactory.update = function() {
             mobs.splice(mob, 1);
         }
     }
+    if (game.input.mousePointer.isDown && this.mobtest) {
+        this.mobtest = false;
+        this.spawnMob(player.entity.x + 250, player.entity.y + 250, mobFactory.defaultMobType, world.getMobLevel());
+        for (var mob in mobs) {
+            mobs[mob].update();
+        }
+        if (game.input.mousePointer.isDown) {
+        }
+    }
     easystar.calculate();
 }
 
@@ -84,11 +93,11 @@ mobFactory.defaultAi = function () {
         this.current_health -= 1;
         if (this.current_health <= 0) {
             this.entity.destroy();
+            //Drop random item
             return;
         }
     }
     var rad = this.pathfindRange;
-    //console.log(rad);
 
     var m_x = Math.floor(this.entity.x / world.getTileSize()); //tile x
     var m_y = Math.floor(this.entity.y / world.getTileSize()); //tile y
@@ -122,6 +131,7 @@ mobFactory.defaultAi = function () {
     }
 };
 
+
 mobFactory.defaultRangedAi = function(){
     if(this.defaultAI == undefined) {this.defaultAi = mobFactory.defaultAi;};
     this.defaultAi();
@@ -129,3 +139,5 @@ mobFactory.defaultRangedAi = function(){
 };
 
 module.exports = mobFactory
+
+

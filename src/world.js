@@ -2,24 +2,25 @@ var game = window.game;
 var player = require('player');
 var random = require('random');
 var simplexNoise = require('perlin');
-var Tile = require('tile');
-var specs = require('specs')
 
+var TileManager = require('tileManager');
+var specs = require('specs');
+var environment = require('environment');
 var bmd;
 var world = {};
 var simplex = {};
-
-var tiles = [];
+var mobLevelUpAfterPixels = 600;
+var mobLevel;
 
 var maps = [];
 
 world.preload = function(){
 
-}
+};
 
 world.emptyMap = function() {
     return maps === undefined || maps.length === 0;
-}
+};
 
 world.preCreate = function(){
     random.generateSeed();
@@ -35,32 +36,22 @@ world.preCreate = function(){
     game.camera.follow(player.entity);
     game.camera.deadzone = new Phaser.Rectangle(50, 50, 600, 400);
     simplex = simplexNoise.create();
-}
+};
 
 world.postCreate = function() {
     this.updateMap();
-}
+};
 
 world.createMap = function(chunk_y, chunk_x) {
     random.setSeed(chunk_x, chunk_y);
     for (var y = chunk_y * specs.chunk; (y < specs.chunk + (chunk_y * specs.chunk) ); y++) {
         for (var x = chunk_x * specs.chunk; (x < specs.chunk + (chunk_x * specs.chunk)) ; x++) {
-            var rng = simplex.noise(x, y)
-            if(tiles[chunk_x] == undefined){
-                tiles[chunk_x] = [];
-            }
-            if(tiles[chunk_x][chunk_y] == undefined){
-                tiles[chunk_x][chunk_y] = [];
-            }
-
-
-            tiles[chunk_x][chunk_y].push(Tile.create(x, y, rng, world).preRender());
+            TileManager.create(x, y, chunk_y, chunk_x, simplex.noise(x, y), world);
         }
     }
     game.world.sendToBack(world.tileGroup);
-}
-
-
+    environment.create(chunk_y, chunk_x);
+};
 world.updateMap = function() {
     var coordinates = player.entity;
     var player_chunk_y = Math.floor(coordinates.y / specs.size / specs.chunk);
@@ -103,18 +94,17 @@ world.updateMap = function() {
             }
         }
         if(!found){
-            var chunkTiles = tiles[notFoundMapCoordinates[1]][notFoundMapCoordinates[0]];
-
+            var chunkTiles = TileManager.getTilesInChunk(notFoundMapCoordinates[0], notFoundMapCoordinates[1]);
             for (x in chunkTiles) {
-                chunkTiles[x].destroy();
+                chunkTiles[x].graphics.destroy();
             }
             maps.splice(y, 1);
         }
     }
 
-}
+};
 
-world.getTilesAroundPlayer = function(r) {  //radius  
+world.getTilesAroundPlayer = function(r) {  //radius
     var p_x = Math.floor(player.entity.x / specs.size); //tile x
     var p_y = Math.floor(player.entity.y / specs.size); //tile y
     var tiles = {
@@ -131,7 +121,7 @@ world.getTilesAroundPlayer = function(r) {  //radius
         for (var j = 0; j < r*2 + 1; j++) {
             var x = p_x - r + j;
             var y = p_y - r + i;
-            var solid = Tile.getType(simplex.noise(x, y)).solid;
+            var solid = TileManager.getType(simplex.noise(x, y)).solid;
             if (solid) {
                 //obstructable
                 tiles.grid[i][j] = 1;
@@ -142,15 +132,15 @@ world.getTilesAroundPlayer = function(r) {  //radius
         }
     }
     return tiles;
-}
+};
 
 world.update = function() {
-
-}
+    world.calculateMobLevel();
+};
 
 world.getTileSize = function() {
     return specs.size;
-}
+};
 
 world.createStartingPoint = function() {
     var width = 150;
@@ -161,7 +151,28 @@ world.createStartingPoint = function() {
     startingPoint.drawRect(0, 0, width, height);
 
     world.startingPointGroup.add(startingPoint);
-}
+};
+
+world.calculateMobLevel = function(){
+    var level = world.getPlayerDistanceOfCenter() / mobLevelUpAfterPixels;
+    if(level <1){
+        mobLevel = 1;
+    } else {
+        mobLevel = Math.floor(level);
+    }
+
+};
+world.getPlayerDistanceOfCenter = function(){
+    var playerDistanceOfCenterX = player.entity.x - game.world.centerX;
+    var playerDistanceOfCenterY = player.entity.y - game.world.centerX;
+    var playerDistanceOfCenter = Math.sqrt((Math.pow(playerDistanceOfCenterX,2))+(Math.pow(playerDistanceOfCenterY,2)));
+
+    return playerDistanceOfCenter;
+};
+
+world.getMobLevel = function(){
+    return mobLevel;
+};
 
 
 module.exports = world;

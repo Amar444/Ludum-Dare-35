@@ -45,25 +45,17 @@ game.random_item = function (level) {
     item.range = split[2] * points;
     item.crit_chance = split[3] * points;
 
-    function mod_calc(s){
-        var hl = (level / 2);
-        return  Math.round((s*level));
-    }
 
-    var split = random.newPercentageSplit(11);
 
-    item.mod_health = mod_calc(split[0]);
-    item.mod_maxHealth = mod_calc(split[0]);
-    item.mod_speed = mod_calc(split[1]);
-    item.mod_strength = mod_calc(split[2]);
-    item.mod_stamina = mod_calc(split[3]);
-    item.mod_intelligence = mod_calc(split[4]);
-    item.mod_charisma = mod_calc(split[5]);
-    item.mod_wisdom = mod_calc(split[6]);
-    item.mod_willpower = mod_calc(split[7]);
-    item.mod_perception = mod_calc(split[8]);
-    item.mod_luck = mod_calc(split[9]);
-    item.mod_armour = mod_calc(split[10]);
+    var split = random.point_split(5,level);
+
+    item.mod_health = split[0];
+    item.mod_maxHealth = split[0];
+    item.mod_speed = split[1];
+    item.mod_strength = split[2];
+    item.mod_wisdom = split[3];
+    item.mod_dexterity = split[4];
+    item.mod_armour = split[5];
 
 
     return item
@@ -84,13 +76,9 @@ game.new_item = function () {
     new_item.mod_health = 0;
     new_item.mod_speed = 0;
     new_item.mod_strength = 0;
-    new_item.mod_stamina = 0;
-    new_item.mod_intelligence = 0;
-    new_item.mod_charisma = 0;
     new_item.mod_wisdom = 0;
-    new_item.mod_willpower = 0;
-    new_item.mod_perception = 0;
-    new_item.mod_luck = 0;
+    new_item.mod_dexterity = 0;
+    new_item.mod_armour = 0;
 
 
 
