@@ -139,12 +139,12 @@ mobFactory.defaultAi = function () {
         this.hit = false;
         var dmg = this.hitDamage;
         this.current_health -= 1;
-        if (this.current_health <= 0) {
-            //Drop random item
-            itemFactory.dropRandomItem(this.level, this.entity.x, this.entity.y);
-            this.entity.destroy();
-            return;
-        }
+    }
+    if (this.current_health <= 0) {
+        //Drop random item
+        itemFactory.dropRandomItem(this.level, this.entity.x, this.entity.y);
+        this.entity.destroy();
+        return;
     }
     var rad = this.pathfindRange;
 
