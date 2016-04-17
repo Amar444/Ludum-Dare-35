@@ -2,7 +2,7 @@ var Tile = require('../tile');
 
 class Grass extends Tile{
     render() {
-        this.graphics.beginFill(0x4DBD33);
+        this.graphics.beginFill(0xFFB03B);
     }
 }
 
