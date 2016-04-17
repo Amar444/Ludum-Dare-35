@@ -18,6 +18,7 @@ var hud = require('hud');
 function preload() {
 
 	game.time.advancedTiming = true;
+	game.junkGroup = game.add.group();
 	world.preload();
 	player.preload();
 	mobFactory.preload();

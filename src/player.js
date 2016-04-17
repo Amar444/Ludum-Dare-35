@@ -9,11 +9,13 @@ var speed = 200;
 
 var player = {};
 var projectile = require("projectileFactory")
+var init_char = require("character")
 
 player.preload = function(){
 }
 
 player.create = function() {
+    player.character = init_char.new_user();
     var sprite = game.add.graphics(0, 0);
     sprite.beginFill(0x222222);
     sprite.drawCircle(0, 0, 32);
@@ -22,6 +24,7 @@ player.create = function() {
     player.entity = game.add.sprite(game.world.centerX, game.world.centerY, sprite.generateTexture());
     sprite.destroy();
     game.physics.p2.enable(player.entity);
+    player.entity.body.parent = player;
     cursors = game.input.keyboard.createCursorKeys();
     keys = {
         w: game.input.keyboard.addKey(Phaser.Keyboard.W),

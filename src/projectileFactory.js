@@ -12,11 +12,13 @@ projectileFactory.preload = function(){
 
 projectileFactory.create = function () {
     var defaultCollisionHandler = function(projectile, target){
-        console.log(projectile.entity)
-        projectile.destroy();
-        target.destroy();
+        console.log("HIT!@")
     };
     this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, game.enemyCollisionGroup, defaultCollisionHandler);
+}
+
+projectileFactory.update = function () {
+
 }
 
 projectileFactory.spawnProjectile = function(source, target, projectile) {
@@ -53,12 +55,13 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
         p.entity.body.velocity.x = x_velocity;
         p.entity.body.velocity.y = y_velocity;
         p.entity.body.setCollisionGroup(game.projectileCollisionGroup);
+        p.entity.body.parent = p;
+
 
         /*DEBUG MESSAGES*/
         console.log(projectile.collideGroups);
         if(projectile.collideGroups != undefined && projectile.collisionHandler != undefined){
             p.entity.body.collides([projectile.collideGroups, game.projectileCollisionGroup], projectile.collisionHandler);
-            console.log("added handler")
         }
 
         // Shoot sound
@@ -69,7 +72,6 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
             projectile.cooldown = false;
         }, projectile.cooldownTime);
         /* Returns the projectile in case you want to do something special with it */
-        console.log(p)
         return p;
     }
 };
