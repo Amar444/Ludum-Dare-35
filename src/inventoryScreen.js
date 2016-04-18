@@ -22,12 +22,15 @@ inventoryScreen.toggle_inventory = function () {
     if (inventoryScreen.active) {
         group.destroy();
         inventoryScreen.active = false;
+        game.physics.p2.resume();
 
     } else {
         group = game.add.group();
+        inventoryScreen.active = true;
+        game.physics.p2.pause();
         inventoryScreen.createInventory();
         inventoryScreen.showStats()
-        inventoryScreen.active = true;
+
     }
 };
 inventoryScreen.createInventory = function() {
