@@ -212,8 +212,10 @@ mobFactory.findMobInCone = function (x,y,direction,spread,range){
         var ty = m.entity.y;
         var angle = Phaser.Point.angle(new Phaser.Point(sx, sy), new Phaser.Point(tx, ty));
         if(d < range){
-            // TODO: radius
-            out.push(m);
+            console.log(angle, direction);
+            if (Math.abs(Math.abs(angle) - Math.abs(direction)) < 0.4) {
+                out.push(mobs[i]);
+            }
         }
     }
 
