@@ -9,7 +9,8 @@ var itemSize = 40;
 var dropchance = 30;
 
 var itemCollisionHandler = function(item, player){
-    console.log("pick up shit");
+    character.getCurrentUser().inventory.push(item.daddy);
+    item.destroy();
 };
 
 itemFactory.dropRandomItem = function(level, x, y){
@@ -69,6 +70,7 @@ itemFactory.drawItem = function(item, x, y){
     console.log(itemCollisionHandler);
     item.body.collides(game.playerCollisionGroup, itemCollisionHandler);
     item.body.collides(game.allCollisionGroups);
+    item.body.daddy = item;
     item.body.debug = true;
 };
 

@@ -18,6 +18,7 @@ player.preload = function(){
 
 player.create = function() {
     player.character = init_char.getCurrentUser();
+    player.iframes = false;
 
     var sprite = game.add.graphics(0, 0);
     sprite.beginFill(0x222222);
@@ -37,7 +38,7 @@ player.create = function() {
     };
     
     player.entity.body.setCollisionGroup(game.playerCollisionGroup)
-
+    player.entity.body.daddy = player;
     player.entity.body.collides(game.allCollisionGroups);
     player.entity.body.collideWorldBounds = true;
     game.input.keyboard.addKey(Phaser.Keyboard.C).onDown.add(function () {

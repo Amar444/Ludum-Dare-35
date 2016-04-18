@@ -20,6 +20,8 @@ var mobFactory = {};
 var mobs = new Array();
 var easystar;
 
+var IFRAMELENGTH = 250;
+
 mobFactory.preload = function(){
     game.load.script('EasyStar', '_plugins/easystar.js');
 };
@@ -48,7 +50,7 @@ mobFactory.update = function() {
 };
 
 mobFactory.spawn = function() {
-    var freq = 50 - world.getMobLevel() * 4;
+    var freq = 175 - world.getMobLevel() * 10;
     var chance = random.newIntBetween(0, freq);
     if (chance != 1)
         return;
@@ -74,7 +76,7 @@ mobFactory.spawn = function() {
             Math.round(y/specs.size)*specs.size + (dy * specs.size),
             mobFactory.defaultMobType, world.getMobLevel()
         );
-        console.log("Creature has spawned");
+        //console.log("Creature has spawned");
     }
 };
 
@@ -105,13 +107,19 @@ mobFactory.create = function () {
     defaultRangedSprite.drawRect(0, 0, 24, 24);
 
     var defaultRangedCollisionHandler = function(projectile, player){
-        console.log("Do shit when you hit the player")
+        //console.log("Do shit when you hit the player");
     }
     var defaultMeleeCollisionHandler = function(mob, player){
-        console.log("Do shit when you hit the player")
+        //console.log("Do shit when you hit the player");
+        if(player.daddy.iframes){return};
+        player.daddy.iframes = true;
+        player.daddy.character.current_health--;
+        setTimeout(function(){
+            player.daddy.iframes = false;
+        }, IFRAMELENGTH);
     }
 
-    mobFactory.defaultRangedProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultRangedCollisionHandler);
+    mobFactory.defaultRangedProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultRangedCollisionHandler, game.playerCollisionGroup);
     mobFactory.defaultMobType = new mobType(mobFactory.defaultAi, defaultSprite.generateTexture(), defaultMeleeCollisionHandler);
     mobFactory.defaultRangedMob = new mobType(mobFactory.defaultRangedAi, defaultRangedSprite.generateTexture());
     defaultSprite.destroy();
@@ -130,7 +138,7 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     mob.pathfindRange = mobType.pathfindRange;
     mobs.push(mob);
     mob.entity.name = "enemy";
-    mob.entity.daddy = mob;
+    mob.entity.body.daddy = mob;
     //mob.entity.onBeginContact.add(mobType.collisionHandler);
     mob.entity.body.setCollisionGroup(game.mobCollisionGroup);
     mob.entity.body.collides(game.playerCollisionGroup, mobType.collisionHandler);
@@ -141,7 +149,12 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
 
 var last;
 mobFactory.defaultAi = function () {
-
+    if (this.current_health <= 0) {
+        //Drop random item
+        itemFactory.dropRandomItem(this.level, this.entity.x, this.entity.y);
+        this.entity.destroy();
+        return;
+    }
 
     var rad = 7;
     if (this.hit) {
@@ -150,12 +163,7 @@ mobFactory.defaultAi = function () {
         var dmg = this.hitDamage;
         this.current_health -= 1;
     }
-    if (this.current_health <= 0) {
-        //Drop random item
-        itemFactory.dropRandomItem(this.level, this.entity.x, this.entity.y);
-        this.entity.destroy();
-        return;
-    }
+
     var rad = this.pathfindRange;
 
     var m_x = Math.round(this.entity.x / specs.size); //tile x

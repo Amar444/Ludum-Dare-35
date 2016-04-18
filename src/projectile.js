@@ -5,7 +5,7 @@ projectile.PROJECTILE_SPEED = 600;
 projectile.PROJECTILE_DAMAGE = 0;
 projectile.PROJECTILE_LIFETIME = 750;
 
-function projectile(velocity, damageValue, cooldownTime, texture, lifetime, collisionHandler){
+function projectile(velocity, damageValue, cooldownTime, texture, lifetime, collisionHandler, collidesWith){
     this.cooldown = false;
     this.velocity = velocity != undefined ? velocity : projectile.PROJECTILE_SPEED;
     this.damageValue = damageValue != undefined ? damageValue : projectile.PROJECTILE_DAMAGE;
@@ -13,6 +13,7 @@ function projectile(velocity, damageValue, cooldownTime, texture, lifetime, coll
     this.texture = texture != undefined ? texture : projectile.DEFAULT_TEXTURE;
     this.lifetime = lifetime != undefined ? lifetime : projectile.PROJECTILE_LIFETIME;
     this.collisionHandler = collisionHandler != undefined ? collisionHandler : null;
+    this.collidesWith = collidesWith != undefined ? collidesWith : game.allCollisionGroups;
 }
 
 projectile.preload = function(){

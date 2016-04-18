@@ -5,6 +5,7 @@ var mobType = function(ai, texture, onContactCollisionHandler) {
     this.collisionHandler = onContactCollisionHandler;
 
     this.move = function(dx, dy) {
+        if(this.entity.body == null){return}
         var nspeed = 100;
         this.entity.body.setZeroVelocity();
 

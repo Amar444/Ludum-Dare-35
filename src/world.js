@@ -128,7 +128,7 @@ world.updateMap = function() {
             x = Math.round(player.entity.body.x / specs.size); //tile x
             y = Math.round(player.entity.body.y / specs.size); //tile y
             solid = TileManager.getType(simplex.noise(x, y));
-            console.log(player);
+            //console.log(player);
         } while (solid);
     }
 };

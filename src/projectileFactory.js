@@ -12,10 +12,11 @@ projectileFactory.preload = function(){
 
 projectileFactory.create = function () {
     var defaultCollisionHandler = function(projectile, enemy){
-        console.log("do stuff here");
+        enemy.daddy.current_health--;
+        projectile.daddy.entity.destroy();
     };
 
-    this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultCollisionHandler);
+    this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultCollisionHandler, game.mobCollisionGroup);
 
 
     var defaultSprite = game.add.graphics();
@@ -28,7 +29,7 @@ projectileFactory.create = function () {
     defaultSprite.drawCircle(5,5, 5);
     var missle = defaultSprite.generateTexture();
     defaultSprite.destroy();
-    this.magicMissile = new projectile(undefined, undefined, undefined,missle , undefined, defaultCollisionHandler);
+    this.magicMissile = new projectile(undefined, undefined, undefined,missle , undefined, defaultCollisionHandler, game.mobCollisionGroup);
 }
 
 projectileFactory.update = function () {
@@ -62,13 +63,13 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
 
         /*creations of the actual projectile*/
         var p = {};
-        p.entity = game.add.sprite(sx + (-Math.cos(angle)*15), sy + (-Math.sin(angle)*15), projectile.texture);
+        p.entity = game.add.sprite(sx + (-Math.cos(angle)), sy + (-Math.sin(angle)), projectile.texture);
         game.physics.p2.enable(p.entity);
         p.entity.body.angle += angle*180/Math.PI;
         p.entity.body.velocity.x = x_velocity;
         p.entity.body.velocity.y = y_velocity;
         p.entity.body.setCollisionGroup(game.projectileCollisionGroup);
-        p.entity.body.collides([game.playerCollisionGroup, game.mobCollisionGroup], projectile.collisionHandler);
+        p.entity.body.collides(projectile.collidesWith, projectile.collisionHandler);
         p.entity.body.collides(game.allCollisionGroups);
         p.entity.body.daddy = p;
         p.entity.name == "projectile";
