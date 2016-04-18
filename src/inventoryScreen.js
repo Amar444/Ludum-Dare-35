@@ -113,14 +113,14 @@ inventoryScreen.createInventory = function() {
             sprite.beginFill(0xffff00);
             shapes.item_weapon(sprite, itemSize)
         }else if(user.inventory[i].type == "armour"){
-            sprite.beginFill(0x00ff00);
+            sprite.beginFill(0x940000);
             shapes.item_armour(sprite,itemSize)
-        }else if(user.inventory[i].type == "hat"){
-            sprite.beginFill(0x0000ff);
+        }else if(user.inventory[i].type == "hat"){     
+            sprite.beginFill(0x222222);
             shapes.item_hat(sprite,itemSize);
         }else if(user.inventory[i].type == "shield"){
-            sprite.beginFill(0xffff00);
-            shapes.item_shield(sprite,itemSize,0xff0000)
+            sprite.beginFill(0x5C2F00);
+            shapes.item_shield(sprite,itemSize,0xD6D6D6)
         }else {
             sprite.beginFill(0x222222);
         }

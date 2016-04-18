@@ -19,7 +19,7 @@ projectileFactory.create = function () {
 
     var magicCollisionHandler = function(projectile, enemy) {
         var entity = projectile.daddy.entity;
-        var m_mobs = require("mobFactory").findMobInCone(entity.x,entity.y,0,Math.PI,50);
+        var m_mobs = require("mobFactory").findMobInCone(entity.x,entity.y,0,Math.PI,100wd);
         for(var m in m_mobs){
             m_mobs[m].current_health -= projectile.daddy.damage;
         }
