@@ -90,16 +90,16 @@ player.drawWeapon = function(sprite) {
     }
     switch(player.character.type) {
         case "Range":
+            sprite.lineStyle(5, 0x222222, 1);
             var x = -Math.cos(angle);
             var y = -Math.sin(angle);
-            sprite.lineStyle(5, 0xEDBE00, 1);
             sprite.moveTo(x*16, y*16);
             sprite.lineTo(x*25, y*25);            
             break;
         case "Melee":
 
             // sprite.fill(2, 0xEDBE00, 1);
-            sprite.lineStyle(2, 0xEDBE00, 1);
+            sprite.lineStyle(5, 0x222222, 1);
             sprite.moveTo(0, 0);
             lt(Math.PI,10)
             lt(Math.PI/16,30)
@@ -108,18 +108,20 @@ player.drawWeapon = function(sprite) {
             lt(-Math.PI,10)
             break;
         case "Magic":
+            sprite.lineStyle(5, 0x222222, 1);
             var xa = -Math.cos(angle + Math.PI/4);
             var ya = -Math.sin(angle + Math.PI/4);
             var xb = -Math.cos(angle - Math.PI/4);
             var yb = -Math.sin(angle - Math.PI/4);
             // sprite.fill(2, 0xEDBE00, 1);
-            sprite.lineStyle(2, 0xEDBE00, 1);
             sprite.moveTo(xa*25, ya*25);
             sprite.lineTo(xa, ya);
             sprite.lineTo(xb*25, yb*25);
             break;
         default:
             break;
+
+        sprite.lineStyle(0, 0xEDBE00, 1);
     }
     
 }
