@@ -39,8 +39,8 @@ world.preCreate = function(){
     game.playerCollisionGroup = game.physics.p2.createCollisionGroup();
     game.mobCollisionGroup = game.physics.p2.createCollisionGroup();
     game.worldCollisionGroup = game.physics.p2.createCollisionGroup();
-    console.log(game.worldCollisionGroup)
-    game.allCollisionGroups = [game.worldCollisionGroup, game.projectileCollisionGroup, game.playerCollisionGroup, game.mobCollisionGroup]
+    game.itemCollisionGroup = game.physics.p2.createCollisionGroup();
+    game.allCollisionGroups = [game.itemCollisionGroup, game.worldCollisionGroup, game.projectileCollisionGroup, game.playerCollisionGroup, game.mobCollisionGroup]
     game.physics.p2.updateBoundsCollisionGroup();
 
     world.tileGroup = game.add.group();

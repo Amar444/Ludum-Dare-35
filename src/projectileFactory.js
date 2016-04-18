@@ -15,12 +15,6 @@ projectileFactory.create = function () {
         console.log("do stuff here");
     };
 
-    var defaultCollisionHandler = function(target, A, B, equation){
-        if(target.sprite.name == "enemy"){
-            
-        }
-    }
-
     this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultCollisionHandler);
 
 
@@ -68,14 +62,14 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
 
         /*creations of the actual projectile*/
         var p = {};
-        p.entity = game.add.sprite(sx + (-Math.cos(angle)*10), sy + (-Math.sin(angle)*10), projectile.texture);
+        p.entity = game.add.sprite(sx + (-Math.cos(angle)*15), sy + (-Math.sin(angle)*15), projectile.texture);
         game.physics.p2.enable(p.entity);
         p.entity.body.angle += angle*180/Math.PI;
         p.entity.body.velocity.x = x_velocity;
         p.entity.body.velocity.y = y_velocity;
         p.entity.body.setCollisionGroup(game.projectileCollisionGroup);
-        p.entity.body.collides([game.allCollisionGroups]);
         p.entity.body.collides([game.playerCollisionGroup, game.mobCollisionGroup], projectile.collisionHandler);
+        p.entity.body.collides(game.allCollisionGroups);
         p.entity.body.daddy = p;
         p.entity.name == "projectile";
 

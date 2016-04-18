@@ -1,7 +1,8 @@
-var mobType = function(ai, texture) {
+var mobType = function(ai, texture, onContactCollisionHandler) {
     this.texture = texture;
     this.ai = ai;
     this.pathfindRange = 10;
+    this.collisionHandler = onContactCollisionHandler;
 
     this.move = function(dx, dy) {
         var nspeed = 100;

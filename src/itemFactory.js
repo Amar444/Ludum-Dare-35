@@ -8,6 +8,10 @@ var itemFactory = {};
 var itemSize = 40;
 var dropchance = 30;
 
+var itemCollisionHandler = function(item, player){
+    console.log("pick up shit");
+};
+
 itemFactory.dropRandomItem = function(level, x, y){
     var randomNumber = Math.random();
 
@@ -60,7 +64,11 @@ itemFactory.drawItem = function(item, x, y){
     var item = game.add.sprite(x, y, sprite.generateTexture());
     sprite.destroy();
     game.physics.p2.enable(item);
+    item.body.setCollisionGroup(game.itemCollisionGroup);
 
+    console.log(itemCollisionHandler);
+    item.body.collides(game.playerCollisionGroup, itemCollisionHandler);
+    item.body.collides(game.allCollisionGroups);
     item.body.debug = true;
 };
 

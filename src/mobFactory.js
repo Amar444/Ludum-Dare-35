@@ -104,13 +104,15 @@ mobFactory.create = function () {
     defaultRangedSprite.beginFill(0x666666);
     defaultRangedSprite.drawRect(0, 0, 24, 24);
 
-    var defaultRangedCollisionHandler = function(mob, player){
+    var defaultRangedCollisionHandler = function(projectile, player){
+        console.log("Do shit when you hit the player")
+    }
+    var defaultMeleeCollisionHandler = function(mob, player){
         console.log("Do shit when you hit the player")
     }
 
-
     mobFactory.defaultRangedProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultRangedCollisionHandler);
-    mobFactory.defaultMobType = new mobType(mobFactory.defaultAi, defaultSprite.generateTexture());
+    mobFactory.defaultMobType = new mobType(mobFactory.defaultAi, defaultSprite.generateTexture(), defaultMeleeCollisionHandler);
     mobFactory.defaultRangedMob = new mobType(mobFactory.defaultRangedAi, defaultRangedSprite.generateTexture());
     defaultSprite.destroy();
     defaultRangedSprite.destroy();
@@ -131,15 +133,16 @@ mobFactory.spawnMob = function (locationX, locationY, mobType, level) {
     mob.entity.daddy = mob;
     //mob.entity.onBeginContact.add(mobType.collisionHandler);
     mob.entity.body.setCollisionGroup(game.mobCollisionGroup);
+    mob.entity.body.collides(game.playerCollisionGroup, mobType.collisionHandler);
     mob.entity.body.collides(game.allCollisionGroups);
-    //console.log(mobType.collisonHandler)
-    mob.entity.body.collides(game.playerCollisionGroup, mobType.collisionHandler)
     /* Returns the mob in case you want to do something special with it */
     return mob;
 };
 
 var last;
 mobFactory.defaultAi = function () {
+
+
     var rad = 7;
     if (this.hit) {
         this.pathfindRange = 15;
