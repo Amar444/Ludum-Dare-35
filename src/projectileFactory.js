@@ -19,7 +19,7 @@ projectileFactory.create = function () {
 
     var magicCollisionHandler = function(projectile, enemy) {
         var entity = projectile.daddy.entity;
-        var m_mobs = require("mobFactory").findMobInCone(entity.x,entity.y,0,Math.PI,100wd);
+        var m_mobs = require("mobFactory").findMobInCone(entity.x,entity.y,0,Math.PI,100);
         for(var m in m_mobs){
             m_mobs[m].current_health -= projectile.daddy.damage;
         }
@@ -40,7 +40,7 @@ projectileFactory.create = function () {
     defaultSprite.drawCircle(5,5, 5);
     var missle = defaultSprite.generateTexture();
     defaultSprite.destroy();
-    this.magicMissile = new projectile(200, 2, 1000,missle , 1000, magicCollisionHandler, game.mobCollisionGroup);
+    this.magicMissile = new projectile(200, 2, 800,missle , 1000, magicCollisionHandler, game.mobCollisionGroup);
 }
 
 projectileFactory.update = function () {

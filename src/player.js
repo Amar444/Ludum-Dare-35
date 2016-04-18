@@ -54,7 +54,8 @@ player.create = function() {
         if(c < m){
             player.character.current_health++
         }
-    },5000)
+    },5000);
+    setInterval(player.mutate, 30000)
 
 }
 
@@ -168,16 +169,16 @@ player.update = function() {
     if(game.input.mousePointer.isUp) {
         mouseBeenUp = true;
     }
-    if(game.input.mousePointer.isDown && mouseBeenUp) {
-        mouseBeenUp = false;
+    if(game.input.mousePointer.isDown) {
         switch(player.character.type) {
             case "Range":
                 projectile.spawnProjectile(player, "mouse", projectile.defaultProjectile);
                 break;
             case "Melee":
-                if (meleeCooldown)
+                if (meleeCooldown || !qmouseBeenUp)
                     break;
                 meleeCooldown = true;
+                mouseBeenUp = false;
                 var sx = player.entity.x;
                 var sy = player.entity.y;
                 var tx = game.input.worldX;

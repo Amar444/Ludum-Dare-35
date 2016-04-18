@@ -71,7 +71,7 @@ itemFactory.drawItem = function(item, x, y){
     item.entity.body.collides(game.playerCollisionGroup, itemCollisionHandler);
     item.entity.body.collides(game.allCollisionGroups);
     item.entity.body.daddy = item;
-    item.entity.body.debug = true;
+    //item.entity.body.debug = true;
 };
 
 module.exports = itemFactory;
