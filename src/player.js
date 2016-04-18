@@ -187,7 +187,7 @@ player.update = function() {
                 var m_x = player.entity.x;
                 var m_y = player.entity.y;
                 var m_direction = angle;
-                var m_spread = Math.PI;
+                var m_spread = 0.4;
                 var m_range = 75;
                 var m_mobs = require("mobFactory").findMobInCone(m_x,m_y,m_direction,m_spread,m_range);
                 for(var m in m_mobs){

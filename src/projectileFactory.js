@@ -2,6 +2,7 @@ var game = window.game;
 var player = require('player');
 var projectile = require("projectile")
 var sound = require("sound")
+var particles = require("particles")
 
 var projectileFactory = {};
 
@@ -12,11 +13,21 @@ projectileFactory.preload = function(){
 
 projectileFactory.create = function () {
     var defaultCollisionHandler = function(projectile, enemy){
-        enemy.daddy.current_health--;
+        enemy.daddy.current_health-= projectile.daddy.damage;
         projectile.daddy.entity.destroy();
     };
 
-    this.defaultProjectile = new projectile(undefined, undefined, undefined, undefined, undefined, defaultCollisionHandler, game.mobCollisionGroup);
+    var magicCollisionHandler = function(projectile, enemy) {
+        var entity = projectile.daddy.entity;
+        var m_mobs = require("mobFactory").findMobInCone(entity.x,entity.y,0,Math.PI,50);
+        for(var m in m_mobs){
+            m_mobs[m].current_health -= projectile.daddy.damage;
+        }
+        particles.magic(entity.x, entity.y);
+        entity.destroy();
+    }
+
+    this.defaultProjectile = new projectile(undefined, 1, undefined, undefined, undefined, defaultCollisionHandler, game.mobCollisionGroup);
 
 
     var defaultSprite = game.add.graphics();
@@ -29,7 +40,7 @@ projectileFactory.create = function () {
     defaultSprite.drawCircle(5,5, 5);
     var missle = defaultSprite.generateTexture();
     defaultSprite.destroy();
-    this.magicMissile = new projectile(undefined, undefined, undefined,missle , undefined, defaultCollisionHandler, game.mobCollisionGroup);
+    this.magicMissile = new projectile(200, 2, 1000,missle , 1000, magicCollisionHandler, game.mobCollisionGroup);
 }
 
 projectileFactory.update = function () {
@@ -62,7 +73,8 @@ projectileFactory.spawnProjectile = function(source, target, projectile) {
         y_velocity = -Math.sin(angle)*projectile.velocity;
 
         /*creations of the actual projectile*/
-        var p = {};
+        var p = {}
+        p.damage = projectile.damageValue;
         p.entity = game.add.sprite(sx + (-Math.cos(angle)), sy + (-Math.sin(angle)), projectile.texture);
         game.physics.p2.enable(p.entity);
         p.entity.body.angle += angle*180/Math.PI;

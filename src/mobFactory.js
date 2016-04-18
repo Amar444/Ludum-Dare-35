@@ -213,7 +213,7 @@ mobFactory.findMobInCone = function (x,y,direction,spread,range){
         var angle = Phaser.Point.angle(new Phaser.Point(sx, sy), new Phaser.Point(tx, ty));
         if(d < range){
             console.log(angle, direction);
-            if (Math.abs(Math.abs(angle) - Math.abs(direction)) < 0.4) {
+            if (Math.abs(Math.abs(angle) - Math.abs(direction)) < spread) {
                 out.push(mobs[i]);
             }
         }

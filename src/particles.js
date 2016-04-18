@@ -1,6 +1,7 @@
 var particles = {};
 var emitter;
 var emitter_splatter;
+var emitter_magic;
 
 particles.preload = function () {
 };
@@ -21,6 +22,13 @@ particles.create = function () {
     sprite.drawRect(0, 0, 25, 25);
     emitter_splatter.makeParticles(sprite.generateTexture());
     emitter_splatter.gravity = 0;
+
+    emitter_magic = game.add.emitter(0, 0, 0);
+    sprite = game.add.graphics();
+    sprite.beginFill(0x0000ff);
+    sprite.drawCircle(0,0, 40);
+    emitter_magic.makeParticles(sprite.generateTexture());
+    emitter_magic.gravity = 0;
 };
 
 particles.explosion = function(x,y){
@@ -29,6 +37,14 @@ particles.explosion = function(x,y){
 
     emitter.setScale(0.01, 1, 0.01, 1, 500, Phaser.Easing.Quintic.Out);
     emitter.start(true, 500, null, 10);
+}
+
+particles.magic = function(x, y) {
+    emitter_magic.x = x;
+    emitter_magic.y = y;
+
+    emitter_magic.setScale(0.01, 1, 0.01, 1, 500, Phaser.Easing.Quintic.Out);
+    emitter_magic.start(true, 500, null, 10);
 }
 
 
