@@ -47,6 +47,7 @@ function create() {
 
 var i = 0;
 function update() {
+	if(inventoryScreen.active){return;}
 	world.update();
 	player.update();
 	mobFactory.update();
