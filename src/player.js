@@ -13,6 +13,10 @@ var init_char = require("character")
 var particles = require("particles")
 var shapes = require("shapes");
 
+var meleeCooldown = false;
+var meleeCooldownTime = 200;
+var mouseBeenUp = true;
+
 player.preload = function(){
 }
 
@@ -100,11 +104,15 @@ player.drawWeapon = function(sprite) {
 
             // sprite.fill(2, 0xEDBE00, 1);
             sprite.lineStyle(5, 0x222222, 1);
+            var f = 1;
+            if (meleeCooldown) {
+                f = 1.5;
+            }
             sprite.moveTo(0, 0);
             lt(Math.PI,10)
-            lt(Math.PI/16,30)
-            lt(0,35)
-            lt(-Math.PI/16,30)
+            lt(Math.PI/16,30*f)
+            lt(0,35*f)
+            lt(-Math.PI/16,30*f)
             lt(-Math.PI,10)
             break;
         case "Magic":
@@ -156,12 +164,20 @@ player.update = function() {
     if (cursors.right.isDown || keys.d.isDown)
         player.entity.body.moveRight(nspeed);
 
-    if(game.input.mousePointer.isDown) {
+
+    if(game.input.mousePointer.isUp) {
+        mouseBeenUp = true;
+    }
+    if(game.input.mousePointer.isDown && mouseBeenUp) {
+        mouseBeenUp = false;
         switch(player.character.type) {
             case "Range":
                 projectile.spawnProjectile(player, "mouse", projectile.defaultProjectile);
                 break;
             case "Melee":
+                if (meleeCooldown)
+                    break;
+                meleeCooldown = true;
                 var sx = player.entity.x;
                 var sy = player.entity.y;
                 var tx = game.input.worldX;
@@ -171,8 +187,8 @@ player.update = function() {
                 var m_x = player.entity.x;
                 var m_y = player.entity.y;
                 var m_direction = angle;
-                var m_spread = Math.PI;
-                var m_range = 50;
+                var m_spread = 0.4;
+                var m_range = 75;
                 var m_mobs = require("mobFactory").findMobInCone(m_x,m_y,m_direction,m_spread,m_range);
                 for(var m in m_mobs){
                     var sx2 = player.entity.x;
@@ -186,8 +202,9 @@ player.update = function() {
                     m_mobs[m].move(x_velocity,y_velocity);
                     m_mobs[m].current_health--;
                 }
-                // debugger
-                console.log(m_mobs.length)
+                setTimeout(function () {
+                    meleeCooldown = false;
+                }, meleeCooldownTime);
                 break;
             case "Magic":
                 projectile.spawnProjectile(player, "mouse", projectile.magicMissile);

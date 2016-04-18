@@ -27,18 +27,14 @@ shapes.item_armour = function (sprite, size){
 }
 
 shapes.item_hat = function (sprite, size){
-    var points = [];
-    points.push(new Phaser.Point(size*0.5,size*0.1));
-    points.push(new Phaser.Point(size*0.1,size*0.7));
-    points.push(new Phaser.Point(size*0.9,size*0.7));
-    sprite.drawTriangle(points);
+    sprite.drawRect(size*0.2, size*0.1, size*0.6, size*0.6);
+    sprite.drawRect(size*0, size*0.6, size*1, size*0.2);
 
 }
 
 
 shapes.item_shield = function (sprite, size,color){
     sprite.drawCircle(size/2, size/2, size);
-    sprite.beginFill(color)
     sprite.drawRect(size*0.45, size*0, size*0.1,size*1);
     sprite.drawRect(size*0, size*0.45, size*1,size*0.1);
 
