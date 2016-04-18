@@ -3,7 +3,7 @@ var inventoryScreen = {};
 var shapes = require("shapes");
 var character = require("character");
 inventoryScreen.preload = function(){
-
+    game.load.image('thrashcan', 'images/thrashcan.png');
 };
 var itemSize = 32;
 var start = {x: itemSize*7, y:itemSize*5,w:5,h:5};
@@ -28,9 +28,10 @@ inventoryScreen.toggle_inventory = function () {
         group = game.add.group();
         inventoryScreen.active = true;
         game.physics.p2.pause();
-        inventoryScreen.createInventory();
-        inventoryScreen.showStats()
 
+        inventoryScreen.showStats();
+        inventoryScreen.showThrash();
+        inventoryScreen.createInventory();
     }
 };
 inventoryScreen.createInventory = function() {
@@ -182,9 +183,23 @@ inventoryScreen.createInventory = function() {
 
             })
             item.events.onDragStop.add(function (item) {
-                console.log(const_i,item);
+                //console.log(const_i,item);
+                console.log(user.inventory[parseInt(const_i)])
                 var pos = item.cameraOffset;
                 var count = 0;
+                var thrashx = start.x + (20 + (itemSize*itemslots.gx)) *2
+                //console.log(pos);
+                //console.log(start.y)
+                //console.log(thrashx)
+
+                //check item destruction
+                if(pos.x > thrashx && pos.x < thrashx + 50 && pos.y > start.y && pos.y < start.y + 50){
+                    inventoryScreen.removeItem((const_i), user);
+                    inventoryScreen.toggle_inventory();
+                    inventoryScreen.toggle_inventory();
+                }
+
+
                 for(var type in types) {
                     if(user.inventory[parseInt(const_i)].type == types[type]){
                         if (pos.x + itemSize > itemslots.x && pos.x + itemSize < (itemslots.x + item_left_size)) {
@@ -211,7 +226,7 @@ inventoryScreen.createInventory = function() {
                 // reset
                 var x = start.x+(Math.floor(const_i / itemslots.gx) *itemSize);
                 var y = start.y+((const_i % itemslots.gx) *itemSize);
-                console.log(x,y);
+                //console.log(x,y);
                 item.cameraOffset.setTo(x,y);
 
             });
@@ -263,6 +278,18 @@ inventoryScreen.showStats = function (){
 
 };
 
+inventoryScreen.showThrash = function() {
+    var sprite = game.add.graphics(0.0);
+    sprite.beginFill(0x222222);
+    sprite.drawRect(0,0,50,50);
+    var thrash = group.create(game.world.centerX + 20, game.world.centerY, "thrashcan");
+    sprite.destroy();
+    thrash.fixedToCamera = true;
+    thrash.cameraOffset.setTo(start.x + (20 + (itemSize*itemslots.gx)) *2, start.y);
+
+
+};
+
 
 inventoryScreen.popup = function(title, lines,x,y) {
     var popup = game.add.group();
@@ -280,7 +307,7 @@ inventoryScreen.popup = function(title, lines,x,y) {
 
     var id =0;
     for(var i in lines){
-        var sprite = game.add.text(0,0, lines[i], {font: "12px Arial", fill: "#000000"});
+        var sprite = game.add.text(0,0, lines[i].replace("mod_","Modifier: "), {font: "12px Arial", fill: "#000000"});
         var t =popup.create(0,0, sprite.generateTexture());
         sprite.destroy()
         t.fixedToCamera = true;
@@ -306,6 +333,12 @@ inventoryScreen.popup = function(title, lines,x,y) {
     }
 
 };
+
+
+
+inventoryScreen.removeItem = function(item, user){
+    user.inventory.splice(item,1);
+}
 
 inventoryScreen.update = function() {
 

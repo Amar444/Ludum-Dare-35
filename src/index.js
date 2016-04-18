@@ -27,6 +27,7 @@ function preload() {
 	sound.preload();
 	hud.preload();
 	particles.preload()
+	inventoryScreen.preload();
 
 }
 

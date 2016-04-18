@@ -161,4 +161,5 @@ user_class.getDamage = function(attacker, target) {
     return dmg - target.armour;
 }
 
+
 module.exports = user_class;
