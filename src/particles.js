@@ -15,7 +15,8 @@ particles.create = function () {
     emitter.gravity = 0;
 
     emitter_splatter = game.add.emitter(0, 0, 0);
-    var sprite = game.add.graphics(0, 0);
+
+    sprite = game.add.graphics(0, 0);
     sprite.beginFill(0xFF0000);
     sprite.drawRect(0, 0, 25, 25);
     emitter_splatter.makeParticles(sprite.generateTexture());
@@ -27,7 +28,7 @@ particles.explosion = function(x,y){
     emitter.y = y;
 
     emitter.setScale(0.01, 1, 0.01, 1, 500, Phaser.Easing.Quintic.Out);
-    emitter.start(true, 500, null, 20);
+    emitter.start(true, 500, null, 10);
 }
 
 
@@ -37,7 +38,7 @@ particles.splatter = function(x,y){
 
 
     emitter_splatter.setScale(0.01, 0.3, 0.01, 0.3, 500, Phaser.Easing.Quintic.Out);
-    emitter_splatter.start(true, 750, null, 20);
+    emitter_splatter.start(true, 750, null, 10);
 }
 
 module.exports = particles;
